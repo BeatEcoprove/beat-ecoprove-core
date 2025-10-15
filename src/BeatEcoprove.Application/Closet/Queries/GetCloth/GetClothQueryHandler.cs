@@ -28,7 +28,7 @@ internal sealed class GetClothQueryHandler : IQueryHandler<GetClothQuery, ErrorO
     {
         var clothId = ClothId.Create(request.ClothId);
 
-        var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {

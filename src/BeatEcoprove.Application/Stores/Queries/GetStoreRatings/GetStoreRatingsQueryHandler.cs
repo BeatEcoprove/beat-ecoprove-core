@@ -1,7 +1,6 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
@@ -17,7 +16,7 @@ internal sealed class GetStoreRatingsQueryHandler : IQueryHandler<GetStoreRating
     private readonly IStoreRepository _storeRepository;
 
     public GetStoreRatingsQueryHandler(
-        IProfileManager profileManager, 
+        IProfileManager profileManager,
         IStoreRepository storeRepository)
     {
         _profileManager = profileManager;
@@ -26,11 +25,10 @@ internal sealed class GetStoreRatingsQueryHandler : IQueryHandler<GetStoreRating
 
     public async Task<ErrorOr<List<RatingDao>>> Handle(GetStoreRatingsQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {

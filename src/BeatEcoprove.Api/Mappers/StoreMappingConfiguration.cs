@@ -3,8 +3,6 @@ using BeatEcoprove.Contracts.Store;
 using BeatEcoprove.Contracts.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
-using BeatEcoprove.Domain.StoreAggregator.Entities;
-using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 
 using Mapster;
 
@@ -26,7 +24,7 @@ public class StoreMappingConfiguration : IRegister
                     src.Profile.AvatarUrl
                 )
             ));
-        
+
         config.NewConfig<WorkerDao, WorkerResponse>()
             .MapWith(src => new WorkerResponse(
                 src.Id,
@@ -34,7 +32,7 @@ public class StoreMappingConfiguration : IRegister
                 src.Email.Value,
                 src.Type.ToString()
             ));
-            
+
         config.NewConfig<Store, StoreResponse>()
             .MapWith(src => new StoreResponse(
                     src.Id,
@@ -62,7 +60,7 @@ public class StoreMappingConfiguration : IRegister
         {
             return CreateOrderClothResponse(orderClothDao);
         }
-        
+
         return new OrderResponse(
             src.Id,
             new ProfileClosetResponse(
@@ -74,7 +72,7 @@ public class StoreMappingConfiguration : IRegister
             src.Type.Type.Name.ToLower()
         );
     }
-    
+
     private static OrderClothResponse CreateOrderClothResponse(OrderClothDao src)
     {
         return new OrderClothResponse(

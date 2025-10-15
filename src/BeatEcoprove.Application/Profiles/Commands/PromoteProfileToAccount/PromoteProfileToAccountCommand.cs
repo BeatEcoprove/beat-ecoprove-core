@@ -7,8 +7,6 @@ namespace BeatEcoprove.Application.Profiles.Commands.PromoteProfileToAccount;
 
 public record PromoteProfileToAccountCommand
 (
-    Guid AuthId,
     Guid ProfileId,
-    string Email,
-    string Password
+    Guid AuthId
 ) : ICommand<ErrorOr<Profile>>;

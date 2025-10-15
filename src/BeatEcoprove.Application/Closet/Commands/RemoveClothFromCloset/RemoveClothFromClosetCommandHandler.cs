@@ -27,7 +27,7 @@ public class RemoveClothFromClosetCommandHandler : ICommandHandler<RemoveClothFr
     public async Task<ErrorOr<ClothResult>> Handle(RemoveClothFromClosetCommand request, CancellationToken cancellationToken)
     {
         var clothId = ClothId.Create(request.ClothId);
-        var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {

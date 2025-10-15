@@ -5,7 +5,6 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
@@ -36,7 +35,6 @@ internal sealed class AddWorkerCommandHandler : ICommandHandler<AddWorkerCommand
 
     public async Task<ErrorOr<WorkerDao>> Handle(AddWorkerCommand request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
 
@@ -54,7 +52,7 @@ internal sealed class AddWorkerCommandHandler : ICommandHandler<AddWorkerCommand
             return email.Errors;
         }
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

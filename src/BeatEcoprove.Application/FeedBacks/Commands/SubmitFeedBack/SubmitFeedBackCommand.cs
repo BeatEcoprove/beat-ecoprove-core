@@ -1,6 +1,5 @@
 using BeatEcoprove.Application.FeedBacks.Commands.Common;
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 
 using ErrorOr;
 
@@ -12,4 +11,4 @@ public record SubmitFeedBackCommand
     Guid ProfileId,
     string Title,
     string Description
-) : ICommand<ErrorOr<FeedBackResult>>, IAuthorization;
+) : ICommand<ErrorOr<FeedBackResult>>;

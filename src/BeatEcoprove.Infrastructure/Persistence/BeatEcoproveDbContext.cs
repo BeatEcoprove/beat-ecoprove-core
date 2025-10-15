@@ -1,5 +1,4 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Models;
@@ -16,19 +15,15 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
 {
     private readonly SoftDeleteInterceptor _softDeleteInterceptor;
     private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
-    private readonly StoreGroupInterceptor _groupInterceptor;
 
     public BeatEcoproveDbContext(
         SoftDeleteInterceptor softDeleteInterceptor,
-        PublishDomainEventsInterceptor publishDomainEventsInterceptor,
-        StoreGroupInterceptor groupInterceptor)
+        PublishDomainEventsInterceptor publishDomainEventsInterceptor)
     {
         _softDeleteInterceptor = softDeleteInterceptor;
         _publishDomainEventsInterceptor = publishDomainEventsInterceptor;
-        _groupInterceptor = groupInterceptor;
     }
 
-    public DbSet<Auth> Auths { get; init; } = null!;
     public DbSet<Profile> Profiles { get; init; } = null!;
     public DbSet<Cloth> Cloths { get; init; } = null!;
     public DbSet<Bucket> Buckets { get; init; } = null!;
@@ -42,14 +37,13 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
     {
         optionsBuilder.AddInterceptors(_softDeleteInterceptor);
         optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
-        optionsBuilder.AddInterceptors(_groupInterceptor);
 
         optionsBuilder.UseNpgsql(Env.Postgres.ConnectionString, builder =>
         {
             builder.MigrationsAssembly("BeatEcoprove.Infrastructure");
             builder.UseNetTopologySuite();
         });
-        
+
         optionsBuilder.EnableSensitiveDataLogging();
     }
 
@@ -57,7 +51,7 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
     {
         modelBuilder.HasPostgresExtension("postgis");
         modelBuilder.HasPostgresExtension("postgis_topology");
-        
+
         modelBuilder
             .Ignore<List<IDomainEvent>>()
             .ApplyConfigurationsFromAssembly(typeof(BeatEcoproveDbContext).Assembly);

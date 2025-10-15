@@ -2,7 +2,6 @@ using BeatEcoprove.Application.Currency.Common;
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Extensions;
 
@@ -25,10 +24,9 @@ internal sealed class ConvertCurrencyQueryHandler : IQueryHandler<ConvertCurrenc
 
     public async Task<ErrorOr<ConversionResult>> Handle(ConvertCurrencyQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

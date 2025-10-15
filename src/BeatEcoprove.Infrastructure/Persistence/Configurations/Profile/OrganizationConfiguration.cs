@@ -1,5 +1,4 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,7 +13,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
            .Property(o => o.TypeOption)
            .HasColumnName("type_option")
            .IsRequired();
-        
+
         builder.OwnsOne(o => o.Address, address =>
         {
             address.Property(a => a.Street)

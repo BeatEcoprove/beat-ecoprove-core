@@ -19,7 +19,6 @@ public static class DependencyInjection
 
         services.AddScoped<SoftDeleteInterceptor>();
         services.AddScoped<PublishDomainEventsInterceptor>();
-        services.AddScoped<StoreGroupInterceptor>();
 
         AddRepositories(services);
 

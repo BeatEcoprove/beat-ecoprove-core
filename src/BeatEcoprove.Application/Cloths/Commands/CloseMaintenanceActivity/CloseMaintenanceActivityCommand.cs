@@ -1,6 +1,5 @@
 using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 
 using ErrorOr;
 
@@ -12,4 +11,4 @@ public record CloseMaintenanceActivityCommand
     Guid ProfileId,
     Guid ClothId,
     Guid MaintenanceActivityId
-) : ICommand<ErrorOr<ClothResult>>, IAuthorization;
+) : ICommand<ErrorOr<ClothResult>>;

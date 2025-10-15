@@ -8,5 +8,4 @@ namespace BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 // TODO: Add pagination??
 public record GetMyProfilesQuery
 (
-    Guid AuthId
 ) : IQuery<ErrorOr<List<ProfileDao>>>;

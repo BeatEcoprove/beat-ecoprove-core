@@ -1,5 +1,4 @@
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 
 using ErrorOr;
@@ -11,4 +10,4 @@ public record GetAvailableServicesQuery
     Guid AuthId,
     Guid ProfileId,
     Guid ClothId
-) : IQuery<ErrorOr<List<MaintenanceService>>>, IAuthorization;
+) : IQuery<ErrorOr<List<MaintenanceService>>>;

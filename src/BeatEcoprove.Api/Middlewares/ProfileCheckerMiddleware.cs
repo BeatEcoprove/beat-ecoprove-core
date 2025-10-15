@@ -4,7 +4,6 @@ using System.Text.Json;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 
@@ -14,32 +13,40 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BeatEcoprove.Api.Middlewares;
-public class ProfileCheckerMiddleware : ControllerBase, IMiddleware
+
+public class ProfileCheckerMiddleware : IMiddleware
 {
     private const string ProfileIdKey = "profileId";
 
-    private readonly IAuthRepository _authRepository;
     private readonly IJwtProvider _jwtProvider;
+    private readonly IProfileRepository _profileRepository;
 
     public ProfileCheckerMiddleware(
-        IAuthRepository authRepository,
-        IJwtProvider jwtProvider)
+        IJwtProvider jwtProvider,
+        IProfileRepository profileRepository)
     {
-        _authRepository = authRepository;
         _jwtProvider = jwtProvider;
+        _profileRepository = profileRepository;
     }
 
-    private async Task<ErrorOr<bool>> IsProfileValid(AuthId authId, ProfileId profileId, CancellationToken cancellationToken = default)
+    private async Task<ErrorOr<bool>> IsProfileValid(Guid authId, ProfileId profileId, CancellationToken cancellationToken = default)
     {
-        return await _authRepository
-               .DoesProfileBelongToAuth(authId, ProfileId.Create(profileId), cancellationToken);
+        var profile = await _profileRepository.GetByIdAsync(profileId, cancellationToken);
+        if (profile == null) return Errors.User.ProfileDoesNotExists;
+
+        return profile.AuthId.Value == authId;
     }
 
-    private async Task<ErrorOr<Email>> GetEmailFromAccessToken(HttpContext context)
+    private async Task<ErrorOr<(Guid AuthId, string Email)>> GetClaimsFromToken(HttpContext context)
     {
+        var authHeader = context.Request.Headers["Authorization"].ToString();
+        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+        {
+            return Errors.Token.MissingToken;
+        }
+
+        var accessToken = authHeader.Split(" ")[1];
         IDictionary<string, string> claims;
-
-        var accessToken = context.Request.Headers["Authorization"].ToString().Split(" ")[1];
 
         try
         {
@@ -47,13 +54,23 @@ public class ProfileCheckerMiddleware : ControllerBase, IMiddleware
         }
         catch (SecurityTokenException)
         {
-            return Errors.Token.InvalidRefreshToken;
+            return Errors.Token.InvalidToken;
         }
 
-        return Email.Create(claims[UserClaims.Email]);
+        if (!claims.TryGetValue(UserClaims.AccountId, out var authId) || !Guid.TryParse(authId, out var parsedAuthId))
+        {
+            return Errors.Token.InvalidToken;
+        }
+
+        if (!claims.TryGetValue(UserClaims.Email, out var email))
+        {
+            return Errors.Token.InvalidToken;
+        }
+
+        return (parsedAuthId, email);
     }
 
-    private Task ReturnUnAuthorized(HttpContext context, string message)
+    private Task ReturnUnAuthorized(HttpContext context, Error error)
     {
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -62,7 +79,8 @@ public class ProfileCheckerMiddleware : ControllerBase, IMiddleware
             new ProblemDetails
             {
                 Status = context.Response.StatusCode,
-                Title = message,
+                Title = error.Description,
+                Type = error.Code
             });
 
         return context.Response.WriteAsync(response);
@@ -70,42 +88,34 @@ public class ProfileCheckerMiddleware : ControllerBase, IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        var profileIdValue =
-            context.Request.RouteValues[ProfileIdKey]?.ToString();
+        var profileIdValue = context.Request.RouteValues[ProfileIdKey]?.ToString();
 
-        if (string.IsNullOrWhiteSpace(profileIdValue) && !Guid.TryParse(profileIdValue, out _))
+        if (string.IsNullOrWhiteSpace(profileIdValue) || !Guid.TryParse(profileIdValue, out _))
         {
             await next(context);
             return;
         }
 
-        var email = await GetEmailFromAccessToken(context);
+        var claims = await GetClaimsFromToken(context);
 
-        if (email.IsError)
+        if (claims.IsError)
         {
-            await ReturnUnAuthorized(context, email.FirstError.Description);
+            await ReturnUnAuthorized(context, claims.FirstError);
             return;
         }
 
-        var auth = await _authRepository.GetAuthByEmail(email.Value, default);
-
-        if (auth is null)
-        {
-            await ReturnUnAuthorized(context, Errors.User.ProfileDoesNotBelongToAuth.Description);
-            return;
-        }
-
-        var isProfileValid = await IsProfileValid(AuthId.Create(auth.Id), ProfileId.Create(Guid.Parse(profileIdValue!)));
+        var (authId, email) = claims.Value;
+        var isProfileValid = await IsProfileValid(authId, ProfileId.Create(Guid.Parse(profileIdValue!)));
 
         if (isProfileValid.IsError)
         {
-            await ReturnUnAuthorized(context, isProfileValid.FirstError.Description);
+            await ReturnUnAuthorized(context, isProfileValid.FirstError);
             return;
         }
 
         if (!isProfileValid.Value)
         {
-            await ReturnUnAuthorized(context, Errors.User.ProfileDoesNotBelongToAuth.Description);
+            await ReturnUnAuthorized(context, Errors.User.ProfileDoesNotBelongToAuth);
             return;
         }
 

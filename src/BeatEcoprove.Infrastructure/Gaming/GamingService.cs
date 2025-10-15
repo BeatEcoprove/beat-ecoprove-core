@@ -1,6 +1,5 @@
 using BeatEcoprove.Application.Shared.Gaming;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
 namespace BeatEcoprove.Infrastructure.Gaming;
 

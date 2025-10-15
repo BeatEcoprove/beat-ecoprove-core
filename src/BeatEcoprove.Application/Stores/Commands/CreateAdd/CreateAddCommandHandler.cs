@@ -3,7 +3,6 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AdvertisementAggregator;
 using BeatEcoprove.Domain.AdvertisementAggregator.Entities;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
@@ -19,8 +18,8 @@ internal sealed class CreateAddCommandHandler : ICommandHandler<CreateAddCommand
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateAddCommandHandler(
-        IProfileManager profileManager, 
-        IAdvertisementService advertisementService, 
+        IProfileManager profileManager,
+        IAdvertisementService advertisementService,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -30,11 +29,10 @@ internal sealed class CreateAddCommandHandler : ICommandHandler<CreateAddCommand
 
     public async Task<ErrorOr<Advertisement>> Handle(CreateAddCommand request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -43,10 +41,10 @@ internal sealed class CreateAddCommandHandler : ICommandHandler<CreateAddCommand
 
         var beginAt = request.BeginAt.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
         var endAt = request.EndAt.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
-        
+
         ErrorOr<Advertisement> advertisement = request.Type switch
         {
-            "advertisement" =>  Advertisement.Create(
+            "advertisement" => Advertisement.Create(
                 profile.Value.Id,
                 request.Title,
                 request.Description,

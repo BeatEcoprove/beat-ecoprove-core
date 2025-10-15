@@ -1,6 +1,5 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
@@ -22,11 +21,10 @@ internal sealed class GetStoreByIdQueryHandler : IQueryHandler<GetStoreByIdQuery
 
     public async Task<ErrorOr<Store>> Handle(GetStoreByIdQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -39,7 +37,7 @@ internal sealed class GetStoreByIdQueryHandler : IQueryHandler<GetStoreByIdQuery
         {
             return store.Errors;
         }
-        
+
         return store.Value;
     }
 }

@@ -1,6 +1,4 @@
 ﻿using BeatEcoprove.Domain.AdvertisementAggregator.Entities;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.AdvertisementAggregator.Enumerators;

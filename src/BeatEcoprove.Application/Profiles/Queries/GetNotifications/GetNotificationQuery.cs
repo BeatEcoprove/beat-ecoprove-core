@@ -8,6 +8,9 @@ namespace BeatEcoprove.Application.Profiles.Queries.GetNotifications;
 
 public record GetNotificationQuery
 (
-    Guid AuthId,
     Guid ProfileId
-) : IQuery<ErrorOr<List<Notification>>>, IAuthorization;
+) : IQuery<ErrorOr<List<Notification>>>, IAuthorization
+{
+    Guid IAuthorization.ProfileId => ProfileId;
+    Guid IAuthorization.AuthId => ProfileId;
+}

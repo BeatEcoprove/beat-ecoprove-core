@@ -2,7 +2,6 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
@@ -19,8 +18,8 @@ internal sealed class PostRatingCommandHandler : ICommandHandler<PostRatingComma
     private readonly IUnitOfWork _unitOfWork;
 
     public PostRatingCommandHandler(
-        IProfileManager profileManager, 
-        IStoreRepository storeRepository, 
+        IProfileManager profileManager,
+        IStoreRepository storeRepository,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -30,11 +29,10 @@ internal sealed class PostRatingCommandHandler : ICommandHandler<PostRatingComma
 
     public async Task<ErrorOr<RatingDao>> Handle(PostRatingCommand request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

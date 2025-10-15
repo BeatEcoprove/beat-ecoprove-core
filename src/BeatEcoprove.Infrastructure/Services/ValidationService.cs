@@ -6,34 +6,17 @@ namespace BeatEcoprove.Infrastructure.Services;
 
 public class ValidationService : IValidationFieldService
 {
-    private readonly IAuthRepository _authRepository;
     private readonly IProfileRepository _profileRepository;
     private readonly Dictionary<string, Func<string, Task<bool>>> _fieldVerifiers;
 
-    public ValidationService(
-        IAuthRepository authRepository,
-        IProfileRepository profileRepository)
+    public ValidationService(IProfileRepository profileRepository)
     {
         _fieldVerifiers = new Dictionary<string, Func<string, Task<bool>>>
         {
-            { "email", IsEmailAvailableAsync },
             { "username", IsUserNameAvailableAsync },
         };
 
-        _authRepository = authRepository;
         _profileRepository = profileRepository;
-    }
-
-    private async Task<bool> IsEmailAvailableAsync(string validateValue)
-    {
-        var email = Email.Create(validateValue);
-
-        if (email.IsError)
-        {
-            return false;
-        }
-
-        return !await _authRepository.ExistsUserByEmailAsync(email.Value, default);
     }
 
     private async Task<bool> IsUserNameAvailableAsync(string validationValue)

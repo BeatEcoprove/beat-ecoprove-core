@@ -1,7 +1,6 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
@@ -18,8 +17,8 @@ internal sealed class GetProviderStoreByIdQueryHandler : IQueryHandler<GetProvid
     private readonly IProfileRepository _profileRepository;
 
     public GetProviderStoreByIdQueryHandler(
-        IProfileManager profileManager, 
-        IStoreService storeService, 
+        IProfileManager profileManager,
+        IStoreService storeService,
         IProfileRepository profileRepository)
     {
         _profileManager = profileManager;
@@ -29,12 +28,11 @@ internal sealed class GetProviderStoreByIdQueryHandler : IQueryHandler<GetProvid
 
     public async Task<ErrorOr<Store>> Handle(GetProviderStoreByIdQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var providerId = ProfileId.Create(request.ProviderId);
         var storeId = StoreId.Create(request.StoreId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

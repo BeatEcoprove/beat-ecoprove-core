@@ -2,7 +2,6 @@ using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
@@ -29,11 +28,10 @@ internal sealed class GetBucketsClothQueryHandler : IQueryHandler<GetBucketsClot
     public async Task<ErrorOr<List<BucketResult>>> Handle(GetBucketsClothQuery request, CancellationToken cancellationToken)
     {
         List<BucketResult> bucketResults = new();
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var clothId = ClothId.Create(request.ClothId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

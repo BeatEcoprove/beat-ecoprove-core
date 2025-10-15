@@ -32,7 +32,7 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
 
     public async Task<ErrorOr<BucketResult>> Handle(CreateBucketCommand request, CancellationToken cancellationToken)
     {
-        var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {

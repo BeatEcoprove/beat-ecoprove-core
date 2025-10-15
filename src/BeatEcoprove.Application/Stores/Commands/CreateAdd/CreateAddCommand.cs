@@ -1,5 +1,4 @@
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Domain.AdvertisementAggregator;
 
 using ErrorOr;
@@ -8,7 +7,6 @@ namespace BeatEcoprove.Application.Stores.Commands.CreateAdd;
 
 public record CreateAddCommand
 (
-    Guid AuthId,
     Guid ProfileId,
     Guid StoreId,
     string Title,
@@ -18,4 +16,4 @@ public record CreateAddCommand
     Stream Picture,
     string Type,
     int Quantity = 0
-) : IAuthorization, ICommand<ErrorOr<Advertisement>>;
+) : ICommand<ErrorOr<Advertisement>>;

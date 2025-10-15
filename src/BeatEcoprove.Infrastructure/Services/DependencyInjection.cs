@@ -10,12 +10,9 @@ public static class DependencyInjection
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<IValidationFieldService, ValidationService>();
-        services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
         services.AddScoped<IProfileManager, ProfileManager>();
-        services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IClosetService, ClosetService>();
         services.AddScoped<IGamingService, GamingService>();
-        services.AddScoped<IGroupService, GroupService>();
         services.AddScoped<IStoreService, StoreService>();
         services.AddScoped<IAdvertisementService, AdvertisementService>();
 

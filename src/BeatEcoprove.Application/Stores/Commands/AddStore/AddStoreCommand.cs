@@ -1,5 +1,4 @@
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Domain.StoreAggregator;
 
 using ErrorOr;
@@ -8,7 +7,6 @@ namespace BeatEcoprove.Application.Stores.Commands.AddStore;
 
 public record AddStoreCommand
 (
-    Guid AuthId,
     Guid ProfileId,
     string Name,
     string Country,
@@ -19,4 +17,4 @@ public record AddStoreCommand
     double Lat,
     double Lon,
     Stream Picture
-) : IAuthorization, ICommand<ErrorOr<Store>>;
+) : ICommand<ErrorOr<Store>>;

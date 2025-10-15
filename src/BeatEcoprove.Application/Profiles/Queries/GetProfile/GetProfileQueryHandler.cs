@@ -1,7 +1,6 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -23,7 +22,6 @@ internal sealed class GetProfileQueryHandler : IQueryHandler<GetProfileQuery, Er
 
     public async Task<ErrorOr<Profile>> Handle(GetProfileQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var username = UserName.Create(request.username);
 
@@ -32,7 +30,7 @@ internal sealed class GetProfileQueryHandler : IQueryHandler<GetProfileQuery, Er
             return username.Errors;
         }
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

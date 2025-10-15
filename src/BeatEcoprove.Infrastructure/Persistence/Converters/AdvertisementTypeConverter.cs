@@ -1,6 +1,4 @@
 ﻿using BeatEcoprove.Domain.AdvertisementAggregator.Enumerators;
-using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
-using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 

@@ -2,7 +2,6 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -32,13 +31,12 @@ internal sealed class RegisterOrderCommandHandler : ICommandHandler<RegisterOrde
 
     public async Task<ErrorOr<OrderDAO>> Handle(RegisterOrderCommand request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
         var clothId = ClothId.Create(request.ClothId);
         var ownerId = ProfileId.Create(request.OwnerId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -65,7 +63,7 @@ internal sealed class RegisterOrderCommandHandler : ICommandHandler<RegisterOrde
         {
             return order.Errors;
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var orderDao = await _storeRepository.GetOrderDaoAsync(order.Value.Id, cancellationToken);

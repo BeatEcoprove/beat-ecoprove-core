@@ -1,5 +1,4 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Models;
+﻿using BeatEcoprove.Domain.Shared.Models;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -37,14 +36,14 @@ public class SoftDeleteInterceptor : SaveChangesInterceptor
         foreach (var entry in deletedEntities)
         {
             if (entry is not { State: EntityState.Deleted }) continue;
-           
+
             entry.State = EntityState.Modified;
-            
+
             if (entry.Entity is ValueObject)
             {
                 continue;
-            }            
-            
+            }
+
             entry.Property("DeletedAt").CurrentValue = DateTimeOffset.UtcNow;
         }
     }

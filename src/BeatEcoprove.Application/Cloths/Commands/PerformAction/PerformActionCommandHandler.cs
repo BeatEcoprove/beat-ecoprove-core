@@ -3,7 +3,6 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -37,13 +36,12 @@ internal sealed class PerformActionCommandHandler : ICommandHandler<PerformActio
 
     public async Task<ErrorOr<ClothResult>> Handle(PerformActionCommand request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var clothId = ClothId.Create(request.ClothId);
         var serviceId = MaintenanceServiceId.Create(request.ServiceId);
         var actionId = MaintenanceActionId.Create(request.ActionId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

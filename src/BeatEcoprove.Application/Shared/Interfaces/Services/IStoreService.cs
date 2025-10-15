@@ -1,10 +1,8 @@
 using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
-using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
-using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
@@ -29,11 +27,11 @@ public interface IStoreService
         Profile profile,
         GetOwningStoreInput input,
         CancellationToken cancellationToken = default);
-    
-     Task<ErrorOr<Store>> GetStoreAsync(
-            StoreId id,
-            Profile profile,
-            CancellationToken cancellationToken = default);
+
+    Task<ErrorOr<Store>> GetStoreAsync(
+           StoreId id,
+           Profile profile,
+           CancellationToken cancellationToken = default);
     Task<ErrorOr<Store>> CreateStoreAsync(
         Store store,
         Profile profile,
@@ -44,13 +42,13 @@ public interface IStoreService
         Profile profile,
         CancellationToken cancellationToken = default);
     Task<ErrorOr<Order>> RegisterOrderAsync(
-        Store store, 
-        ProfileId owner, 
+        Store store,
+        ProfileId owner,
         ClothId clothId,
         CancellationToken cancellationToken = default);
     Task<ErrorOr<Order>> CompleteOrderAsync(
-        Store store, 
-        OrderId order, 
+        Store store,
+        OrderId order,
         ProfileId owner,
         CancellationToken cancellationToken = default);
     Task<ErrorOr<(Worker, Password)>> RegisterWorkerAsync(

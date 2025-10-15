@@ -26,7 +26,7 @@ public static class DependencyInjection
                     events.AddEventSources("Microsoft-AspNetCore-Server-Kestrel");
                     events.AddEventSources("System-Net-Http");
                 });
-                
+
                 metrics.AddPrometheusExporter();
             });
 
@@ -52,7 +52,6 @@ public static class DependencyInjection
     private static IServiceCollection AddMiddlewares(this IServiceCollection services)
     {
         services.AddTransient<ProfileCheckerMiddleware>();
-        services.AddTransient<WebSocketsMiddleware>();
 
         return services;
     }

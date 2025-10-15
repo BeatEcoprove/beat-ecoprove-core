@@ -5,11 +5,10 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
-using BeatEcoprove.Domain.Shared.Extensions;
 
 using ErrorOr;
 
@@ -18,20 +17,17 @@ namespace BeatEcoprove.Application.Profiles.Commands.CreateNestedProfile;
 internal sealed class CreateNestedProfileCommandHandler : ICommandHandler<CreateNestedProfileCommand, ErrorOr<Profile>>
 {
     private readonly IProfileManager _profileManager;
-    private readonly IAccountService _accountService;
     private readonly IProfileRepository _profileRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IFileStorageProvider _fileStorageProvider;
 
     public CreateNestedProfileCommandHandler(
         IProfileManager profileManager,
-        IAccountService accountService,
         IProfileRepository profileRepository,
         IUnitOfWork unitOfWork,
         IFileStorageProvider fileStorageProvider)
     {
         _profileManager = profileManager;
-        _accountService = accountService;
         _profileRepository = profileRepository;
         _unitOfWork = unitOfWork;
         _fileStorageProvider = fileStorageProvider;
@@ -39,17 +35,16 @@ internal sealed class CreateNestedProfileCommandHandler : ICommandHandler<Create
 
     public async Task<ErrorOr<Profile>> Handle(CreateNestedProfileCommand request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
-
         // Validate request
         var userName = UserName.Create(request.UserName.Capitalize());
-        var gender = _accountService.GetGender(request.Gender);
-
-        var shouldBeValid = userName.AddValidate(gender);
-
-        if (shouldBeValid.IsError)
+        if (!Enum.TryParse<Gender>(request.Gender, out var gender))
         {
-            return shouldBeValid.Errors;
+            return Errors.User.InvalidUserGender;
+        }
+
+        if (userName.IsError)
+        {
+            return userName.Errors;
         }
 
         if (await _profileRepository.ExistsUserByUserNameAsync(userName.Value, cancellationToken))
@@ -58,7 +53,7 @@ internal sealed class CreateNestedProfileCommandHandler : ICommandHandler<Create
         }
 
         // Get Main Profile and check profile
-        var profile = await _profileManager.GetProfileAsync(authId, Guid.Empty, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.AuthId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -72,11 +67,11 @@ internal sealed class CreateNestedProfileCommandHandler : ICommandHandler<Create
             userName.Value,
             phone.Value,
             request.BornDate,
-            gender.Value
+            gender
         );
 
         // Add Nested Profile to Main Profile
-        nestedProfile.SetAuthPointer(profile.Value.AuthId);
+        nestedProfile.SetAuthId(profile.Value.AuthId);
 
         // Set avatar and store it on database
         var avatarUrl =

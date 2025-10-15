@@ -16,16 +16,7 @@ public class NotificationMappingConfiguration : IRegister
                     src.Type
                 ));
 
-        config.NewConfig<InviteNotification, InviteNotificationResponse>()
-            .MapWith(src => new InviteNotificationResponse
-                (
-                    src.Title,
-                    src.GroupId,
-                    src.GroupName,
-                    src.InvitorId,
-                    src.Code,
-                    src.Type
-                ));
+        // Removido: Mapeamento de InviteNotification pois agora é gerenciado pelo microserviço de grupos
 
         config.NewConfig<LeveUpNotification, LevelUpNotificationResponse>()
             .MapWith(src => new LevelUpNotificationResponse

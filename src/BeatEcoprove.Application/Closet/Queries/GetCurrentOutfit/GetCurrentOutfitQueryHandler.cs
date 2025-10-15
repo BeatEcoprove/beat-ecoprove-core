@@ -26,7 +26,7 @@ internal sealed class GetCurrentOutfitQueryHandler : IQueryHandler<GetCurrentOut
 
     public async Task<ErrorOr<BucketResult>> Handle(GetCurrentOutfitQuery request, CancellationToken cancellationToken)
     {
-        var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {

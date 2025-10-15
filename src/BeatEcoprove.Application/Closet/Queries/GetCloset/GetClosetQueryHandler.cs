@@ -4,7 +4,6 @@ using BeatEcoprove.Application.Shared.Extensions;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -80,7 +79,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
             _ => Errors.Filters.Order,
         };
     }
-   
+
     private async Task<ErrorOr<List<Guid>>> GetClothId(string hexs, CancellationToken cancellationToken = default)
     {
         List<Guid> colorIds = new();
@@ -125,7 +124,6 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         ErrorOr<List<Guid>>? colorId = null;
         ErrorOr<List<Guid>>? brandId = null;
 
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var size = request.Size is null ? null : GetSize(request.Size);
         var categories = request.Categories is null ? null : GetCategory(request.Categories);
@@ -143,7 +141,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         {
             result = categories.Value.Errors;
         }
-        
+
         if (request.Color != null)
         {
             colorId = await GetClothId(request.Color, cancellationToken);
@@ -169,7 +167,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
             return result.Errors;
         }
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -177,7 +175,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         }
 
         var nestedProfiles = await
-            _profileManager.GetNestedProfileIds(authId, profile.Value.Id, cancellationToken);
+            _profileManager.GetNestedProfileIds(profile.Value.Id, cancellationToken);
 
         if (nestedProfiles.IsError)
         {

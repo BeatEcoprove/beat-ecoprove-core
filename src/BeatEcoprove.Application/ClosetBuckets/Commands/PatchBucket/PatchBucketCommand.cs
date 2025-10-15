@@ -1,5 +1,4 @@
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Domain.ClosetAggregator;
 
 using ErrorOr;
@@ -12,4 +11,4 @@ public record PatchBucketCommand
     Guid ProfileId,
     Guid BucketId,
     string Name
-) : ICommand<ErrorOr<Bucket>>, IAuthorization;
+) : ICommand<ErrorOr<Bucket>>;

@@ -1,8 +1,6 @@
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
@@ -25,10 +23,9 @@ internal sealed class GetAllStandardProvidersQueryHandler : IQueryHandler<GetAll
 
     public async Task<ErrorOr<List<Organization>>> Handle(GetAllStandardProvidersQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

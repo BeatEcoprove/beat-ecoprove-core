@@ -1,6 +1,5 @@
 using BeatEcoprove.Contracts.Closet.Bucket;
 using BeatEcoprove.Contracts.Profile;
-using BeatEcoprove.Contracts.Services;
 
 using ClothResponse = BeatEcoprove.Contracts.Closet.Cloth.ClothResponse;
 
@@ -9,9 +8,9 @@ namespace BeatEcoprove.Contracts.Store;
 public class OrderClothResponse : OrderResponse
 {
     public OrderClothResponse(
-        Guid id, 
-        ProfileClosetResponse owner, 
-        List<MaintenanceOrderResponse> services, 
+        Guid id,
+        ProfileClosetResponse owner,
+        List<MaintenanceOrderResponse> services,
         string orderType,
         ClothResponse cloth) : base(id, owner, services, orderType)
     {
@@ -24,9 +23,9 @@ public class OrderClothResponse : OrderResponse
 public class OrderBucketResponse : OrderResponse
 {
     public OrderBucketResponse(
-        Guid id, 
-        ProfileClosetResponse owner, 
-        List<MaintenanceOrderResponse> services, 
+        Guid id,
+        ProfileClosetResponse owner,
+        List<MaintenanceOrderResponse> services,
         string orderType,
         BucketResponse bucket) : base(id, owner, services, orderType)
     {
@@ -39,9 +38,9 @@ public class OrderBucketResponse : OrderResponse
 public class OrderResponse
 {
     public OrderResponse(
-        Guid id, 
-        ProfileClosetResponse owner, 
-        List<MaintenanceOrderResponse> services, 
+        Guid id,
+        ProfileClosetResponse owner,
+        List<MaintenanceOrderResponse> services,
         string orderType)
     {
         Id = id;

@@ -1,7 +1,7 @@
 using BeatEcoprove.Domain.Shared.Models;
-using BeatEcoprove.Domain.StoreAggregator.Entities;
 
 namespace BeatEcoprove.Domain.StoreAggregator.Enumerators;
+
 public class ServiceProviderType : Enumeration<ServiceProviderType>
 {
     public static readonly ServiceProviderType Store = new(0, typeof(Store));

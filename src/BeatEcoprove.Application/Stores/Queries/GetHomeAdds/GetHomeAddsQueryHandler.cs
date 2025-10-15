@@ -2,7 +2,6 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AdvertisementAggregator;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 using ErrorOr;
@@ -15,7 +14,7 @@ internal sealed class GetHomeAddsQueryHandler : IQueryHandler<GetHomeAddsQuery, 
     private readonly IAdvertisementRepository _advertisementRepository;
 
     public GetHomeAddsQueryHandler(
-        IProfileManager profileManager, 
+        IProfileManager profileManager,
         IAdvertisementRepository advertisementRepository)
     {
         _profileManager = profileManager;
@@ -24,21 +23,20 @@ internal sealed class GetHomeAddsQueryHandler : IQueryHandler<GetHomeAddsQuery, 
 
     public async Task<ErrorOr<List<Advertisement>>> Handle(GetHomeAddsQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
-        
+
         var adds = await _advertisementRepository.GetAllHomeAdds(
             search: request.Search,
             page: request.Page,
             pageSize: request.PageSize,
-            cancellationToken:  cancellationToken
+            cancellationToken: cancellationToken
         );
 
         return adds;

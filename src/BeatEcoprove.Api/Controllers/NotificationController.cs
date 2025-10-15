@@ -42,9 +42,7 @@ public class NotificationController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var getNotifications = await _sender.Send(
-            new GetNotificationQuery(
-                authId,
-                profileId),
+            new GetNotificationQuery(profileId),
             cancellationToken
         );
 
@@ -61,7 +59,6 @@ public class NotificationController : ApiController
             {
                 object response = notification switch
                 {
-                    InviteNotification inviteNotification => _mapper.Map<InviteNotificationResponse>(inviteNotification),
                     LeveUpNotification levelUpNotification => _mapper.Map<LevelUpNotificationResponse>(levelUpNotification),
                     Notification genericNotification => _mapper.Map<NotificationResponse>(genericNotification),
                     _ => throw new ArgumentException("Unsupported notification type"),

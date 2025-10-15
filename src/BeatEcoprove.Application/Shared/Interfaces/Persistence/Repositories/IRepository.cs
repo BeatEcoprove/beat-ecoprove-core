@@ -1,5 +1,4 @@
-﻿using BeatEcoprove.Domain.AdvertisementAggregator;
-using BeatEcoprove.Domain.Shared.Models;
+﻿using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 

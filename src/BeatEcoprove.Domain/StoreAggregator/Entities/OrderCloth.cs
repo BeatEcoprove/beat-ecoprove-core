@@ -1,4 +1,3 @@
-using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
@@ -9,10 +8,10 @@ namespace BeatEcoprove.Domain.StoreAggregator.Entities;
 public sealed class OrderCloth : Order
 {
     private OrderCloth() { }
-    
+
     private OrderCloth(
-        StoreId store, 
-        ProfileId owner, 
+        StoreId store,
+        ProfileId owner,
         ClothId cloth,
         List<MaintenanceServiceId> services) : base(store, owner, services)
     {
@@ -29,6 +28,6 @@ public sealed class OrderCloth : Order
     }
 
     public ClothId Cloth { get; private set; } = null!;
-    
+
     public override OrderType Type => OrderType.Cloth;
 }

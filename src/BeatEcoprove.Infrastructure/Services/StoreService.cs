@@ -11,7 +11,6 @@ using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
-using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
@@ -22,15 +21,13 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BeatEcoprove.Infrastructure.Services;
 
-public class StoreService : IStoreService
+public partial class StoreService : IStoreService
 {
     private readonly IStoreRepository _storeRepository;
     private readonly IFileStorageProvider _fileStorageProvider;
     private readonly IProfileRepository _profileRepository;
     private readonly IMaintenanceServiceRepository _maintenanceServiceRepository;
     private readonly IPasswordGenerator _passwordGenerator;
-    private readonly IAccountService _accountService;
-    private readonly IAuthRepository _authRepository;
     private readonly IClosetService _closetService;
 
     public StoreService(
@@ -39,40 +36,37 @@ public class StoreService : IStoreService
         IProfileRepository profileRepository,
         IMaintenanceServiceRepository maintenanceServiceRepository,
         IPasswordGenerator passwordGenerator,
-        IAccountService accountService, 
-        IAuthRepository authRepository, IClosetService closetService)
+        IClosetService closetService)
     {
         _storeRepository = storeRepository;
         _fileStorageProvider = fileStorageProvider;
         _profileRepository = profileRepository;
         _maintenanceServiceRepository = maintenanceServiceRepository;
         _passwordGenerator = passwordGenerator;
-        _accountService = accountService;
-        _authRepository = authRepository;
         _closetService = closetService;
     }
 
     public async Task GivePointsTo(
-        Store store, 
-        Profile owner, 
-        int sustainablePoints, 
+        Store store,
+        Profile owner,
+        int sustainablePoints,
         CancellationToken cancellationToken = default)
     {
-         if (owner is Organization organization)
-         {
-             owner.SustainabilityPoints += sustainablePoints;
-         }
-        
-         store.SustainablePoints += sustainablePoints;
-        
-         var workerProfileIds = store.Workers
-             .Select(worker => worker.Profile)
-             .ToList();
+        if (owner is Organization organization)
+        {
+            owner.SustainabilityPoints += sustainablePoints;
+        }
 
-         await _profileRepository.UpdateWorkerProfileSustainablePoints(
-             workerProfileIds,
-             store.SustainablePoints,
-             cancellationToken);
+        store.SustainablePoints += sustainablePoints;
+
+        var workerProfileIds = store.Workers
+            .Select(worker => worker.Profile)
+            .ToList();
+
+        await _profileRepository.UpdateWorkerProfileSustainablePoints(
+            workerProfileIds,
+            store.SustainablePoints,
+            cancellationToken);
     }
 
     public async Task<List<Order>> GetAllStoresAsync(ProfileId owner, GetAllStoreInput input,
@@ -111,12 +105,12 @@ public class StoreService : IStoreService
     }
 
     public async Task<ErrorOr<Store>> GetStoreAsync(
-        StoreId id, 
+        StoreId id,
         Profile profile,
         CancellationToken cancellationToken = default)
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
-        
+
         if (!await _storeRepository.HasAccessToStore(id, profile, isEmployee, cancellationToken))
         {
             return Errors.Store.DontHaveAccessToStore;
@@ -226,9 +220,9 @@ public class StoreService : IStoreService
     }
 
     public async Task<ErrorOr<Order>> CompleteOrderAsync(
-        Store store, 
-        OrderId orderId, 
-        ProfileId ownerId, 
+        Store store,
+        OrderId orderId,
+        ProfileId ownerId,
         CancellationToken cancellationToken = default)
     {
         var order = store
@@ -245,7 +239,7 @@ public class StoreService : IStoreService
         {
             return Errors.Order.IsAlreadyCompleted;
         }
-        
+
         var owner = await _profileRepository.GetByIdAsync(ownerId, cancellationToken);
 
         if (owner is null)
@@ -315,7 +309,7 @@ public class StoreService : IStoreService
             profile.Phone.Clone()
         );
 
-        var account = await _accountService.CreateAccount(
+        var account = await CreateAccount(
             input.Email,
             password,
             employee,
@@ -353,8 +347,8 @@ public class StoreService : IStoreService
             {
                 return Errors.Store.DontHaveAccessToStore;
             }
-        }        
-        
+        }
+
         var worker = await _storeRepository.GetWorkerAsync(workerId, cancellationToken);
 
         if (worker is null)
@@ -369,7 +363,7 @@ public class StoreService : IStoreService
             return Errors.Profile.NotFound;
         }
 
-        await _authRepository.RemoveAuthProfileAsync(workerProfile, cancellationToken);
+        await _profileRepository.DeleteAsync(workerProfile.Id, cancellationToken);
         await _storeRepository.RemoveWorkerAsync(worker.Id, cancellationToken);
 
         return worker;
@@ -379,7 +373,7 @@ public class StoreService : IStoreService
         CancellationToken cancellationToken = default)
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
-        
+
         if (!await _storeRepository.HasAccessToStore(store.Id, profile, isEmployee, cancellationToken))
         {
             return Errors.Store.DontHaveAccessToStore;
@@ -395,7 +389,7 @@ public class StoreService : IStoreService
         if (isEmployee)
         {
             var foundWorker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
-            
+
             if (foundWorker is null)
             {
                 return Errors.Worker.NotFound;

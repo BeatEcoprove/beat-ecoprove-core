@@ -36,14 +36,6 @@ public static class ApplicationConfiguration
         return app;
     }
 
-    private static IApplicationBuilder AddWebSockets(this IApplicationBuilder app)
-    {
-        app.UseWebSockets();
-        app.UseMiddleware<WebSocketsMiddleware>();
-
-        return app;
-    }
-
     private static IApplicationBuilder AddMultiLanguageSupport(this IApplicationBuilder app)
     {
         var supportedCultures = Language.GetSupportedLanguages();
@@ -81,13 +73,12 @@ public static class ApplicationConfiguration
 
         app.UsePathBase("/api");
         app.MapControllers();
-        
+
         app.UseAuthorization();
-        
+
         app.AddCustomMiddlewares();
 
         app.AddLocalFileStorage();
-        app.AddWebSockets();
 
         return app;
     }

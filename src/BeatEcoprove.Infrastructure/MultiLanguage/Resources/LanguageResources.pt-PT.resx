@@ -327,9 +327,7 @@
     <data name="Profile.NotFound" xml:space="preserve">
         <value>Não foi possível encontrar o perfil.</value>
     </data>
-    <data name="Token.InvalidRefreshToken" xml:space="preserve">
-        <value>O token de atualização é inválido.</value>
-    </data>
+
     <data name="User.ProfileDoesNotBelongToAuth" xml:space="preserve">
         <value>Este utilizador não tem acesso ao perfil escolhido.</value>
     </data>

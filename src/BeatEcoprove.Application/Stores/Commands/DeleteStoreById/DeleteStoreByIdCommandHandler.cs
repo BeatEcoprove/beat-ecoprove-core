@@ -2,7 +2,6 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
@@ -19,9 +18,9 @@ internal sealed class DeleteStoreByIdCommandHandler : ICommandHandler<DeleteStor
     private readonly IUnitOfWork _unitOfWork;
 
     public DeleteStoreByIdCommandHandler(
-        IProfileManager profileManager, 
-        IStoreService storeService, 
-        IStoreRepository storeRepository, 
+        IProfileManager profileManager,
+        IStoreService storeService,
+        IStoreRepository storeRepository,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -32,11 +31,10 @@ internal sealed class DeleteStoreByIdCommandHandler : ICommandHandler<DeleteStor
 
     public async Task<ErrorOr<Store>> Handle(DeleteStoreByIdCommand request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

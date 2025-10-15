@@ -1,6 +1,5 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 
 using ErrorOr;
 
@@ -10,4 +9,4 @@ public record GetCurrentOutfitQuery
 (
     Guid AuthId,
     Guid ProfileId
-) : IQuery<ErrorOr<BucketResult>>, IAuthorization;
+) : IQuery<ErrorOr<BucketResult>>;

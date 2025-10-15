@@ -1,4 +1,4 @@
-﻿using BeatEcoprove.Contracts.Authentication.SignIn;
+﻿using BeatEcoprove.Contracts.Common;
 
 using Microsoft.AspNetCore.Http;
 

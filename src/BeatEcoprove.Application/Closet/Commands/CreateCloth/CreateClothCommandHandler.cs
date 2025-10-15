@@ -38,7 +38,7 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
         CreateClothCommand request,
         CancellationToken cancellationToken)
     {
-        var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {

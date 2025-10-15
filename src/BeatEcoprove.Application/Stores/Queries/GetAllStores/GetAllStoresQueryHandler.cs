@@ -2,10 +2,8 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
-using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
 
 using ErrorOr;
@@ -47,8 +45,8 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
         }
 
         return serviceIds;
-    }    
-    
+    }
+
     private async Task<ErrorOr<List<Guid>>> GetBrandId(string brands, CancellationToken cancellationToken = default)
     {
         List<Guid> brandIds = new();
@@ -66,9 +64,9 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
         }
 
         return brandIds;
-    }    
-    
-    
+    }
+
+
     private async Task<ErrorOr<List<Guid>>> GetClothId(string hexs, CancellationToken cancellationToken = default)
     {
         List<Guid> colorIds = new();
@@ -97,8 +95,8 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
 
         return true;
     }
-    
-    
+
+
     private ErrorOr<string>? GetOrderBy(string orderBy)
     {
         return orderBy switch
@@ -115,12 +113,11 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
         ErrorOr<List<Guid>>? colorId = null;
         ErrorOr<List<Guid>>? brandId = null;
         ErrorOr<List<Guid>>? serviceId = null;
-        
-        var authId = AuthId.Create(request.AuthId);
+
         var profileId = ProfileId.Create(request.ProfileId);
         var order = request.OrderBy is null ? null : GetOrderBy(request.OrderBy);
         var result = ValidateParams(order);
-        
+
         if (request.Color != null)
         {
             colorId = await GetClothId(request.Color, cancellationToken);
@@ -130,7 +127,7 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
                 result = colorId.Value.Errors;
             }
         }
-        
+
         if (request.Services != null)
         {
             serviceId = await GetServiceId(request.Services, cancellationToken);
@@ -140,7 +137,7 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
                 result = serviceId.Value.Errors;
             }
         }
-        
+
         if (request.Brand != null)
         {
             brandId = await GetBrandId(request.Brand, cancellationToken);
@@ -155,14 +152,14 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
         {
             return result.Errors;
         }
-        
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
-        
+
         var stores = await _storeService.GetAllStoresAsync(
             profile.Value.Id,
             new GetAllStoreInput(

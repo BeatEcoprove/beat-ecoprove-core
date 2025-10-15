@@ -1,7 +1,6 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 
 using ErrorOr;
@@ -23,17 +22,19 @@ internal sealed class GetMyProfilesQueryHandler : IQueryHandler<GetMyProfilesQue
 
     public async Task<ErrorOr<List<ProfileDao>>> Handle(GetMyProfilesQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
-
-        var profile = await _profileManager.GetProfileAsync(authId, Guid.Empty, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(Guid.Empty, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
 
-        var profileList = await _profileRepository.GetAllProfilesOfAuthIdAsync(authId, cancellationToken);
+        var profileList = await _profileRepository.GetAllProfilesAsync(
+            null, // No search filter
+            1,    // First page
+            100,  // Maximum profiles to return
+            cancellationToken);
 
-        return profileList;
+        return profileList.ConvertAll(p => p.ToDao());
     }
 }

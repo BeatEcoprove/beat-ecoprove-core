@@ -1,6 +1,5 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
@@ -14,7 +13,7 @@ internal sealed class GetProviderByIdQueryHandler : IQueryHandler<GetProviderByI
     private readonly IProviderService _providerService;
 
     public GetProviderByIdQueryHandler(
-        IProfileManager profileManager, 
+        IProfileManager profileManager,
         IProviderService providerService)
     {
         _profileManager = profileManager;
@@ -23,11 +22,10 @@ internal sealed class GetProviderByIdQueryHandler : IQueryHandler<GetProviderByI
 
     public async Task<ErrorOr<ProviderDao>> Handle(GetProviderByIdQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var providerId = ProfileId.Create(request.ProviderId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

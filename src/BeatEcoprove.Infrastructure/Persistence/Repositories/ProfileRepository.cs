@@ -1,5 +1,4 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
@@ -10,7 +9,6 @@ using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.StoreAggregator;
-using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 
 using Microsoft.EntityFrameworkCore;
@@ -23,11 +21,18 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
     {
     }
 
-    public async Task<bool> DisableSubProfiles(AuthId authId, CancellationToken cancellationToken = default)
+    public async Task<bool> DisableSubProfiles(ProfileId profileId, CancellationToken cancellationToken = default)
     {
-        var getAllSubProfiles = from profile in DbContext.Set<Profile>()
-            where profile.AuthId == authId
-            select profile;
+        var profile = await DbContext.Profiles.FindAsync(new object[] { profileId }, cancellationToken: cancellationToken);
+
+        if (profile is null)
+        {
+            return false;
+        }
+
+        var getAllSubProfiles = from p in DbContext.Set<Profile>()
+                                where p.AuthId == profile.AuthId
+                                select p;
 
         var subProfiles = await getAllSubProfiles.ToListAsync(cancellationToken);
 
@@ -35,10 +40,10 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         {
             return false;
         }
-        
-        foreach (var profile in subProfiles)
+
+        foreach (var subProfile in subProfiles)
         {
-            DbContext.Profiles.Remove(profile);
+            DbContext.Profiles.Remove(subProfile);
         }
 
         return true;
@@ -47,48 +52,49 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
     public async Task<ProviderDao?> GetOrganizationAsync(ProfileId organizationId, CancellationToken cancellationToken = default)
     {
         var getOrganization = from profile in DbContext.Set<Profile>()
-            let organization = profile as Organization
-            where 
-                organization != null && profile.Type.Equals(UserType.Organization)
-            let totalRating = (
-                from store in DbContext.Set<Store>()
-                where 
-                    store.Owner == organization.Id
-                    group store by store.Owner into storeGroup
-                    select new {
-                        TotalRating = storeGroup.Sum(s => s.Ratings.Sum(r => r.Rate)),
-                        TotalItems = storeGroup.Count()
-                    }
-            ).FirstOrDefault()
-            select new ProviderDao(
-                organization.Id,
-                organization.UserName,
-                organization.AvatarUrl,
-                organization.TypeOption,
-                new(),
-                totalRating != null ? totalRating.TotalItems / totalRating.TotalItems : 0
-            );
+                              let organization = profile as Organization
+                              where
+                                  organization != null && profile.Type.Equals(UserType.Organization)
+                              let totalRating = (
+                                  from store in DbContext.Set<Store>()
+                                  where
+                                      store.Owner == organization.Id
+                                  group store by store.Owner into storeGroup
+                                  select new
+                                  {
+                                      TotalRating = storeGroup.Sum(s => s.Ratings.Sum(r => r.Rate)),
+                                      TotalItems = storeGroup.Count()
+                                  }
+                              ).FirstOrDefault()
+                              select new ProviderDao(
+                                  organization.Id,
+                                  organization.UserName,
+                                  organization.AvatarUrl,
+                                  organization.TypeOption,
+                                  new(),
+                                  totalRating != null ? totalRating.TotalItems / totalRating.TotalItems : 0
+                              );
 
         return await getOrganization.FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<List<Organization>> GetAllOrganizationsAsync(
-        string? search = null, 
-        int page = 1, 
+        string? search = null,
+        int page = 1,
         int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
         var getAllOrganizations = from profile in DbContext.Set<Profile>()
-            let organization = profile as Organization
-            where
-                profile.Type.Equals(UserType.Organization) && organization != null &&
-                (search == null || ((string)profile.UserName).ToLower().Contains(search.ToLower()))
-            select organization;
-        
-         getAllOrganizations = getAllOrganizations
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize);
- 
+                                  let organization = profile as Organization
+                                  where
+                                      profile.Type.Equals(UserType.Organization) && organization != null &&
+                                      (search == null || ((string)profile.UserName).ToLower().Contains(search.ToLower()))
+                                  select organization;
+
+        getAllOrganizations = getAllOrganizations
+           .Skip((page - 1) * pageSize)
+           .Take(pageSize);
+
         return await getAllOrganizations.ToListAsync(cancellationToken);
     }
 
@@ -192,13 +198,13 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
     }
 
     public async Task UpdateWorkerProfileSustainablePoints(
-        List<ProfileId> workerProfileIds, 
+        List<ProfileId> workerProfileIds,
         int valueSustainablePoints,
         CancellationToken cancellationToken = default)
     {
         var getWorkers = from profile in DbContext.Set<Profile>()
-            where profile.Type.Equals(UserType.Employee) && workerProfileIds.Contains(profile.Id)
-            select profile;
+                         where profile.Type.Equals(UserType.Employee) && workerProfileIds.Contains(profile.Id)
+                         select profile;
 
         var workers = await getWorkers.ToListAsync(cancellationToken);
         workers.ForEach(worker =>
@@ -207,15 +213,21 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         });
     }
 
-    public Task<List<ProfileId>> GetNestedProfileIds(AuthId authId, CancellationToken cancellationToken)
+    public async Task<List<ProfileId>> GetNestedProfileIds(ProfileId profileId, CancellationToken cancellationToken)
     {
-        var getNestedProfileIds =
-            from auth in DbContext.Auths
-            join profile in DbContext.Profiles on auth.Id equals profile.AuthId
-            where auth.Id == authId
-            select profile.Id;
+        var profile = await DbContext.Profiles.FindAsync(new object[] { profileId }, cancellationToken: cancellationToken);
 
-        return getNestedProfileIds.ToListAsync(cancellationToken);
+        if (profile is null)
+        {
+            return new List<ProfileId>();
+        }
+
+        var getNestedProfileIds =
+            from p in DbContext.Profiles
+            where p.AuthId == profile.AuthId
+            select p.Id;
+
+        return await getNestedProfileIds.ToListAsync(cancellationToken);
     }
 
     public async Task<List<Bucket>> GetBucketCloth(
@@ -240,43 +252,59 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         return await getAllBuckets.ToListAsync(cancellationToken);
     }
 
-    public Task<bool> CanProfileAccessBucket(ProfileId profileId, BucketId bucketId, CancellationToken cancellationToken = default)
+    public async Task<bool> CanProfileAccessBucket(ProfileId profileId, BucketId bucketId, CancellationToken cancellationToken = default)
     {
+        var profile = await DbContext.Profiles.FindAsync(new object[] { profileId }, cancellationToken: cancellationToken);
+
+        if (profile == null)
+        {
+            return false;
+        }
+
         var canAccessBucket =
-            from profile in DbContext.Profiles
-            from bucketEntry in profile.BucketEntries
-            join auth in DbContext.Auths on profile.AuthId equals auth.Id
+            from p in DbContext.Profiles
+            from bucketEntry in p.BucketEntries
             where
-                (bucketEntry.BucketId == bucketId && profile.Id == profileId)
-                || (auth.MainProfileId == profileId)
+                p.AuthId == profile.AuthId &&
+                bucketEntry.BucketId == bucketId
             select bucketEntry;
 
-        return canAccessBucket.AnyAsync(cancellationToken);
+        return await canAccessBucket.AnyAsync(cancellationToken);
     }
 
-    public Task<bool> CanProfileAccessCloth(ProfileId profileId, ClothId clothId, CancellationToken cancellationToken = default)
+    public async Task<bool> CanProfileAccessCloth(ProfileId profileId, ClothId clothId, CancellationToken cancellationToken = default)
     {
+        var profile = await DbContext.Profiles.FindAsync(new object[] { profileId }, cancellationToken: cancellationToken);
+
+        if (profile == null)
+        {
+            return false;
+        }
+
         var canAccessCloth =
-            from profile in DbContext.Profiles
-            from clothEntry in profile.ClothEntries
-            join auth in DbContext.Auths on profile.AuthId equals auth.Id
+            from p in DbContext.Profiles
+            from clothEntry in p.ClothEntries
             where
-                (clothEntry.ClothId == clothId && profile.Id == profileId)
-                || (auth.MainProfileId == profileId)
+                p.AuthId == profile.AuthId &&
+                clothEntry.ClothId == clothId
             select clothEntry;
 
-        return canAccessCloth.AnyAsync(cancellationToken);
+        return await canAccessCloth.AnyAsync(cancellationToken);
     }
 
     public Task<List<ProfileDao>> GetAllProfilesOfAuthIdAsync(AuthId authId, CancellationToken cancellationToken)
     {
+        // TODO: How to determine main profile?
         var profiles =
-            from auth in DbContext.Auths
-            join profile in DbContext.Profiles on auth.Id equals profile.AuthId
-            where auth.Id == authId
+            from profile in DbContext.Profiles
+            where profile.AuthId == authId
             select new ProfileDao(
-                profile,
-                auth.MainProfileId == profile.Id
+                profile.Id.Value,
+                profile.AuthId.Value,
+                (string)profile.UserName,
+                profile.AvatarUrl,
+                profile.Type.ToString()!,
+                false
             );
 
         return profiles.ToListAsync(cancellationToken);

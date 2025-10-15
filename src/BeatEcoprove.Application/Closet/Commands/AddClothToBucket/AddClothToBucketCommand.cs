@@ -1,6 +1,5 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 
 using ErrorOr;
 
@@ -12,4 +11,4 @@ public record AddClothToBucketCommand
     Guid ProfileId,
     Guid BucketId,
     List<Guid> ClothToAdd
-) : ICommand<ErrorOr<BucketResult>>, IAuthorization;
+) : ICommand<ErrorOr<BucketResult>>;

@@ -26,29 +26,5 @@ public class NotificationRepository : DocumentRepository<Notification, MessageId
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<InviteNotification?> GetNotificationByInviteId(string code, CancellationToken cancellationToken = default)
-    {
-        var filter = Builders<Notification>
-            .Filter
-            .Eq("code", code);
-
-        var result = await Collection
-            .Find(filter)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        return result as InviteNotification;
-    }
-
-    public async Task<bool> ThereIsAnyInviteForUserOnGroup(Domain.GroupAggregator.ValueObjects.GroupId groupId, ProfileId owner, CancellationToken cancellationToken = default)
-    {
-        var filter = Builders<Notification>.Filter
-            .And(
-                Builders<Notification>.Filter.Eq("group_id", groupId),
-                Builders<Notification>.Filter.Eq("owner", owner)
-            );
-
-        return await Collection
-            .Find(filter)
-            .AnyAsync(cancellationToken);
-    }
+    // Removido: Funcionalidade de convites agora é gerida pelo microserviço de grupos
 }

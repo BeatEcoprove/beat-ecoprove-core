@@ -228,9 +228,7 @@
     <data name="Profile.NotFound" xml:space="preserve">
         <value>The profile could not be found.</value>
     </data>
-    <data name="Token.InvalidRefreshToken" xml:space="preserve">
-        <value>The refresh token is invalid.</value>
-    </data>
+
     <data name="User.ProfileDoesNotBelongToAuth" xml:space="preserve">
         <value>This user does not have access to the chosen profile.</value>
     </data>

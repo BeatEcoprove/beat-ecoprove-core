@@ -1,7 +1,7 @@
-﻿namespace BeatEcoprove.Application.Shared.Helpers;
+namespace BeatEcoprove.Application.Shared.Helpers;
 
 public interface IAuthorization
 {
-    public Guid AuthId { get; }
-    public Guid ProfileId { get; }
+    Guid ProfileId { get; }
+    Guid AuthId { get; }
 }

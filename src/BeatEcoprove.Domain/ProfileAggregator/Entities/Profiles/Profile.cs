@@ -1,8 +1,8 @@
 ﻿using BeatEcoprove.Application.Shared.Gaming;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Events;
+using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -42,7 +42,6 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
         EcoCoins = 0;
     }
 
-    public AuthId AuthId { get; protected set; } = null!;
     public UserName UserName { get; protected set; } = null!;
     public Phone Phone { get; protected set; } = null!;
     public double XP { get; set; }
@@ -51,6 +50,7 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
     public int SustainabilityPoints { get; set; }
     public int EcoScore { get; set; }
     public string AvatarUrl { get; protected set; } = null!;
+    public AuthId AuthId { get; protected set; } = null!;
     public UserType Type { get; protected set; } = null!;
     public IReadOnlyList<ClothEntry> ClothEntries => _clothEntries.AsReadOnly();
     public IReadOnlyList<BucketEntry> BucketEntries => _bucketEntries.AsReadOnly();
@@ -60,10 +60,21 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
         AvatarUrl = avatarUrl;
     }
 
-    public void SetAuthPointer(AuthId authId)
+    public void SetAuthId(AuthId authId)
     {
-        ArgumentNullException.ThrowIfNull(authId);
         AuthId = authId;
+    }
+
+    public ProfileDao ToDao()
+    {
+        return new ProfileDao(
+            Id.Value,
+            AuthId.Value,
+            UserName.Value,
+            AvatarUrl,
+            Type.ToString()!,
+            this is Consumer
+        );
     }
 
     public void AddCloth(Cloth cloth)

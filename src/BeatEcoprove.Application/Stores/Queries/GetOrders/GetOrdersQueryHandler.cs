@@ -1,7 +1,6 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -22,11 +21,11 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
     private readonly IMaintenanceServiceRepository _maintenanceServiceRepository;
 
     public GetOrdersQueryHandler(
-        IProfileManager profileManager, 
-        IStoreService storeService, 
-        IStoreRepository storeRepository, 
-        IColorRepository colorRepository, 
-        IBrandRepository brandRepository, 
+        IProfileManager profileManager,
+        IStoreService storeService,
+        IStoreRepository storeRepository,
+        IColorRepository colorRepository,
+        IBrandRepository brandRepository,
         IMaintenanceServiceRepository maintenanceServiceRepository)
     {
         _profileManager = profileManager;
@@ -36,7 +35,7 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
         _brandRepository = brandRepository;
         _maintenanceServiceRepository = maintenanceServiceRepository;
     }
-    
+
     private ErrorOr<dynamic> ValidateParams(ErrorOr<string>? order)
     {
         if (order is not null && order.Value.IsError)
@@ -53,11 +52,10 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
         ErrorOr<List<Guid>>? colorId = null;
         ErrorOr<List<Guid>>? brandId = null;
 
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
-        
+
         var result =
-            ValidateParams("asc");        
+            ValidateParams("asc");
 
         if (request.Services != null)
         {
@@ -68,7 +66,7 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
                 result = serviceId.Value.Errors;
             }
         }
-        
+
         if (request.Color != null)
         {
             colorId = await GetColorId(request.Color, cancellationToken);
@@ -94,20 +92,20 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
             return result.Errors;
         }
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
-        
+
         var storeIds = await GetStoreId(request.StoreIds, profile.Value, cancellationToken);
 
         if (storeIds.IsError)
         {
             return storeIds.Errors;
         }
-        
+
         var orders = await _storeRepository.GetOrderDaosAsync(
             storeIds.Value,
             request.Search,
@@ -122,7 +120,7 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
 
         return orders;
     }
-    
+
     private async Task<ErrorOr<List<Guid>>> GetColorId(string hexs, CancellationToken cancellationToken = default)
     {
         List<Guid> colorIds = new();
@@ -141,7 +139,7 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
 
         return colorIds;
     }
-    
+
     private async Task<ErrorOr<List<Guid>>> GetMaintenanceId(string services, CancellationToken cancellationToken = default)
     {
         List<Guid> serviceIds = new();
@@ -199,7 +197,7 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
 
             return ids;
         }
-        catch (Exception e)
+        catch
         {
             return Errors.Store.StoreNotFound;
         }

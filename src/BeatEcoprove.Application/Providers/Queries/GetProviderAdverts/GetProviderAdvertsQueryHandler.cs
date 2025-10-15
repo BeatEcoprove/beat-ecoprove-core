@@ -2,7 +2,6 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AdvertisementAggregator;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 
@@ -17,7 +16,7 @@ internal sealed class GetProviderAdvertsQueryHandler : IQueryHandler<GetProvider
     private readonly IProfileRepository _profileRepository;
 
     public GetProviderAdvertsQueryHandler(
-        IProfileManager profileManager, 
+        IProfileManager profileManager,
         IAdvertisementRepository advertisementRepository,
         IProfileRepository profileRepository)
     {
@@ -28,11 +27,10 @@ internal sealed class GetProviderAdvertsQueryHandler : IQueryHandler<GetProvider
 
     public async Task<ErrorOr<List<Advertisement>>> Handle(GetProviderAdvertsQuery request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var providerId = ProfileId.Create(request.ProviderId);
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

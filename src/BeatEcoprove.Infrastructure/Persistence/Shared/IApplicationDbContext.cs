@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
@@ -10,7 +9,6 @@ namespace BeatEcoprove.Infrastructure.Persistence.Shared;
 
 public interface IApplicationDbContext
 {
-    DbSet<Auth> Auths { get; }
     DbSet<Profile> Profiles { get; }
     DbSet<Cloth> Cloths { get; }
     DbSet<Bucket> Buckets { get; }

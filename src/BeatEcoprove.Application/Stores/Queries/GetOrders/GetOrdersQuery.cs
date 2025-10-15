@@ -1,5 +1,4 @@
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 
 using ErrorOr;
@@ -8,7 +7,6 @@ namespace BeatEcoprove.Application.Stores.Queries.GetOrders;
 
 public record GetOrdersQuery
 (
-    Guid AuthId,
     Guid ProfileId,
     string StoreIds,
     string? Search = null,
@@ -18,4 +16,4 @@ public record GetOrdersQuery
     bool? IsDone = null,
     int Page = 0,
     int PageSize = 10
-) : IAuthorization, IQuery<ErrorOr<List<OrderDAO>>>;
+) : IQuery<ErrorOr<List<OrderDAO>>>;

@@ -1,12 +1,10 @@
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.StoreAggregator.Enumerators;
+using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 namespace BeatEcoprove.Domain.StoreAggregator.Daos;
 
 public record WorkerDao
 (
-    Guid Id,
-    string Name,
-    Email Email,
-    WorkerType Type
+    WorkerId Id,
+    string Username,
+    string Role
 );

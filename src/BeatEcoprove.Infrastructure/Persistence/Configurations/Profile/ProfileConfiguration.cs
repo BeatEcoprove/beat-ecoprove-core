@@ -1,6 +1,4 @@
-﻿using BeatEcoprove.Domain.AuthAggregator;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
-using BeatEcoprove.Domain.ClosetAggregator;
+﻿using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
@@ -104,18 +102,6 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasConversion(
                 id => id.Value,
                 value => ProfileId.Create(value));
-
-        builder.HasOne<Auth>()
-            .WithMany()
-            .HasForeignKey(t => t.AuthId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.Property(profile => profile.AuthId)
-            .HasColumnName("auth_id")
-            .HasConversion(
-                authId => authId.Value,
-                value => AuthId.Create(value));
 
         builder.HasDiscriminator(u => u.Type)
             .HasValue<Consumer>(UserType.Consumer)

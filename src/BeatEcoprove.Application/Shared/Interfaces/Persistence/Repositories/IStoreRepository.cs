@@ -10,16 +10,16 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 public interface IStoreRepository : IRepository<Store, StoreId>
 {
     Task SubtractPoints(
-        ProfileId profileId, 
-        int advertisementSustainablePoints, 
+        ProfileId profileId,
+        int advertisementSustainablePoints,
         CancellationToken cancellationToken);
     public Task<int> GetTotalOfSustainablePoints(
         Profile provider,
         CancellationToken cancellationToken = default);
     public Task<bool> ExistsAnyStoreWithName(string name, CancellationToken cancellationToken = default);
     public Task<bool> HasAccessToStore(
-        StoreId id, 
-        Profile manager, 
+        StoreId id,
+        Profile manager,
         bool isEmployee = false,
         CancellationToken cancellationToken = default);
     public Task<List<Store>> GetOwningStoreAsync(
@@ -30,12 +30,12 @@ public interface IStoreRepository : IRepository<Store, StoreId>
         int pageSize = 10,
         CancellationToken cancellationToken = default);
     Task<List<Order>> GetAllStoresAsync(
-        Guid owner, 
-        string? search, 
-        List<Guid>? services = null, 
-        List<Guid>? colorValue = null, 
+        Guid owner,
+        string? search,
+        List<Guid>? services = null,
+        List<Guid>? colorValue = null,
         List<Guid>? brandValue = null,
-        int pageSize = 10, 
+        int pageSize = 10,
         int page = 1,
         CancellationToken cancellationToken = default
     );
@@ -53,7 +53,7 @@ public interface IStoreRepository : IRepository<Store, StoreId>
         CancellationToken cancellationToken = default);
     Task<WorkerDao?> GetWorkerDaoAsync(WorkerId workerId, CancellationToken cancellationToken = default);
     Task<List<WorkerDao>> GetWorkerDaosAsync(
-        StoreId storeId, 
+        StoreId storeId,
         string? search = null,
         int page = 1,
         int pageSize = 10,

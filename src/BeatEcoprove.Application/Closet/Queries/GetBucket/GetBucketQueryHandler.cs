@@ -29,7 +29,7 @@ internal sealed class GetBucketQueryHandler : IQueryHandler<GetBucketQuery, Erro
     {
         var bucketId = BucketId.Create(request.BucketId);
 
-        var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {

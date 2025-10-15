@@ -2,7 +2,6 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -33,7 +32,6 @@ internal sealed class PatchBucketCommandHandler : ICommandHandler<PatchBucketCom
 
     public async Task<ErrorOr<Bucket>> Handle(PatchBucketCommand request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var bucketId = BucketId.Create(request.BucketId);
 
@@ -42,7 +40,7 @@ internal sealed class PatchBucketCommandHandler : ICommandHandler<PatchBucketCom
             return Errors.Bucket.NameCannotBeEmpty;
         }
 
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {

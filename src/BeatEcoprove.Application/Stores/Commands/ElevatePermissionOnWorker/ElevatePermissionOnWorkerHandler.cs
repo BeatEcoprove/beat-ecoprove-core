@@ -1,9 +1,8 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
@@ -16,65 +15,48 @@ namespace BeatEcoprove.Application.Stores.Commands.ElevatePermissionOnWorker;
 internal sealed class ElevatePermissionOnWorkerHandler : ICommandHandler<ElevatePermissionOnWorkerCommand, ErrorOr<WorkerDao>>
 {
     private readonly IProfileManager _profileManager;
-    private readonly IStoreService _storeService;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IStoreRepository _storeRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IStoreService _storeService;
 
     public ElevatePermissionOnWorkerHandler(
-        IProfileManager profileManager, 
-        IStoreService storeService, 
-        IUnitOfWork unitOfWork, 
-        IStoreRepository storeRepository)
+        IProfileManager profileManager,
+        IStoreRepository storeRepository,
+        IUnitOfWork unitOfWork,
+        IStoreService storeService)
     {
         _profileManager = profileManager;
-        _storeService = storeService;
-        _unitOfWork = unitOfWork;
         _storeRepository = storeRepository;
+        _unitOfWork = unitOfWork;
+        _storeService = storeService;
     }
 
     public async Task<ErrorOr<WorkerDao>> Handle(ElevatePermissionOnWorkerCommand request, CancellationToken cancellationToken)
     {
-        var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
         var workerId = WorkerId.Create(request.WorkerId);
-        var workerType = _storeService.GetWorkerType(request.Permission);
 
-        if (workerType.IsError)
-        {
-            return workerType.Errors;
-        }
-
-        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
 
-        var store = await _storeService.GetStoreAsync(storeId, profile.Value, cancellationToken);
+        var store = await _storeRepository.GetByIdAsync(storeId, cancellationToken);
 
-        if (store.IsError)
+        if (store is null)
         {
-            return store.Errors;
+            return Errors.Store.StoreNotFound;
         }
 
-        var worker = await _storeService.SwitchPermission(
-            store.Value,
-            profile.Value,
-            new SwitchPermissionInput(
-                workerId,
-                workerType.Value
-            ),
-            cancellationToken
-        );
+        var permission = _storeService.GetWorkerType(request.Permission);
 
-        if (worker.IsError)
+        if (permission.IsError)
         {
-            return worker.Errors;
+            return permission.Errors;
         }
-        
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var workerDao = await _storeRepository.GetWorkerDaoAsync(
             workerId,
@@ -86,6 +68,22 @@ internal sealed class ElevatePermissionOnWorkerHandler : ICommandHandler<Elevate
             return Errors.Worker.NotFound;
         }
 
+        var result = await _storeService.SwitchPermission(
+            store,
+            profile.Value,
+            new SwitchPermissionInput(
+                workerId,
+                permission.Value
+            ),
+            cancellationToken
+        );
+
+        if (result.IsError)
+        {
+            return result.Errors;
+        }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return workerDao;
     }
 }
