@@ -22,26 +22,18 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/profiles/closet")]
-public class OutfitController : ApiController
+public class OutfitController(
+    ISender sender,
+    IMapper mapper,
+    ILanguageCulture languageCulture)
+    : ApiController(languageCulture)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public OutfitController(
-        ISender sender,
-        IMapper mapper,
-        ILanguageCulture languageCulture) : base(languageCulture)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpPut("cloth/{clothId:guid}/use")]
     public async Task<ActionResult<DailyActivityResponse>> RegisterClothUsage([FromQuery] Guid profileId, [FromRoute] Guid clothId)
     {
         var authId = HttpContext.User.GetUserId();
 
-        var registerClothUsageResult = await _sender.Send(new
+        var registerClothUsageResult = await sender.Send(new
         {
             AuthId = authId,
             ProfileId = profileId,
@@ -49,7 +41,7 @@ public class OutfitController : ApiController
         }.Adapt<RegisterClothUsageCommand>());
 
         return registerClothUsageResult.Match(
-            response => Ok(_mapper.Map<DailyActivityResponse>(response)),
+            response => Ok(mapper.Map<DailyActivityResponse>(response)),
             Problem<DailyActivityResponse>
         );
     }
@@ -59,7 +51,7 @@ public class OutfitController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var registerClothUsageResult = await _sender.Send(new
+        var registerClothUsageResult = await sender.Send(new
         {
             AuthId = authId,
             ProfileId = profileId,
@@ -67,7 +59,7 @@ public class OutfitController : ApiController
         }.Adapt<RemoveClothFromOutfitCommand>());
 
         return registerClothUsageResult.Match(
-            response => Ok(_mapper.Map<DailyActivityResponse>(response)),
+            response => Ok(mapper.Map<DailyActivityResponse>(response)),
             Problem<DailyActivityResponse>
         );
     }
@@ -77,14 +69,14 @@ public class OutfitController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var registerClothUsageResult = await _sender.Send(new
+        var registerClothUsageResult = await sender.Send(new
         {
             AuthId = authId,
             ProfileId = profileId
         }.Adapt<GetCurrentOutfitQuery>());
 
         return registerClothUsageResult.Match(
-            response => Ok(_mapper.Map<BucketResponse>(response)),
+            response => Ok(mapper.Map<BucketResponse>(response)),
             Problem<BucketResponse>
         );
     }

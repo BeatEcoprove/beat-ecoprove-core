@@ -14,24 +14,16 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BeatEcoprove.Api.Middlewares;
 
-public class ProfileCheckerMiddleware : IMiddleware
+public class ProfileCheckerMiddleware(
+    IJwtProvider jwtProvider,
+    IProfileRepository profileRepository)
+    : IMiddleware
 {
     private const string ProfileIdKey = "profileId";
 
-    private readonly IJwtProvider _jwtProvider;
-    private readonly IProfileRepository _profileRepository;
-
-    public ProfileCheckerMiddleware(
-        IJwtProvider jwtProvider,
-        IProfileRepository profileRepository)
-    {
-        _jwtProvider = jwtProvider;
-        _profileRepository = profileRepository;
-    }
-
     private async Task<ErrorOr<bool>> IsProfileValid(Guid authId, ProfileId profileId, CancellationToken cancellationToken = default)
     {
-        var profile = await _profileRepository.GetByIdAsync(profileId, cancellationToken);
+        var profile = await profileRepository.GetByIdAsync(profileId, cancellationToken);
         if (profile == null) return Errors.User.ProfileDoesNotExists;
 
         return profile.AuthId.Value == authId;
@@ -39,7 +31,7 @@ public class ProfileCheckerMiddleware : IMiddleware
 
     private async Task<ErrorOr<(Guid AuthId, string Email)>> GetClaimsFromToken(HttpContext context)
     {
-        var authHeader = context.Request.Headers["Authorization"].ToString();
+        var authHeader = context.Request.Headers.Authorization.ToString();
         if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
         {
             return Errors.Token.MissingToken;
@@ -50,19 +42,16 @@ public class ProfileCheckerMiddleware : IMiddleware
 
         try
         {
-            claims = await _jwtProvider.GetClaims(accessToken);
+            claims = await jwtProvider.GetClaims(accessToken);
         }
         catch (SecurityTokenException)
         {
             return Errors.Token.InvalidToken;
         }
 
-        if (!claims.TryGetValue(UserClaims.AccountId, out var authId) || !Guid.TryParse(authId, out var parsedAuthId))
-        {
-            return Errors.Token.InvalidToken;
-        }
-
-        if (!claims.TryGetValue(UserClaims.Email, out var email))
+        if (!claims.TryGetValue(UserClaims.AccountId, out var authId) 
+            || !Guid.TryParse(authId, out var parsedAuthId) 
+            || !claims.TryGetValue(UserClaims.Email, out var email))
         {
             return Errors.Token.InvalidToken;
         }
@@ -70,7 +59,7 @@ public class ProfileCheckerMiddleware : IMiddleware
         return (parsedAuthId, email);
     }
 
-    private Task ReturnUnAuthorized(HttpContext context, Error error)
+    private static Task ReturnUnAuthorized(HttpContext context, Error error)
     {
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

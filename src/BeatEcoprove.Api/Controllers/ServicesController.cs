@@ -16,27 +16,19 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/services")]
-public class ServicesController : ApiController
+public class ServicesController(
+    ISender sender,
+    IMapper mapper,
+    ILanguageCulture languageCulture)
+    : ApiController(languageCulture)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public ServicesController(
-        ISender sender,
-        IMapper mapper,
-        ILanguageCulture languageCulture) : base(languageCulture)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpGet]
     public async Task<ActionResult<List<MaintenanceServiceResponse>>> GetAllServices()
     {
-        var services = await _sender.Send(new GetAllServicesQuery());
+        var services = await sender.Send(new GetAllServicesQuery());
 
         return services.Match(
-            result => _mapper.Map<List<MaintenanceServiceResponse>>(result),
+            result => mapper.Map<List<MaintenanceServiceResponse>>(result),
             Problem<List<MaintenanceServiceResponse>>
         );
     }

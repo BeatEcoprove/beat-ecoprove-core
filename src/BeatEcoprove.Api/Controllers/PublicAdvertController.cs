@@ -18,20 +18,12 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/public/adverts")]
-public class PublicAdvertController : ApiController
+public class PublicAdvertController(
+    ILanguageCulture localizer,
+    ISender sender,
+    IMapper mapper)
+    : ApiController(localizer)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public PublicAdvertController(
-        ILanguageCulture localizer, 
-        ISender sender, 
-        IMapper mapper) : base(localizer)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpGet("{advertId:guid}")]
     public async Task<ActionResult<AdvertisementResponse>> GetById(
         [FromQuery] Guid profileId,
@@ -40,7 +32,7 @@ public class PublicAdvertController : ApiController
     {
          var authId = HttpContext.User.GetUserId();
                         
-        var getByIdAdvert = await _sender.Send(new
+        var getByIdAdvert = await sender.Send(new
             GetAdvertByIdQuery(
                 profileId,
                 advertId,
@@ -49,7 +41,7 @@ public class PublicAdvertController : ApiController
         );
         
         return getByIdAdvert.Match(
-            result => Ok(_mapper.Map<AdvertisementResponse>(result)),
+            result => Ok(mapper.Map<AdvertisementResponse>(result)),
             Problem<AdvertisementResponse>
         );
     }
@@ -64,7 +56,7 @@ public class PublicAdvertController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                 
-        var getAllAdverts = await _sender.Send(new
+        var getAllAdverts = await sender.Send(new
             GetHomeAddsQuery(
                 profileId,
                 search,
@@ -74,7 +66,7 @@ public class PublicAdvertController : ApiController
         );
         
         return getAllAdverts.Match(
-            result => Ok(_mapper.Map<List<AdvertisementResponse>>(result)),
+            result => Ok(mapper.Map<List<AdvertisementResponse>>(result)),
             Problem<List<AdvertisementResponse>>
         );
     }

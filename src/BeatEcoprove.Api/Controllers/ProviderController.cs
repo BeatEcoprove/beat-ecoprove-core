@@ -23,20 +23,12 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/providers")]
-public class ProviderController : ApiController
+public class ProviderController(
+    ILanguageCulture localizer,
+    ISender sender,
+    IMapper mapper)
+    : ApiController(localizer)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-    
-    public ProviderController(
-        ILanguageCulture localizer, 
-        ISender sender, 
-        IMapper mapper) : base(localizer)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-    
     [HttpGet]
     public async Task<ActionResult<List<StandardProviderResponse>>> GetAllProviders(
         [FromQuery] Guid profileId,
@@ -47,7 +39,7 @@ public class ProviderController : ApiController
     { 
         var authId = HttpContext.User.GetUserId();
                         
-        var getAllProviders = await _sender.Send(new
+        var getAllProviders = await sender.Send(new
             GetAllStandardProvidersQuery(
                 profileId,
                 search,
@@ -57,7 +49,7 @@ public class ProviderController : ApiController
         );
         
         return getAllProviders.Match(
-            result => Ok(_mapper.Map<List<StandardProviderResponse>>(result)),
+            result => Ok(mapper.Map<List<StandardProviderResponse>>(result)),
             Problem<List<StandardProviderResponse>>
         );
     }
@@ -70,7 +62,7 @@ public class ProviderController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                         
-        var getAllProviders = await _sender.Send(new
+        var getAllProviders = await sender.Send(new
             GetProviderByIdQuery(
                 profileId,
                 providerId
@@ -78,7 +70,7 @@ public class ProviderController : ApiController
         );
         
         return getAllProviders.Match(
-            result => Ok(_mapper.Map<ProviderResponse>(result)),
+            result => Ok(mapper.Map<ProviderResponse>(result)),
             Problem<ProviderResponse>
         );
     }
@@ -94,7 +86,7 @@ public class ProviderController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                         
-        var getAllProviders = await _sender.Send(new
+        var getAllProviders = await sender.Send(new
             GetProviderStoresQuery(
                 profileId, 
                 providerId, 
@@ -105,7 +97,7 @@ public class ProviderController : ApiController
         );
         
         return getAllProviders.Match(
-            result => Ok(_mapper.Map<List<StoreResponse>>(result)),
+            result => Ok(mapper.Map<List<StoreResponse>>(result)),
             Problem<List<StoreResponse>>
         );
     }
@@ -119,7 +111,7 @@ public class ProviderController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                         
-        var getStoreById = await _sender.Send(new
+        var getStoreById = await sender.Send(new
             GetProviderStoreByIdQuery(
                 profileId,
                 providerId,
@@ -128,7 +120,7 @@ public class ProviderController : ApiController
         );
         
         return getStoreById.Match(
-            result => Ok(_mapper.Map<StoreResponse>(result)),
+            result => Ok(mapper.Map<StoreResponse>(result)),
             Problem<StoreResponse>
         );
     }
@@ -141,7 +133,7 @@ public class ProviderController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                         
-        var getAdverts = await _sender.Send(new
+        var getAdverts = await sender.Send(new
             GetProviderAdvertsQuery(
                 profileId, 
                 providerId
@@ -149,7 +141,7 @@ public class ProviderController : ApiController
         );
         
         return getAdverts.Match(
-            result => Ok(_mapper.Map<List<AdvertisementResponse>>(result)),
+            result => Ok(mapper.Map<List<AdvertisementResponse>>(result)),
             Problem<List<AdvertisementResponse>>
         );
     }

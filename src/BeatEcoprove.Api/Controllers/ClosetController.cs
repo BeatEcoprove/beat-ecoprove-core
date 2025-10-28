@@ -30,20 +30,12 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/profiles/closet")]
-public class ClosetController : ApiController
+public class ClosetController(
+    ISender sender,
+    IMapper mapper,
+    ILanguageCulture languageCulture)
+    : ApiController(languageCulture)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public ClosetController(
-        ISender sender,
-        IMapper mapper,
-        ILanguageCulture languageCulture) : base(languageCulture)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpGet()]
     public async Task<ActionResult<ClosetResponse>> GetCloset(
         [FromQuery] Guid profileId,
@@ -60,7 +52,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new
+            await sender.Send(new
             {
                 ProfileId = profileId,
                 AuthId = authId,
@@ -76,7 +68,7 @@ public class ClosetController : ApiController
             }.Adapt<GetClosetQuery>());
 
         return result.Match(
-            response => Ok(_mapper.Map<ClosetResponse>(response)),
+            response => Ok(mapper.Map<ClosetResponse>(response)),
             Problem<ClosetResponse>
         );
     }
@@ -87,7 +79,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new CreateClothCommand(
+            await sender.Send(new CreateClothCommand(
                 authId,
                 profileId,
                 request.Name,
@@ -100,7 +92,7 @@ public class ClosetController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<ClothResponse>(response)
+                mapper.Map<ClothResponse>(response)
                 ),
             Problem<ClothResponse>
         );
@@ -112,7 +104,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new
+            await sender.Send(new
             {
                 AuthId = authId,
                 ProfileId = profileId,
@@ -120,7 +112,7 @@ public class ClosetController : ApiController
             }.Adapt<GetBucketsClothQuery>());
 
         return result.Match(
-           ok => _mapper.Map<List<BucketResponse>>(ok),
+           ok => mapper.Map<List<BucketResponse>>(ok),
             Problem<List<BucketResponse>>
         );
     }
@@ -131,7 +123,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new
+            await sender.Send(new
             {
                 AuthId = authId,
                 ProfileId = profileId,
@@ -141,7 +133,7 @@ public class ClosetController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<ClothResponse>(response)
+                mapper.Map<ClothResponse>(response)
             ),
             Problem<ClothResponse>
         );
@@ -153,7 +145,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new
+            await sender.Send(new
             {
                 AuthId = authId,
                 ProfileId = profileId,
@@ -175,7 +167,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new
+            await sender.Send(new
             {
                 AuthId = authId,
                 ProfileId = profileId,
@@ -186,7 +178,7 @@ public class ClosetController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<BucketResponse>(response)),
+                mapper.Map<BucketResponse>(response)),
             Problem<BucketResponse>
         );
     }
@@ -197,7 +189,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new
+            await sender.Send(new
             {
                 AuthId = authId,
                 ProfileId = profileId,
@@ -207,7 +199,7 @@ public class ClosetController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<BucketResponse>(response)
+                mapper.Map<BucketResponse>(response)
             ),
             Problem<BucketResponse>
         );
@@ -219,7 +211,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new
+            await sender.Send(new
             {
                 AuthId = authId,
                 ProfileId = profileId,
@@ -229,7 +221,7 @@ public class ClosetController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<BucketResponse>(response)
+                mapper.Map<BucketResponse>(response)
             ),
             Problem<BucketResponse>
         );
@@ -241,7 +233,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new
+            await sender.Send(new
             {
                 AuthId = authId,
                 ProfileId = profileId,
@@ -252,7 +244,7 @@ public class ClosetController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<BucketResponse>(response)),
+                mapper.Map<BucketResponse>(response)),
             Problem<BucketResponse>
         );
     }
@@ -263,7 +255,7 @@ public class ClosetController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var result =
-            await _sender.Send(new
+            await sender.Send(new
             {
                 AuthId = authId,
                 ProfileId = profileId,
@@ -274,7 +266,7 @@ public class ClosetController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<BucketResponse>(response)),
+                mapper.Map<BucketResponse>(response)),
             Problem<BucketResponse>
         );
     }

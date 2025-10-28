@@ -5,15 +5,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace BeatEcoprove.Api.Extensions;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
-public class AuthorizationRole : AuthorizeAttribute, IAuthorizationFilter
+public class AuthorizationRole(params string[] roles) : AuthorizeAttribute, IAuthorizationFilter
 {
-    private readonly string[] _roles;
-
-    public AuthorizationRole(params string[] roles)
-    {
-        _roles = roles;
-    }
-
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         var userType = context.HttpContext.User.GetUserType();
@@ -28,6 +21,6 @@ public class AuthorizationRole : AuthorizeAttribute, IAuthorizationFilter
 
     private bool HasRole(string userType)
     {
-        return _roles.Any(role => role == userType);
+        return roles.Any(role => role == userType);
     }
 }

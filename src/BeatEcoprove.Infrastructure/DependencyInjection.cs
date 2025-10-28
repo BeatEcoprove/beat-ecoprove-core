@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Infrastructure.BackgroundJobs;
+﻿using BeatEcoprove.Infrastructure.Authentication;
+using BeatEcoprove.Infrastructure.BackgroundJobs;
 using BeatEcoprove.Infrastructure.EmailSender;
 using BeatEcoprove.Infrastructure.FileStorage;
 using BeatEcoprove.Infrastructure.MultiLanguage;
@@ -26,6 +27,7 @@ public static class DependencyInjection
         services.AddServices();
         services.AddPersistenceLayer();
         services.AddMultiLanguage();
+        services.AddJwks();
 
         return services;
     }

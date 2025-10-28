@@ -22,20 +22,12 @@ namespace BeatEcoprove.Api.Controllers;
 [Authorize]
 [AuthorizationRole("organization", "employee")]
 [Route("v{version:apiVersion}/stores/{storeId:guid}/workers")]
-public class WorkerController : ApiController
+public class WorkerController(
+    ILanguageCulture localizer,
+    ISender sender,
+    IMapper mapper)
+    : ApiController(localizer)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public WorkerController(
-        ILanguageCulture localizer, 
-        ISender sender, 
-        IMapper mapper) : base(localizer)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpGet]
     public async Task<ActionResult<List<WorkerResponse>>> GetWorkers(
         [FromQuery] Guid profileId,
@@ -47,7 +39,7 @@ public class WorkerController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                         
-        var getWorkerById = await _sender.Send(new
+        var getWorkerById = await sender.Send(new
             GetWorkersQuery(
                profileId, 
                storeId, 
@@ -58,7 +50,7 @@ public class WorkerController : ApiController
         );
 
         return getWorkerById.Match(
-            result => Ok(_mapper.Map<List<WorkerResponse>>(result)),
+            result => Ok(mapper.Map<List<WorkerResponse>>(result)),
             Problem<List<WorkerResponse>>
         );
     }
@@ -72,7 +64,7 @@ public class WorkerController : ApiController
     ) {
         var authId = HttpContext.User.GetUserId();
                 
-        var getWorkerById = await _sender.Send(new
+        var getWorkerById = await sender.Send(new
             GetWorkerByIdQuery(
                profileId, 
                storeId, 
@@ -81,7 +73,7 @@ public class WorkerController : ApiController
         );
 
         return getWorkerById.Match(
-            result => Ok(_mapper.Map<WorkerResponse>(result)),
+            result => Ok(mapper.Map<WorkerResponse>(result)),
             Problem<WorkerResponse>
         );
     }
@@ -95,7 +87,7 @@ public class WorkerController : ApiController
     ) {
         var authId = HttpContext.User.GetUserId();
         
-        var registerOrderResult = await _sender.Send(new
+        var registerOrderResult = await sender.Send(new
             AddWorkerCommand(
                 profileId,
                 storeId,
@@ -106,7 +98,7 @@ public class WorkerController : ApiController
         );
         
         return registerOrderResult.Match(
-            result => Ok(_mapper.Map<WorkerResponse>(result)),
+            result => Ok(mapper.Map<WorkerResponse>(result)),
             Problem<WorkerResponse>
         );
     }
@@ -120,7 +112,7 @@ public class WorkerController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
         
-        var registerOrderResult = await _sender.Send(new
+        var registerOrderResult = await sender.Send(new
              RemoveWorkerCommand(
                 profileId,
                 storeId,
@@ -129,7 +121,7 @@ public class WorkerController : ApiController
         );
         
         return registerOrderResult.Match(
-            result => Ok(_mapper.Map<WorkerResponse>(result)),
+            result => Ok(mapper.Map<WorkerResponse>(result)),
             Problem<WorkerResponse>
         );
     }
@@ -144,7 +136,7 @@ public class WorkerController : ApiController
     ) {
         var authId = HttpContext.User.GetUserId();
         
-        var registerOrderResult = await _sender.Send(new
+        var registerOrderResult = await sender.Send(new
              ElevatePermissionOnWorkerCommand(
                  profileId,
                  storeId,
@@ -154,7 +146,7 @@ public class WorkerController : ApiController
         );
         
         return registerOrderResult.Match(
-            result => Ok(_mapper.Map<WorkerResponse>(result)),
+            result => Ok(mapper.Map<WorkerResponse>(result)),
             Problem<WorkerResponse>
         );
     }

@@ -8,15 +8,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace BeatEcoprove.Api.Controllers;
 
 [ApiController]
-public class ApiController : ControllerBase
+public class ApiController(ILanguageCulture localizer) : ControllerBase
 {
-    protected readonly ILanguageCulture Localizer;
-
-    public ApiController(ILanguageCulture localizer)
-    {
-        Localizer = localizer;
-    }
-
     protected ActionResult<TResponse> Problem<TResponse>(List<Error> errors)
     {
         if (errors.All(error => error.Type == ErrorType.Validation))
@@ -28,7 +21,7 @@ public class ApiController : ControllerBase
 
                 modelValidation.AddModelError(
                     error.Code,
-                    Localizer.GetChunk(error.Code, error.Description));
+                    localizer.GetChunk(error.Code, error.Description));
             }
 
             return ValidationProblem(modelValidation);
@@ -44,6 +37,6 @@ public class ApiController : ControllerBase
             _ => StatusCodes.Status500InternalServerError
         };
 
-        return Problem(statusCode: statusCode, title: Localizer.GetChunk(firstError.Code, firstError.Description));
+        return Problem(statusCode: statusCode, title: localizer.GetChunk(firstError.Code, firstError.Description));
     }
 }

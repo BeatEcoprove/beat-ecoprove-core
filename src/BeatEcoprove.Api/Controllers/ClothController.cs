@@ -26,26 +26,18 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/profiles/closet/cloth/{clothId:guid}/services")]
-public class ClothController : ApiController
+public class ClothController(
+    IMapper mapper,
+    ISender sender,
+    ILanguageCulture languageCulture)
+    : ApiController(languageCulture)
 {
-    private readonly IMapper _mapper;
-    private readonly ISender _sender;
-
-    public ClothController(
-        IMapper mapper,
-        ISender sender,
-        ILanguageCulture languageCulture) : base(languageCulture)
-    {
-        _mapper = mapper;
-        _sender = sender;
-    }
-
     [HttpGet]
     public async Task<ActionResult<List<MaintenanceServiceResponse>>> GetAvailableServices([FromRoute] Guid clothId, [FromQuery] Guid profileId, CancellationToken cancellationToken = default)
     {
         var userId = HttpContext.User.GetUserId();
 
-        var result = await _sender.Send(new
+        var result = await sender.Send(new
         {
             AuthId = userId,
             ProfileId = profileId,
@@ -53,7 +45,7 @@ public class ClothController : ApiController
         }.Adapt<GetAvailableServicesQuery>());
 
         return result.Match(
-            response => Ok(_mapper.Map<List<MaintenanceServiceResponse>>(response)),
+            response => Ok(mapper.Map<List<MaintenanceServiceResponse>>(response)),
             Problem<List<MaintenanceServiceResponse>>
         );
     }
@@ -68,7 +60,7 @@ public class ClothController : ApiController
     {
         var userId = HttpContext.User.GetUserId();
 
-        var result = await _sender.Send(new
+        var result = await sender.Send(new
         {
             AuthId = userId,
             ProfileId = profileId,
@@ -78,7 +70,7 @@ public class ClothController : ApiController
         }.Adapt<PerformActionCommand>(), cancellationToken);
 
         return result.Match(
-            response => Ok(_mapper.Map<ClothResponse>(response)),
+            response => Ok(mapper.Map<ClothResponse>(response)),
             Problem<ClothResponse>
         );
     }
@@ -92,7 +84,7 @@ public class ClothController : ApiController
     {
         var userId = HttpContext.User.GetUserId();
 
-        var result = await _sender.Send(new
+        var result = await sender.Send(new
         CloseMaintenanceActivityCommand(
             userId,
             profileId,
@@ -101,7 +93,7 @@ public class ClothController : ApiController
         ), cancellationToken);
 
         return result.Match(
-            response => Ok(_mapper.Map<ClothResponse>(response)),
+            response => Ok(mapper.Map<ClothResponse>(response)),
             Problem<ClothResponse>
         );
     }
@@ -114,7 +106,7 @@ public class ClothController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var currentStatus = await _sender.Send(new
+        var currentStatus = await sender.Send(new
             GetClothMaintenanceStatusQuery(
                 authId,
                 profileId,
@@ -123,7 +115,7 @@ public class ClothController : ApiController
         );
 
         return currentStatus.Match(
-            response => Ok(_mapper.Map<ClothMaintenanceStatusResponse>(response)),
+            response => Ok(mapper.Map<ClothMaintenanceStatusResponse>(response)),
             Problem<ClothMaintenanceStatusResponse>
         );
     }
@@ -135,7 +127,7 @@ public class ClothController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var history = await _sender.Send(new
+        var history = await sender.Send(new
             GetHistoryQuery(
                 authId,
                 profileId,
@@ -156,8 +148,8 @@ public class ClothController : ApiController
             {
                 object response = history switch
                 {
-                    DailyHistoryResult dailyHistory => _mapper.Map<DailyHistoryResponse>(dailyHistory),
-                    MaintenaceHistoryResult maintenaceHistory => _mapper.Map<MaintenanceHistoryResponse>(maintenaceHistory),
+                    DailyHistoryResult dailyHistory => mapper.Map<DailyHistoryResponse>(dailyHistory),
+                    MaintenaceHistoryResult maintenaceHistory => mapper.Map<MaintenanceHistoryResponse>(maintenaceHistory),
                     _ => throw new ArgumentException("Unsupported history type"),
                 };
 

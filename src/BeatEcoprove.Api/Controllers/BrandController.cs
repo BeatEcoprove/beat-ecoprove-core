@@ -16,28 +16,20 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/extension/brands")]
-public class BrandController : ApiController
+public class BrandController(
+    ISender sender,
+    IMapper mapper,
+    ILanguageCulture languageCulture)
+    : ApiController(languageCulture)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public BrandController(
-        ISender sender,
-        IMapper mapper,
-        ILanguageCulture languageCulture) : base(languageCulture)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpGet]
     public async Task<ActionResult<BrandResponse>> GetAllBrands()
     {
         var getAllBrandsQuery =
-            await _sender.Send(new GetAllBrandsQuery());
+            await sender.Send(new GetAllBrandsQuery());
 
         return getAllBrandsQuery.Match(
-            brandResponse => Ok(_mapper.Map<BrandResponse>(brandResponse)),
+            brandResponse => Ok(mapper.Map<BrandResponse>(brandResponse)),
             Problem<BrandResponse>
         );
     }

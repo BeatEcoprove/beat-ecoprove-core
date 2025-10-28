@@ -22,20 +22,12 @@ namespace BeatEcoprove.Api.Controllers;
 [Authorize]
 [AuthorizationRole("organization", "employee", "consumer")]
 [Route("v{version:apiVersion}/orders")]
-public class OrderController : ApiController
+public class OrderController(
+    ILanguageCulture localizer,
+    ISender sender,
+    IMapper mapper)
+    : ApiController(localizer)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public OrderController(
-        ILanguageCulture localizer, 
-        ISender sender, 
-        IMapper mapper) : base(localizer)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpGet("{orderId:guid}/stores/{storeId:guid}")]
     public async Task<ActionResult<OrderResponse>> GetOrderById(
         [FromQuery] Guid profileId,
@@ -45,7 +37,7 @@ public class OrderController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
         
-        var registerOrderResult = await _sender.Send(new
+        var registerOrderResult = await sender.Send(new
             GetOrderByIdQuery(
                 profileId,
                 orderId,
@@ -54,7 +46,7 @@ public class OrderController : ApiController
         );
         
         return registerOrderResult.Match(
-            result => Ok(_mapper.Map<OrderResponse>(result)),
+            result => Ok(mapper.Map<OrderResponse>(result)),
             Problem<OrderResponse>
         );
     }
@@ -74,7 +66,7 @@ public class OrderController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                 
-        var registerOrderResult = await _sender.Send(new
+        var registerOrderResult = await sender.Send(new
             GetOrdersQuery(
                 profileId, 
                 storeIds, 
@@ -105,7 +97,7 @@ public class OrderController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
         
-        var registerOrderResult = await _sender.Send(new
+        var registerOrderResult = await sender.Send(new
             RegisterOrderCommand(
                 profileId, 
                 storeId, 
@@ -115,7 +107,7 @@ public class OrderController : ApiController
         );
         
         return registerOrderResult.Match(
-            result => Ok(_mapper.Map<OrderResponse>(result)),
+            result => Ok(mapper.Map<OrderResponse>(result)),
             Problem<OrderResponse>
         );
     }
@@ -130,7 +122,7 @@ public class OrderController : ApiController
     {
          var authId = HttpContext.User.GetUserId();
          
-         var completeOrder = await _sender.Send(new
+         var completeOrder = await sender.Send(new
              CompleteOrderCommand(
                  profileId, 
                  storeId,
@@ -140,7 +132,7 @@ public class OrderController : ApiController
          );
          
          return completeOrder.Match(
-             result => Ok(_mapper.Map<OrderResponse>(result)),
+             result => Ok(mapper.Map<OrderResponse>(result)),
              Problem<OrderResponse>
          );       
     }

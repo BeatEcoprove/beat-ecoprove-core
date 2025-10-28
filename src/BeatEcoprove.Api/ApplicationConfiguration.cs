@@ -75,9 +75,7 @@ public static class ApplicationConfiguration
         app.MapControllers();
 
         app.UseAuthorization();
-
-        app.AddCustomMiddlewares();
-
+        // app.AddCustomMiddlewares(); -> disable profile middleware
         app.AddLocalFileStorage();
 
         return app;

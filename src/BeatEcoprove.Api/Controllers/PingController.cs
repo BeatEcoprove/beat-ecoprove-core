@@ -9,12 +9,8 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Route("v{version:apiVersion}/ping")]
-public class PingController : ApiController
+public class PingController(ILanguageCulture localizer) : ApiController(localizer)
 {
-    public PingController(ILanguageCulture localizer) : base(localizer)
-    {
-    }
-
     [HttpGet]
     public ActionResult<dynamic> PingServer()
     {

@@ -22,21 +22,12 @@ namespace BeatEcoprove.Api.Controllers;
 [Authorize]
 [AuthorizationRole("organization", "employee")]
 [Route("v{version:apiVersion}/stores")]
-public class StoreController : ApiController
+public class StoreController(
+    ISender sender,
+    IMapper mapper,
+    ILanguageCulture localizer)
+    : ApiController(localizer)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-    
-    public StoreController(
-        ISender sender,
-        IMapper mapper,
-        ILanguageCulture localizer
-    ) : base(localizer)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpGet("own")]
     public async Task<ActionResult<List<StoreResponse>>> GetOwningStores(
         [FromQuery] Guid profileId,
@@ -47,7 +38,7 @@ public class StoreController : ApiController
     ) {
         var authId = HttpContext.User.GetUserId();
                 
-        var getOwningStores = await _sender.Send(new
+        var getOwningStores = await sender.Send(new
             GetOwningStoresQuery(
                 profileId,
                 search,
@@ -57,7 +48,7 @@ public class StoreController : ApiController
         );
         
         return getOwningStores.Match(
-            result => Ok(_mapper.Map<List<StoreResponse>>(result)),
+            result => Ok(mapper.Map<List<StoreResponse>>(result)),
             Problem<List<StoreResponse>>
         );
     }
@@ -70,7 +61,7 @@ public class StoreController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
         
-        var getStoreResult = await _sender.Send(new
+        var getStoreResult = await sender.Send(new
             GetStoreByIdQuery(
                 profileId,
                 storeId
@@ -78,7 +69,7 @@ public class StoreController : ApiController
         );
         
         return getStoreResult.Match(
-            result => Ok(_mapper.Map<StoreResponse>(result)),
+            result => Ok(mapper.Map<StoreResponse>(result)),
             Problem<StoreResponse>
         );
     }
@@ -91,7 +82,7 @@ public class StoreController : ApiController
     ) {
         var authId = HttpContext.User.GetUserId();
 
-        var createStoreResult = await _sender.Send(new
+        var createStoreResult = await sender.Send(new
             AddStoreCommand(
                 profileId,
                 request.Name,
@@ -107,7 +98,7 @@ public class StoreController : ApiController
         );
         
         return createStoreResult.Match(
-            result => Ok(_mapper.Map<StoreResponse>(result)),
+            result => Ok(mapper.Map<StoreResponse>(result)),
             Problem<StoreResponse>
         );
     }
@@ -120,7 +111,7 @@ public class StoreController : ApiController
     ) {
         var authId = HttpContext.User.GetUserId();
         
-        var deleteStoreById = await _sender.Send(new
+        var deleteStoreById = await sender.Send(new
             DeleteStoreByIdCommand(
                 profileId,
                 storeId
@@ -128,7 +119,7 @@ public class StoreController : ApiController
         );
         
         return deleteStoreById.Match(
-            result => Ok(_mapper.Map<StoreResponse>(result)),
+            result => Ok(mapper.Map<StoreResponse>(result)),
             Problem<StoreResponse>
         );
     }

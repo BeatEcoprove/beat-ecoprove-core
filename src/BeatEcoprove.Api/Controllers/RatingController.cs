@@ -18,20 +18,12 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/stores/{storeId:guid}/ratings")]
-public class RatingController : ApiController
+public class RatingController(
+    ILanguageCulture localizer,
+    ISender sender,
+    IMapper mapper)
+    : ApiController(localizer)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-    
-    public RatingController(
-        ILanguageCulture localizer, 
-        ISender sender, 
-        IMapper mapper) : base(localizer)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpGet]
     public async Task<ActionResult<List<RatingResponse>>> GetStoreRatings(
         [FromQuery] Guid profileId,
@@ -42,7 +34,7 @@ public class RatingController : ApiController
     ) {
         var authId = HttpContext.User.GetUserId();
                         
-        var getRatings = await _sender.Send(new
+        var getRatings = await sender.Send(new
             GetStoreRatingsQuery(
                 profileId,
                 storeId,
@@ -52,7 +44,7 @@ public class RatingController : ApiController
         );
         
         return getRatings.Match(
-            result => Ok(_mapper.Map<List<RatingResponse>>(result)),
+            result => Ok(mapper.Map<List<RatingResponse>>(result)),
             Problem<List<RatingResponse>>
         );
     }
@@ -66,7 +58,7 @@ public class RatingController : ApiController
     ) {
         var authId = HttpContext.User.GetUserId();
                 
-        var postRating = await _sender.Send(new
+        var postRating = await sender.Send(new
             PostRatingCommand(
                 profileId,
                 storeId,
@@ -75,7 +67,7 @@ public class RatingController : ApiController
         );
         
         return postRating.Match(
-            result => Ok(_mapper.Map<RatingResponse>(result)),
+            result => Ok(mapper.Map<RatingResponse>(result)),
             Problem<RatingResponse>
         );
     }

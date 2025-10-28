@@ -25,20 +25,20 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/profiles")]
-public class ProfileController : ApiController
+public class ProfileController(
+    ISender sender,
+    IMapper mapper,
+    ILanguageCulture languageCulture)
+    : ApiController(languageCulture)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public ProfileController(
-        ISender sender,
-        IMapper mapper,
-        ILanguageCulture languageCulture) : base(languageCulture)
+    [HttpGet("test")]
+    [AuthorizationRole("client")]
+    public async Task<ActionResult<string>> TestEndPoint()
     {
-        _sender = sender;
-        _mapper = mapper;
+        await Task.CompletedTask;
+        return Ok("Cebolas");
     }
-
+    
     [HttpGet("all")]
     public async Task<ActionResult<AllProfilesResponse>> GetAllProfiles(
         [FromQuery] Guid profileId,
@@ -50,7 +50,7 @@ public class ProfileController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var profiles = await _sender
+        var profiles = await sender
             .Send(new GetAllProfilesQuery(
                 profileId,
                 search,
@@ -72,14 +72,14 @@ public class ProfileController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var profiles = await _sender
+        var profiles = await sender
             .Send(new GetProfileQuery(
                 profileId,
                 username
             ), cancellationToken);
 
         return profiles.Match(
-            response => Ok(_mapper.Map<ProfileResponse>(response)),
+            response => Ok(mapper.Map<ProfileResponse>(response)),
             Problem<ProfileResponse>
         );
     }
@@ -89,11 +89,11 @@ public class ProfileController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var profiles = await _sender
+        var profiles = await sender
             .Send(new GetMyProfilesQuery(), cancellationToken);
 
         return profiles.Match(
-            response => Ok(_mapper.Map<MyProfilesResponse>(response)),
+            response => Ok(mapper.Map<MyProfilesResponse>(response)),
             Problem<MyProfilesResponse>
         );
     }
@@ -124,13 +124,13 @@ public class ProfileController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var profiles = await _sender
+        var profiles = await sender
             .Send(new DeleteNestedProfileCommand(
                 profileId
             ), cancellationToken);
 
         return profiles.Match(
-            response => Ok(_mapper.Map<ProfileResponse>(response)),
+            response => Ok(mapper.Map<ProfileResponse>(response)),
             Problem<ProfileResponse>
         );
     }
@@ -140,7 +140,7 @@ public class ProfileController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var addNestedProfile = await _sender
+        var addNestedProfile = await sender
             .Send(new CreateNestedProfileCommand(
                     authId,
                     request.Name,
@@ -151,7 +151,7 @@ public class ProfileController : ApiController
                 ), cancellation);
 
         return addNestedProfile.Match(
-            response => Ok(_mapper.Map<ProfileResponse>(response)),
+            response => Ok(mapper.Map<ProfileResponse>(response)),
             Problem<ProfileResponse>
         );
     }
@@ -164,7 +164,7 @@ public class ProfileController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var addNestedProfile = await _sender
+        var addNestedProfile = await sender
             .Send(new UpdateProfileCommand(
                 profileId,
                 request.Username,
@@ -175,7 +175,7 @@ public class ProfileController : ApiController
             ), cancellationToken);
 
         return addNestedProfile.Match(
-            response => Ok(_mapper.Map<ProfileResponse>(response)),
+            response => Ok(mapper.Map<ProfileResponse>(response)),
             Problem<ProfileResponse>
         );
     }

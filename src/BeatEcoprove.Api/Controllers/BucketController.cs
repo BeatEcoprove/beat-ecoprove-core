@@ -18,20 +18,12 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/profiles/closet/bucket/{bucketId:guid}")]
-public class BucketController : ApiController
+public class BucketController(
+    ISender sender,
+    IMapper mapper,
+    ILanguageCulture languageCulture)
+    : ApiController(languageCulture)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public BucketController(
-        ISender sender,
-        IMapper mapper,
-        ILanguageCulture languageCulture) : base(languageCulture)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpPatch]
     public async Task<ActionResult<BucketResponse>> PathBucket(
         Guid bucketId,
@@ -40,7 +32,7 @@ public class BucketController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var result = await _sender.Send(new
+        var result = await sender.Send(new
             PatchBucketCommand(
                 authId,
                 profileId,
@@ -49,7 +41,7 @@ public class BucketController : ApiController
             ));
 
         return result.Match(
-            response => Ok(_mapper.Map<BucketResponse>(response)),
+            response => Ok(mapper.Map<BucketResponse>(response)),
             Problem<BucketResponse>
         );
     }

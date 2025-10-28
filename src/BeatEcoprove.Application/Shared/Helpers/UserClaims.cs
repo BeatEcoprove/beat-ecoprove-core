@@ -1,10 +1,12 @@
-﻿namespace BeatEcoprove.Application.Shared.Helpers;
+﻿using System.Security.Claims;
+
+namespace BeatEcoprove.Application.Shared.Helpers;
 
 public struct UserClaims
 {
     public const string AccountId = "sub";
     public const string Type = "type";
-    public const string Role = "role";
+    public const string Role = ClaimTypes.Role;
     public const string StoreId = "store_id";
     public const string ProfileId = "profile_id";
     public const string Email = "email";
@@ -14,8 +16,8 @@ public struct UserClaims
     public const string LevelPercentage = "level_percentage";
     public const string SustainablePoints = "sustainable_points";
     public const string TokenType = "token_type";
-    public static string EcoScore = "eco_score";
-    public static string EcoCoins = "eco_coins";
-    public static string CurrentXp = "current_xp";
-    public static string NextLevelXp = "next_level_xp";
+    public static readonly string EcoScore = "eco_score";
+    public static readonly string EcoCoins = "eco_coins";
+    public static readonly string CurrentXp = "current_xp";
+    public static readonly string NextLevelXp = "next_level_xp";
 }

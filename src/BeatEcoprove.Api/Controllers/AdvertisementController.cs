@@ -21,20 +21,12 @@ namespace BeatEcoprove.Api.Controllers;
 [Authorize]
 [AuthorizationRole("organization", "employee")]
 [Route("v{version:apiVersion}/adverts")]
-public class AdvertisementController : ApiController
+public class AdvertisementController(
+    ILanguageCulture localizer,
+    ISender sender,
+    IMapper mapper)
+    : ApiController(localizer)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public AdvertisementController(
-        ILanguageCulture localizer, 
-        ISender sender, 
-        IMapper mapper) : base(localizer)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpDelete("{advertId:guid}")]
     public async Task<ActionResult<AdvertisementResponse>> DeleteAdvert(
         [FromQuery] Guid profileId,
@@ -44,7 +36,7 @@ public class AdvertisementController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                                 
-        var deleteAdvert = await _sender.Send(new
+        var deleteAdvert = await sender.Send(new
             RemoveAdvertCommand(
                 profileId, 
                 advertId
@@ -52,7 +44,7 @@ public class AdvertisementController : ApiController
         );
         
         return deleteAdvert.Match(
-            result => Ok(_mapper.Map<AdvertisementResponse>(result)),
+            result => Ok(mapper.Map<AdvertisementResponse>(result)),
             Problem<AdvertisementResponse>
         );
     }
@@ -67,7 +59,7 @@ public class AdvertisementController : ApiController
         CancellationToken cancellationToken = default) {
         var authId = HttpContext.User.GetUserId();
                         
-        var getMyAdverts = await _sender.Send(new
+        var getMyAdverts = await sender.Send(new
             GetMyAdvertsQuery(
                 profileId,
                 storeId,
@@ -78,7 +70,7 @@ public class AdvertisementController : ApiController
         );
         
         return getMyAdverts.Match(
-            result => Ok(_mapper.Map<List<AdvertisementResponse>>(result)),
+            result => Ok(mapper.Map<List<AdvertisementResponse>>(result)),
             Problem<List<AdvertisementResponse>>
         );
     }
@@ -91,7 +83,7 @@ public class AdvertisementController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                         
-        var getByIdAdvert = await _sender.Send(new
+        var getByIdAdvert = await sender.Send(new
             GetAdvertByIdQuery(
                 profileId,
                 advertId
@@ -99,7 +91,7 @@ public class AdvertisementController : ApiController
         );
         
         return getByIdAdvert.Match(
-            result => Ok(_mapper.Map<AdvertisementResponse>(result)),
+            result => Ok(mapper.Map<AdvertisementResponse>(result)),
             Problem<AdvertisementResponse>
         );
     }    
@@ -113,7 +105,7 @@ public class AdvertisementController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
                 
-        var createAddResult = await _sender.Send(new
+        var createAddResult = await sender.Send(new
             CreateAddCommand(
                 profileId,
                 storeId,
@@ -128,7 +120,7 @@ public class AdvertisementController : ApiController
         );
         
         return createAddResult.Match(
-            result => Ok(_mapper.Map<AdvertisementResponse>(result)),
+            result => Ok(mapper.Map<AdvertisementResponse>(result)),
             Problem<AdvertisementResponse>
         );
     }

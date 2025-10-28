@@ -31,7 +31,7 @@ public static class ClaimsExtensions
         var claimList = claims.Claims;
 
         var userType = claimList
-            .FirstOrDefault(claim => claim.Type == UserClaims.Type)!;
+            .FirstOrDefault(claim => claim.Type == UserClaims.Role)!;
 
         return userType.Value;
     }

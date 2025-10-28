@@ -60,13 +60,13 @@ public static class DependencyInjection
     {
         services.AddTelemetry();
         services.AddApiVersion();
-
+        
         services.AddMiddlewares();
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddMappings();
-
+        
         services.AddCors();
 
         return services;

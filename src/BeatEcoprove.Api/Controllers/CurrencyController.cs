@@ -17,20 +17,12 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/extension/concurrency")]
-public class CurrencyController : ApiController
+public class CurrencyController(
+    ISender sender,
+    IMapper mapper,
+    ILanguageCulture languageCulture)
+    : ApiController(languageCulture)
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public CurrencyController(
-        ISender sender,
-        IMapper mapper,
-        ILanguageCulture languageCulture) : base(languageCulture)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
-
     [HttpGet("convert")]
     public async Task<ActionResult<Conversionresult>> GetAllCurrencies(
         [FromRoute] Guid profileId,
@@ -41,7 +33,7 @@ public class CurrencyController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var getAllCurrenciesResult =
-            await _sender.Send(
+            await sender.Send(
                 new ConvertCurrencyQuery(
                     profileId,
                     ecoCoins,
@@ -49,7 +41,7 @@ public class CurrencyController : ApiController
                 ));
         
         return getAllCurrenciesResult.Match(
-            currencyResponse => Ok(_mapper.Map<Conversionresult>(currencyResponse)),
+            currencyResponse => Ok(mapper.Map<Conversionresult>(currencyResponse)),
             Problem<Conversionresult>
         );
     }
