@@ -46,7 +46,6 @@ public class AdvertisementController : ApiController
                                 
         var deleteAdvert = await _sender.Send(new
             RemoveAdvertCommand(
-                authId, 
                 profileId, 
                 advertId
             ), cancellationToken
@@ -70,7 +69,6 @@ public class AdvertisementController : ApiController
                         
         var getMyAdverts = await _sender.Send(new
             GetMyAdvertsQuery(
-                authId,
                 profileId,
                 storeId,
                 search,
@@ -95,7 +93,6 @@ public class AdvertisementController : ApiController
                         
         var getByIdAdvert = await _sender.Send(new
             GetAdvertByIdQuery(
-                authId,
                 profileId,
                 advertId
             ), cancellationToken
@@ -118,7 +115,6 @@ public class AdvertisementController : ApiController
                 
         var createAddResult = await _sender.Send(new
             CreateAddCommand(
-                authId,
                 profileId,
                 storeId,
                 request.Title,

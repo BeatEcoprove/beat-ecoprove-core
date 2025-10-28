@@ -49,7 +49,6 @@ public class StoreController : ApiController
                 
         var getOwningStores = await _sender.Send(new
             GetOwningStoresQuery(
-                authId,
                 profileId,
                 search,
                 page,
@@ -73,7 +72,6 @@ public class StoreController : ApiController
         
         var getStoreResult = await _sender.Send(new
             GetStoreByIdQuery(
-                authId,
                 profileId,
                 storeId
             ), cancellationToken
@@ -95,7 +93,6 @@ public class StoreController : ApiController
 
         var createStoreResult = await _sender.Send(new
             AddStoreCommand(
-                authId,
                 profileId,
                 request.Name,
                 request.Country,
@@ -125,7 +122,6 @@ public class StoreController : ApiController
         
         var deleteStoreById = await _sender.Send(new
             DeleteStoreByIdCommand(
-                authId,
                 profileId,
                 storeId
             ), cancellationToken

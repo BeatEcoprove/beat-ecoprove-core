@@ -43,12 +43,11 @@ public class CurrencyController : ApiController
         var getAllCurrenciesResult =
             await _sender.Send(
                 new ConvertCurrencyQuery(
-                    authId,
                     profileId,
                     ecoCoins,
                     sustainabilityPoints
                 ));
-
+        
         return getAllCurrenciesResult.Match(
             currencyResponse => Ok(_mapper.Map<Conversionresult>(currencyResponse)),
             Problem<Conversionresult>

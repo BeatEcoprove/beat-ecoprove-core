@@ -51,7 +51,7 @@ public static class ConfigurationExtensions
             }
 
             var bsonClassMap = Activator.CreateInstance(bsonClassMapType);
-            configurationMethod.Invoke(configurationService, new[] { bsonClassMap });
+            configurationMethod.Invoke(configurationService, [bsonClassMap]);
 
             BsonClassMap.TryRegisterClassMap((dynamic)bsonClassMap!);
         }

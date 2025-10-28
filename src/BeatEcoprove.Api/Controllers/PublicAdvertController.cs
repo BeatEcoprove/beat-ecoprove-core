@@ -42,7 +42,6 @@ public class PublicAdvertController : ApiController
                         
         var getByIdAdvert = await _sender.Send(new
             GetAdvertByIdQuery(
-                authId,
                 profileId,
                 advertId,
                 false
@@ -67,7 +66,6 @@ public class PublicAdvertController : ApiController
                 
         var getAllAdverts = await _sender.Send(new
             GetHomeAddsQuery(
-                authId,
                 profileId,
                 search,
                 page ?? 1,

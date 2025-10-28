@@ -47,7 +47,6 @@ public class OrderController : ApiController
         
         var registerOrderResult = await _sender.Send(new
             GetOrderByIdQuery(
-                authId,
                 profileId,
                 orderId,
                 storeId
@@ -77,7 +76,6 @@ public class OrderController : ApiController
                 
         var registerOrderResult = await _sender.Send(new
             GetOrdersQuery(
-                authId, 
                 profileId, 
                 storeIds, 
                 search, 
@@ -109,7 +107,6 @@ public class OrderController : ApiController
         
         var registerOrderResult = await _sender.Send(new
             RegisterOrderCommand(
-                authId, 
                 profileId, 
                 storeId, 
                 ownerId, 
@@ -135,7 +132,6 @@ public class OrderController : ApiController
          
          var completeOrder = await _sender.Send(new
              CompleteOrderCommand(
-                 authId, 
                  profileId, 
                  storeId,
                  orderId,

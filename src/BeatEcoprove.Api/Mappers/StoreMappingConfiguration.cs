@@ -25,13 +25,13 @@ public class StoreMappingConfiguration : IRegister
                 )
             ));
 
-        config.NewConfig<WorkerDao, WorkerResponse>()
-            .MapWith(src => new WorkerResponse(
-                src.Id,
-                src.Name,
-                src.Email.Value,
-                src.Type.ToString()
-            ));
+        // config.NewConfig<WorkerDao, WorkerResponse>()
+        //     .MapWith(src => new WorkerResponse(
+        //         src.Id,
+        //         src.Name,
+        //         src.Email.Value,
+        //         src.Type.ToString()
+        //     ));
 
         config.NewConfig<Store, StoreResponse>()
             .MapWith(src => new StoreResponse(

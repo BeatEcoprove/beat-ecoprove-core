@@ -44,7 +44,6 @@ public class RatingController : ApiController
                         
         var getRatings = await _sender.Send(new
             GetStoreRatingsQuery(
-                authId,
                 profileId,
                 storeId,
                 page,
@@ -69,7 +68,6 @@ public class RatingController : ApiController
                 
         var postRating = await _sender.Send(new
             PostRatingCommand(
-                authId,
                 profileId,
                 storeId,
                 request.Rating

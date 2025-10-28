@@ -12,7 +12,7 @@ public static class ApplicationConfiguration
     {
         var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "public");
 
-        app.UseStaticFiles(new StaticFileOptions
+        app.UseStaticFiles(new StaticFileOptions()
         {
             OnPrepareResponse = ctx =>
             {

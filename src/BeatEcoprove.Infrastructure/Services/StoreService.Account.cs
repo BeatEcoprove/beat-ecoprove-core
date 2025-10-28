@@ -7,7 +7,7 @@ namespace BeatEcoprove.Infrastructure.Services;
 
 public partial class StoreService
 {
-    private async Task<ErrorOr<AuthId>> CreateAccount(
+    private Task<ErrorOr<AuthId>> CreateAccount(
         string email,
         string password,
         Profile profile,
@@ -16,6 +16,6 @@ public partial class StoreService
     {
         var authId = AuthId.Create(Guid.NewGuid());
         profile.SetAuthId(authId);
-        return authId;
+        return Task.FromResult<ErrorOr<AuthId>>(authId);
     }
 }

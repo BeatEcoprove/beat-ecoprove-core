@@ -1,15 +1,23 @@
-using BeatEcoprove.Domain.Shared.ValueObjects;
+using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
-public sealed class AuthId : Id<Guid>
+public class AuthId : AggregateRootId<Guid>
 {
-    private AuthId(Guid value) : base(value)
+    private AuthId() { }
+
+    private AuthId(Guid id) => Value = id;
+
+    public sealed override Guid Value { get; protected set; }
+
+    public static AuthId CreateUnique() => new(Guid.NewGuid());
+
+    public static AuthId Create(Guid id) => new(id);
+
+    protected override IEnumerable<object> GetEqualityComponents()
     {
+        yield return Value;
     }
 
-    public static AuthId Create(Guid value)
-    {
-        return new AuthId(value);
-    }
+    public static implicit operator Guid(AuthId self) => self.Value;
 }

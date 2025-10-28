@@ -49,7 +49,6 @@ public class ProviderController : ApiController
                         
         var getAllProviders = await _sender.Send(new
             GetAllStandardProvidersQuery(
-                authId,
                 profileId,
                 search,
                 page,
@@ -73,7 +72,6 @@ public class ProviderController : ApiController
                         
         var getAllProviders = await _sender.Send(new
             GetProviderByIdQuery(
-                authId,
                 profileId,
                 providerId
             ), cancellationToken
@@ -98,7 +96,6 @@ public class ProviderController : ApiController
                         
         var getAllProviders = await _sender.Send(new
             GetProviderStoresQuery(
-                authId, 
                 profileId, 
                 providerId, 
                 search, 
@@ -124,7 +121,6 @@ public class ProviderController : ApiController
                         
         var getStoreById = await _sender.Send(new
             GetProviderStoreByIdQuery(
-                authId,
                 profileId,
                 providerId,
                 storeId
@@ -147,7 +143,6 @@ public class ProviderController : ApiController
                         
         var getAdverts = await _sender.Send(new
             GetProviderAdvertsQuery(
-                authId,
                 profileId, 
                 providerId
             ), cancellationToken

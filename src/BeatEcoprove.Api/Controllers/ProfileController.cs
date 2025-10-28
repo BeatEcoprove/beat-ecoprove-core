@@ -52,7 +52,6 @@ public class ProfileController : ApiController
 
         var profiles = await _sender
             .Send(new GetAllProfilesQuery(
-                authId,
                 profileId,
                 search,
                 page ?? 1,
@@ -75,7 +74,6 @@ public class ProfileController : ApiController
 
         var profiles = await _sender
             .Send(new GetProfileQuery(
-                authId,
                 profileId,
                 username
             ), cancellationToken);
@@ -92,7 +90,7 @@ public class ProfileController : ApiController
         var authId = HttpContext.User.GetUserId();
 
         var profiles = await _sender
-            .Send(new GetMyProfilesQuery(authId), cancellationToken);
+            .Send(new GetMyProfilesQuery(), cancellationToken);
 
         return profiles.Match(
             response => Ok(_mapper.Map<MyProfilesResponse>(response)),
@@ -100,6 +98,7 @@ public class ProfileController : ApiController
         );
     }
 
+    /*
     [HttpPut("{profileId:guid}/promote")]
     public async Task<ActionResult<ProfileResponse>> PromoteProfileToAccount(Guid profileId, [FromBody] PromoteProfileRequest request, CancellationToken cancellationToken = default)
     {
@@ -118,6 +117,7 @@ public class ProfileController : ApiController
             Problem<ProfileResponse>
         );
     }
+    */
 
     [HttpDelete("{profileId:guid}")]
     public async Task<ActionResult<ProfileResponse>> DeletePNestedProfile(Guid profileId, CancellationToken cancellationToken = default)
@@ -126,7 +126,6 @@ public class ProfileController : ApiController
 
         var profiles = await _sender
             .Send(new DeleteNestedProfileCommand(
-                authId,
                 profileId
             ), cancellationToken);
 
@@ -167,7 +166,6 @@ public class ProfileController : ApiController
 
         var addNestedProfile = await _sender
             .Send(new UpdateProfileCommand(
-                authId,
                 profileId,
                 request.Username,
                 request.Email,

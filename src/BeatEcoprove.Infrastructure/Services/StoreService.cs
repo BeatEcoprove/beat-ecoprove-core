@@ -286,7 +286,7 @@ public partial class StoreService : IStoreService
             }
         }
 
-        if (input.Name.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(input.Name))
         {
             return Errors.Worker.NotAllowedName;
         }

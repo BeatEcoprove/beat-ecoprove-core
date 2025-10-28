@@ -30,7 +30,7 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
 
     public string GetConnectionString()
     {
-        return this.Database.GetConnectionString() ?? Env.Postgres.ConnectionString;
+        return Env.Postgres.ConnectionString;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

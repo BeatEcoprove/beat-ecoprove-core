@@ -97,11 +97,18 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasColumnName("deleted_at");
 
         builder.Property(profile => profile.Id)
-            .HasColumnName("Id")
+            .HasColumnName("id")
             .ValueGeneratedNever()
             .HasConversion(
                 id => id.Value,
                 value => ProfileId.Create(value));
+        
+        builder.Property(profile => profile.AuthId)
+            .HasColumnName("auth_id")
+            .ValueGeneratedNever()
+            .HasConversion(
+                id => id.Value,
+                value => AuthId.Create(value));
 
         builder.HasDiscriminator(u => u.Type)
             .HasValue<Consumer>(UserType.Consumer)

@@ -49,7 +49,6 @@ public class WorkerController : ApiController
                         
         var getWorkerById = await _sender.Send(new
             GetWorkersQuery(
-               authId, 
                profileId, 
                storeId, 
                search,
@@ -75,7 +74,6 @@ public class WorkerController : ApiController
                 
         var getWorkerById = await _sender.Send(new
             GetWorkerByIdQuery(
-               authId, 
                profileId, 
                storeId, 
                workerId
@@ -99,7 +97,6 @@ public class WorkerController : ApiController
         
         var registerOrderResult = await _sender.Send(new
             AddWorkerCommand(
-                authId,
                 profileId,
                 storeId,
                 request.Name,
@@ -125,7 +122,6 @@ public class WorkerController : ApiController
         
         var registerOrderResult = await _sender.Send(new
              RemoveWorkerCommand(
-                authId,
                 profileId,
                 storeId,
                 workerId
@@ -150,7 +146,6 @@ public class WorkerController : ApiController
         
         var registerOrderResult = await _sender.Send(new
              ElevatePermissionOnWorkerCommand(
-                 authId,
                  profileId,
                  storeId,
                  workerId,

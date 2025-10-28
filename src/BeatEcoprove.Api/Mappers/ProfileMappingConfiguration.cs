@@ -33,13 +33,13 @@ public class ProfileMappingConfiguration : IRegister
                 )
             );
 
-        config.NewConfig<List<ProfileDao>, MyProfilesResponse>()
-            .MapWith(src => ToMyProfilesResponse(src));
+        // config.NewConfig<List<ProfileDao>, MyProfilesResponse>()
+        //     .MapWith(src => ToMyProfilesResponse(src));
 
 
     }
 
-    private MyProfilesResponse ToMyProfilesResponse(List<ProfileDao> profiles)
+    /*private MyProfilesResponse ToMyProfilesResponse(List<ProfileDao> profiles)
     {
         var mainProfile =
             profiles.SingleOrDefault(profile => profile.IsNested);
@@ -52,12 +52,12 @@ public class ProfileMappingConfiguration : IRegister
         var nestedProfiles =
             profiles
                 .Where(profile => !profile.IsNested)
-                .Select(profile => profile.Profile)
+                // .Select(profile => profile.Profile)
                 .ToList();
 
         return new MyProfilesResponse(
             mainProfile.Profile.Adapt<ProfileResponse>(),
             nestedProfiles.Adapt<List<ProfileResponse>>()
         );
-    }
+    }*/
 }
