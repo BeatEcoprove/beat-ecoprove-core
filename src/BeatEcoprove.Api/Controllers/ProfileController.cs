@@ -3,17 +3,20 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Commands.CreateNestedProfile;
 using BeatEcoprove.Application.Profiles.Commands.DeleteNestedProfile;
-using BeatEcoprove.Application.Profiles.Commands.PromoteProfileToAccount;
 using BeatEcoprove.Application.Profiles.Commands.UpdateProfile;
 using BeatEcoprove.Application.Profiles.Queries.GetAllProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetProfile;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Profile;
+using BeatEcoprove.Domain.ProfileAggregator.Events;
+using BeatEcoprove.Domain.Shared.Broker;
 
 using Mapster;
 
 using MapsterMapper;
+
+using MassTransit;
 
 using MediatR;
 
@@ -28,15 +31,21 @@ namespace BeatEcoprove.Api.Controllers;
 public class ProfileController(
     ISender sender,
     IMapper mapper,
-    ILanguageCulture languageCulture)
+    ILanguageCulture languageCulture,
+    ITopicProducer<IAuthEvent> publisher)
     : ApiController(languageCulture)
 {
     [HttpGet("test")]
     [AuthorizationRole("client")]
-    public async Task<ActionResult<string>> TestEndPoint()
+    public async Task<ActionResult<string>> TestEndPoint(CancellationToken cancellationToken = default)
     {
-        await Task.CompletedTask;
-        return Ok("Cebolas");
+        await publisher.Produce(
+            new ProfileCreatedEvent
+            {
+                ProfileId = Guid.CreateVersion7()
+            },  cancellationToken);
+        
+        return Ok("Profile OK");
     }
     
     [HttpGet("all")]
@@ -56,7 +65,7 @@ public class ProfileController(
                 search,
                 page ?? 1,
                 pageSize ?? 10
-                ), cancellationToken);
+            ), cancellationToken);
 
         return profiles.Match(
             response => Ok(new AllProfilesResponse(response.Adapt<List<ProfileResponse>>())),
@@ -142,13 +151,13 @@ public class ProfileController(
 
         var addNestedProfile = await sender
             .Send(new CreateNestedProfileCommand(
-                    authId,
-                    request.Name,
-                    request.BornDate,
-                    request.Gender,
-                    request.UserName,
-                    request.PictureStream
-                ), cancellation);
+                authId,
+                request.Name,
+                request.BornDate,
+                request.Gender,
+                request.UserName,
+                request.PictureStream
+            ), cancellation);
 
         return addNestedProfile.Match(
             response => Ok(mapper.Map<ProfileResponse>(response)),

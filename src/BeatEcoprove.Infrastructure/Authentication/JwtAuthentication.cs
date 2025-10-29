@@ -1,6 +1,4 @@
 using BeatEcoprove.Infrastructure.Configuration;
-using BeatEcoprove.Infrastructure.Persistence.Configurations;
-using BeatEcoprove.Infrastructure.Persistence.Serializers;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,10 +37,7 @@ public static class JwtAuthentication
 
                 options.Events = new JwtBearerEvents
                 {
-                    OnAuthenticationFailed = context =>
-                    {
-                        return Task.CompletedTask;
-                    }
+                    OnAuthenticationFailed = context => Task.CompletedTask
                 };
             });
         
