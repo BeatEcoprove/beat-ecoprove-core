@@ -1,5 +1,4 @@
 ﻿using BeatEcoprove.Infrastructure.Authentication;
-using BeatEcoprove.Infrastructure.BackgroundJobs;
 using BeatEcoprove.Infrastructure.Broker;
 using BeatEcoprove.Infrastructure.EmailSender;
 using BeatEcoprove.Infrastructure.FileStorage;
@@ -19,9 +18,7 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.SetUpMongoDb();
         services.SetUpRedis();
-        services.SetUpBackgroundJobs();
         services.AddEmailSender();
         services.AddFileStorageConfiguration();
         services.AddProviders();

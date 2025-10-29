@@ -9,10 +9,8 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MongoDB.Driver;
 using Respawn;
 using StackExchange.Redis;
-using Testcontainers.MongoDb;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 
@@ -36,17 +34,10 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
         .WithImage("redis:latest")
         .Build();
 
-    private readonly MongoDbContainer _mongoDbContainer = new MongoDbBuilder()
-        .WithImage("mongo:latest")
-        .WithUsername("beat")
-        .WithPassword("password")
-        .Build();
-
     protected override IHostBuilder? CreateHostBuilder()
     {
         Env.Postgres.ConnectionString = _dbContainer.GetConnectionString();
         Env.Redis.ConnectionString = _redisContainer.GetConnectionString();
-        Env.Mongo.ConnectionString = _mongoDbContainer.GetConnectionString();
         
         return base.CreateHostBuilder();
     }
@@ -58,23 +49,7 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
             ConfigureDbContext(services);
             ConfigureRedis(services);
             ConfigureMailSender(services);
-            ConfigureMongoDb(services);
         });
-    }
-
-    private void ConfigureMongoDb(IServiceCollection services)
-    {
-        var descriptor = services
-            .SingleOrDefault(s =>
-                s.ServiceType == typeof(IMongoClient));
-
-        if (descriptor is not null)
-        {
-            services.Remove(descriptor);
-        }
-
-        services.AddSingleton<IMongoClient>
-            (new MongoClient(_mongoDbContainer.GetConnectionString()));
     }
 
     private static void ConfigureMailSender(IServiceCollection services)
@@ -151,7 +126,6 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     {
         await _dbContainer.StartAsync();
         await _redisContainer.StartAsync();
-        await _mongoDbContainer.StartAsync();
 
         await InitiateDbConnection();
     }
@@ -175,7 +149,6 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     public new async Task DisposeAsync()
     {
         await _redisContainer.StopAsync();
-        await _mongoDbContainer.StopAsync();
         await _dbContainer.StopAsync();
     }
 }
