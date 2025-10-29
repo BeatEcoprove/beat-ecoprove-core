@@ -1,5 +1,4 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Infrastructure.Configuration;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,13 +10,6 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddScoped<IMailSender, MailSender>();
-
-        services.AddFluentEmail(Env.Smtp.Email)
-            .AddSmtpSender(
-                Env.Smtp.Host,
-                Env.Smtp.Port,
-                Env.Smtp.User,
-                Env.Smtp.Password);
 
         return services;
     }

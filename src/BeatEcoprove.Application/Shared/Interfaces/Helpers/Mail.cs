@@ -3,6 +3,5 @@
 public record Mail
 (
     string To,
-    string Subject,
-    string Body
-);
+    string Template,
+    Dictionary<string, string> Variables);

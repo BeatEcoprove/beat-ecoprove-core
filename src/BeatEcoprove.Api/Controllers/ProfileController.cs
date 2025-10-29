@@ -7,6 +7,8 @@ using BeatEcoprove.Application.Profiles.Commands.UpdateProfile;
 using BeatEcoprove.Application.Profiles.Queries.GetAllProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetProfile;
+using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Domain.ProfileAggregator.Events;
@@ -32,7 +34,8 @@ public class ProfileController(
     ISender sender,
     IMapper mapper,
     ILanguageCulture languageCulture,
-    ITopicProducer<IAuthEvent> publisher)
+    ITopicProducer<IAuthEvent> publisher,
+    IMailSender emailSender)
     : ApiController(languageCulture)
 {
     [HttpGet("test")]
@@ -44,6 +47,18 @@ public class ProfileController(
             {
                 ProfileId = Guid.CreateVersion7()
             },  cancellationToken);
+
+        await emailSender.SendMailAsync(
+            new Mail(
+                "sarahcallahan@ipvc.pt",
+                "confirm-user",
+                new Dictionary<string, string>()
+                {
+                    { "name", "diogo assunção" }
+                }
+            ),
+            cancellationToken
+        );
         
         return Ok("Profile OK");
     }

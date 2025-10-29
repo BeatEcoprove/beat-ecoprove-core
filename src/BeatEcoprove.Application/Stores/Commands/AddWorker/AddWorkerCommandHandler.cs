@@ -15,30 +15,20 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Stores.Commands.AddWorker;
 
-internal sealed class AddWorkerCommandHandler : ICommandHandler<AddWorkerCommand, ErrorOr<WorkerDao>>
+internal sealed class AddWorkerCommandHandler(
+    IProfileManager profileManager,
+    IStoreService storeService,
+    IStoreRepository storeRepository,
+    IMailSender mailSender,
+    IUnitOfWork unitOfWork)
+    : ICommandHandler<AddWorkerCommand, ErrorOr<WorkerDao>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IStoreService _storeService;
-    private readonly IStoreRepository _storeRepository;
-    private readonly IMailSender _mailSender;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public AddWorkerCommandHandler(IProfileManager profileManager, IStoreService storeService,
-        IStoreRepository storeRepository, IMailSender mailSender, IUnitOfWork unitOfWork)
-    {
-        _profileManager = profileManager;
-        _storeService = storeService;
-        _storeRepository = storeRepository;
-        _mailSender = mailSender;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<ErrorOr<WorkerDao>> Handle(AddWorkerCommand request, CancellationToken cancellationToken)
     {
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
 
-        var workerType = _storeService.GetWorkerType(request.Permission);
+        var workerType = storeService.GetWorkerType(request.Permission);
 
         if (workerType.IsError)
         {
@@ -52,21 +42,21 @@ internal sealed class AddWorkerCommandHandler : ICommandHandler<AddWorkerCommand
             return email.Errors;
         }
 
-        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
 
-        var store = await _storeRepository.GetByIdAsync(storeId, cancellationToken);
+        var store = await storeRepository.GetByIdAsync(storeId, cancellationToken);
 
         if (store is null)
         {
             return Errors.Store.StoreNotFound;
         }
 
-        var result = await _storeService.RegisterWorkerAsync(
+        var result = await storeService.RegisterWorkerAsync(
             store,
             profile.Value,
             new AddWorkerInput(
@@ -84,20 +74,23 @@ internal sealed class AddWorkerCommandHandler : ICommandHandler<AddWorkerCommand
 
         (Worker worker, Password password) = result.Value;
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var workerDao = await _storeRepository.GetWorkerDaoAsync(worker.Id, cancellationToken);
+        var workerDao = await storeRepository.GetWorkerDaoAsync(worker.Id, cancellationToken);
 
         if (workerDao is null)
         {
             return Errors.Worker.NotAllowedName;
         }
 
-        await _mailSender.SendMailAsync(
+        await mailSender.SendMailAsync(
             new Mail(
                 email.Value,
-                "Chave de accesso do empregado",
-                $"Chave de Accesso: {password.Value}"
+                "delivery-employee-key",
+                Variables: new Dictionary<string, string>()
+                {
+                    {"password", password.Value}
+                }
             ),
             cancellationToken
         );

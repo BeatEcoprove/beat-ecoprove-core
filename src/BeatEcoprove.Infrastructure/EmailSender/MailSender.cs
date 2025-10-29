@@ -1,33 +1,32 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Domain.Shared.Broker;
 
-using FluentEmail.Core;
+using MassTransit;
 
 namespace BeatEcoprove.Infrastructure.EmailSender;
 
-public class MailSender : IMailSender
+public class MailSender(
+    ITopicProducer<IEmailEvent> emailPublisher
+) : IMailSender
 {
-    private readonly IFluentEmail _fluentEmail;
-    private static readonly List<Mail> Mails = new();
+    private static readonly List<Mail> Mails = [];
 
-    public MailSender(IFluentEmail fluentEmail)
+    public async Task SendMailAsync(
+        Mail mail, 
+        CancellationToken cancellationToken = default)
     {
-        _fluentEmail = fluentEmail;
-    }
-
-    public async Task SendMailAsync(Mail mail, CancellationToken cancellationToken = default)
-    {
-        await _fluentEmail
-            .To(mail.To)
-            .Subject(mail.Subject)
-            .Body(mail.Body, isHtml: false)
-            .SendAsync(cancellationToken);
+        await emailPublisher.Produce(
+            new EmailQueueEvent(
+                mail.To,
+                mail.Template,
+                mail.Variables
+            ),
+            cancellationToken);
 
         Mails.Add(mail);
     }
 
     public Mail? Last()
-    {
-        return Mails.Count == 0 ? null : Mails.Last();
-    }
+        => Mails.Count == 0 ? null : Mails.Last();
 }

@@ -9,7 +9,7 @@ public class TopicBuilder<TEventTopic>(string topic, string topicGroup)
     where TEventTopic : class, IBrokerEvent
 {
     private readonly KafkaBrokerDeserializer<TEventTopic> _deserializer = new();
-    private readonly KafkaBrokerSerializer _serializer = new();
+    private readonly KafkaBrokerSerializer<TEventTopic> _serializer = new();
     
     private readonly List<Type> _consumers = [];
     
@@ -22,9 +22,17 @@ public class TopicBuilder<TEventTopic>(string topic, string topicGroup)
         return this;
     }
     
+    public TopicBuilder<TEventTopic> WithEvent<TEvent>()
+        where TEvent : class, IBrokerEvent
+    {
+        _deserializer.Register<TEvent>();
+        
+        return this;
+    }
+    
     public TopicBuilder<TEventTopic> WithProducer(IRiderRegistrationConfigurator rider)
     {
-        rider.AddProducer<IAuthEvent>(topic, (ctx, config) =>
+        rider.AddProducer<TEventTopic>(topic, (ctx, config) =>
         {
             config.SetValueSerializer(_serializer);
         }); 
