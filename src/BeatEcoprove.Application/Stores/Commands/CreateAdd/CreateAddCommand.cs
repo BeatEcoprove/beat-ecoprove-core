@@ -13,7 +13,6 @@ public record CreateAddCommand
     string Description,
     DateOnly BeginAt,
     DateOnly EndAt,
-    Stream Picture,
     string Type,
     int Quantity = 0
 ) : ICommand<ErrorOr<Advertisement>>;

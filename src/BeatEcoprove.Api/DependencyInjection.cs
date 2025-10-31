@@ -1,7 +1,11 @@
-﻿using Asp.Versioning;
+﻿using System.Text.Json;
+
+using Asp.Versioning;
 
 using BeatEcoprove.Api.Mappers;
 using BeatEcoprove.Api.Middlewares;
+
+using Carter;
 
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -62,11 +66,18 @@ public static class DependencyInjection
         services.AddApiVersion();
         
         services.AddMiddlewares();
+        
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+        });
+        
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddMappings();
-        
+
+        services.AddCarter();
         services.AddCors();
 
         return services;

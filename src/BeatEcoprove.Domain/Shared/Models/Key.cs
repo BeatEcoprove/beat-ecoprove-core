@@ -6,7 +6,7 @@ public record Key
 
     public string Value { get; }
 
-    public Key(params string[] values)
+    protected Key(params string[] values)
     {
         Value = string.Join(Delimiter, values);
     }

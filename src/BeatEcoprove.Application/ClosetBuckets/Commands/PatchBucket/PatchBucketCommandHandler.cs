@@ -9,27 +9,15 @@ using BeatEcoprove.Domain.Shared.Errors;
 
 using ErrorOr;
 
-namespace BeatEcoprove.Application.ClosetBuckets.Commands;
+namespace BeatEcoprove.Application.ClosetBuckets.Commands.PatchBucket;
 
-internal sealed class PatchBucketCommandHandler : ICommandHandler<PatchBucketCommand, ErrorOr<Bucket>>
+internal sealed class PatchBucketCommandHandler(
+    IProfileManager profileManager,
+    IProfileRepository profileRepository,
+    IBucketRepository bucketRepository,
+    IUnitOfWork unitOfWork)
+    : ICommandHandler<PatchBucketCommand, ErrorOr<Bucket>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IProfileRepository _profileRepository;
-    private readonly IBucketRepository _bucketRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public PatchBucketCommandHandler(
-        IProfileManager profileManager,
-        IProfileRepository profileRepository,
-        IBucketRepository bucketRepository,
-        IUnitOfWork unitOfWork)
-    {
-        _profileManager = profileManager;
-        _profileRepository = profileRepository;
-        _bucketRepository = bucketRepository;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<ErrorOr<Bucket>> Handle(PatchBucketCommand request, CancellationToken cancellationToken)
     {
         var profileId = ProfileId.Create(request.ProfileId);
@@ -40,24 +28,24 @@ internal sealed class PatchBucketCommandHandler : ICommandHandler<PatchBucketCom
             return Errors.Bucket.NameCannotBeEmpty;
         }
 
-        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
 
-        if (!await _profileRepository.CanProfileAccessBucket(profile.Value.Id, bucketId, cancellationToken))
+        if (!await profileRepository.CanProfileAccessBucket(profile.Value.Id, bucketId, cancellationToken))
         {
             return Errors.Bucket.CannotAccessBucket;
         }
 
-        if (await _bucketRepository.IsBucketNameAlreadyUsed(profile.Value.Id, bucketId, request.Name, cancellationToken))
+        if (await bucketRepository.IsBucketNameAlreadyUsed(profile.Value.Id, bucketId, request.Name, cancellationToken))
         {
             return Errors.Bucket.BucketNameAlreadyUsed;
         }
 
-        var bucket = await _bucketRepository.GetByIdAsync(bucketId, cancellationToken);
+        var bucket = await bucketRepository.GetByIdAsync(bucketId, cancellationToken);
 
         if (bucket is null)
         {
@@ -65,7 +53,7 @@ internal sealed class PatchBucketCommandHandler : ICommandHandler<PatchBucketCom
         }
 
         bucket.SetName(request.Name);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return bucket;
     }

@@ -11,22 +11,12 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.FeedBacks.Commands.SubmitFeedBack;
 
-internal sealed class SubmitFeedBackCommandHandler : ICommandHandler<SubmitFeedBackCommand, ErrorOr<FeedBackResult>>
+internal sealed class SubmitFeedBackCommandHandler(
+    IProfileManager profileManager,
+    IFeedBackRepository feedBackRepository,
+    IUnitOfWork unitOfWork)
+    : ICommandHandler<SubmitFeedBackCommand, ErrorOr<FeedBackResult>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IFeedBackRepository _feedBackRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public SubmitFeedBackCommandHandler(
-        IProfileManager profileManager,
-        IFeedBackRepository feedBackRepository,
-        IUnitOfWork unitOfWork)
-    {
-        _profileManager = profileManager;
-        _feedBackRepository = feedBackRepository;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<ErrorOr<FeedBackResult>> Handle(SubmitFeedBackCommand request, CancellationToken cancellationToken)
     {
         var profileId = ProfileId.Create(request.ProfileId);
@@ -37,7 +27,7 @@ internal sealed class SubmitFeedBackCommandHandler : ICommandHandler<SubmitFeedB
             return title.Errors;
         }
 
-        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -49,8 +39,8 @@ internal sealed class SubmitFeedBackCommandHandler : ICommandHandler<SubmitFeedB
             title.Value,
             request.Description);
 
-        await _feedBackRepository.AddAsync(feedBack.Value, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await feedBackRepository.AddAsync(feedBack.Value, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new FeedBackResult(
             feedBack.Value.Id,

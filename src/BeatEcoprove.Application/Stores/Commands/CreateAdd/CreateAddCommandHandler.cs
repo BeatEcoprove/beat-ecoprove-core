@@ -11,28 +11,18 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Stores.Commands.CreateAdd;
 
-internal sealed class CreateAddCommandHandler : ICommandHandler<CreateAddCommand, ErrorOr<Advertisement>>
+internal sealed class CreateAddCommandHandler(
+    IProfileManager profileManager,
+    IAdvertisementService advertisementService,
+    IUnitOfWork unitOfWork)
+    : ICommandHandler<CreateAddCommand, ErrorOr<Advertisement>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IAdvertisementService _advertisementService;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public CreateAddCommandHandler(
-        IProfileManager profileManager,
-        IAdvertisementService advertisementService,
-        IUnitOfWork unitOfWork)
-    {
-        _profileManager = profileManager;
-        _advertisementService = advertisementService;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<ErrorOr<Advertisement>> Handle(CreateAddCommand request, CancellationToken cancellationToken)
     {
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
 
-        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -74,11 +64,10 @@ internal sealed class CreateAddCommandHandler : ICommandHandler<CreateAddCommand
             return advertisement.Errors;
         }
 
-        var createResult = await _advertisementService.CreateAdd(
+        var createResult = await advertisementService.CreateAdd(
             storeId,
             advertisement.Value,
             profile.Value,
-            request.Picture,
             cancellationToken
         );
 
@@ -87,7 +76,7 @@ internal sealed class CreateAddCommandHandler : ICommandHandler<CreateAddCommand
             return createResult.Errors;
         }
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return advertisement;
     }

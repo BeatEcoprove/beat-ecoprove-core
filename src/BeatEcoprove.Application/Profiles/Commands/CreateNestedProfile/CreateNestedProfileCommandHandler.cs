@@ -14,29 +14,17 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Commands.CreateNestedProfile;
 
-internal sealed class CreateNestedProfileCommandHandler : ICommandHandler<CreateNestedProfileCommand, ErrorOr<Profile>>
+internal sealed class CreateNestedProfileCommandHandler(
+    IProfileManager profileManager,
+    IProfileRepository profileRepository,
+    IUnitOfWork unitOfWork,
+    IFileStorageProvider fileStorageProvider)
+    : ICommandHandler<CreateNestedProfileCommand, ErrorOr<Profile>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IProfileRepository _profileRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IFileStorageProvider _fileStorageProvider;
-
-    public CreateNestedProfileCommandHandler(
-        IProfileManager profileManager,
-        IProfileRepository profileRepository,
-        IUnitOfWork unitOfWork,
-        IFileStorageProvider fileStorageProvider)
-    {
-        _profileManager = profileManager;
-        _profileRepository = profileRepository;
-        _unitOfWork = unitOfWork;
-        _fileStorageProvider = fileStorageProvider;
-    }
-
     public async Task<ErrorOr<Profile>> Handle(CreateNestedProfileCommand request, CancellationToken cancellationToken)
     {
         // Validate request
-        var userName = UserName.Create(request.UserName.Capitalize());
+        var userName = DisplayName.Create(request.UserName.Capitalize());
         if (!Enum.TryParse<Gender>(request.Gender, out var gender))
         {
             return Errors.User.InvalidUserGender;
@@ -47,13 +35,13 @@ internal sealed class CreateNestedProfileCommandHandler : ICommandHandler<Create
             return userName.Errors;
         }
 
-        if (await _profileRepository.ExistsUserByUserNameAsync(userName.Value, cancellationToken))
+        if (await profileRepository.ExistsUserByUserNameAsync(userName.Value, cancellationToken))
         {
             return Errors.User.UserNameAlreadyExists;
         }
 
         // Get Main Profile and check profile
-        var profile = await _profileManager.GetProfileAsync(request.AuthId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(request.AuthId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -65,6 +53,9 @@ internal sealed class CreateNestedProfileCommandHandler : ICommandHandler<Create
 
         var nestedProfile = Consumer.Create(
             userName.Value,
+            string.Empty,
+            String.Empty,
+            String.Empty, 
             phone.Value,
             request.BornDate,
             gender
@@ -75,7 +66,7 @@ internal sealed class CreateNestedProfileCommandHandler : ICommandHandler<Create
 
         // Set avatar and store it on database
         var avatarUrl =
-            await _fileStorageProvider
+            await fileStorageProvider
                 .UploadFileAsync(
                     Buckets.ProfileBucket,
                     ((Guid)nestedProfile.Id).ToString(),
@@ -85,8 +76,8 @@ internal sealed class CreateNestedProfileCommandHandler : ICommandHandler<Create
         nestedProfile.SetProfileAvatar(avatarUrl);
 
         // Save Nested Profile
-        await _profileRepository.AddAsync(nestedProfile, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await profileRepository.AddAsync(nestedProfile, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return nestedProfile;
     }

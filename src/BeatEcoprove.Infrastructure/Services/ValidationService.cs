@@ -21,7 +21,7 @@ public class ValidationService : IValidationFieldService
 
     private async Task<bool> IsUserNameAvailableAsync(string validationValue)
     {
-        var userName = UserName.Create(validationValue);
+        var userName = DisplayName.Create(validationValue);
 
         return !await _profileRepository.ExistsUserByUserNameAsync(userName.Value, default);
     }

@@ -7,6 +7,5 @@ namespace BeatEcoprove.Application.Profiles.Queries.GetProfile;
 
 public record GetProfileQuery
 (
-    Guid ProfileId,
-    string username
+    Guid ProfileId
 ) : IQuery<ErrorOr<Profile>>;

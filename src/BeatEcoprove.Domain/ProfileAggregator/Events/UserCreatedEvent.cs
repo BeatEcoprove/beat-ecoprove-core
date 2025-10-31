@@ -1,9 +1,12 @@
+using System.Text.Json;
+
 using BeatEcoprove.Domain.Shared.Broker;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Events;
 
 public record UserCreatedEvent(
-    string PublicId, 
-    string Email, 
+    Guid AuthId,
+    Guid ProfileId,
+    string Email,
     string Role
 ) : IAuthEvent;

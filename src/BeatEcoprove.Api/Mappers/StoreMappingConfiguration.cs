@@ -20,7 +20,7 @@ public class StoreMappingConfiguration : IRegister
                 src.Rating,
                 new ProfileClosetResponse(
                     src.Profile.Id,
-                    src.Profile.UserName,
+                    src.Profile.DisplayName,
                     src.Profile.AvatarUrl
                 )
             ));
@@ -65,7 +65,7 @@ public class StoreMappingConfiguration : IRegister
             src.Id,
             new ProfileClosetResponse(
                 src.Owner.Id,
-                src.Owner.UserName,
+                src.Owner.DisplayName,
                 src.Owner.AvatarUrl
             ),
             ToMaintenanceOrder(src),
@@ -79,7 +79,7 @@ public class StoreMappingConfiguration : IRegister
             src.Id,
             new ProfileClosetResponse(
                 src.Owner.Id,
-                src.Owner.UserName,
+                src.Owner.DisplayName,
                 src.Owner.AvatarUrl
             ),
             ToMaintenanceOrder(src),

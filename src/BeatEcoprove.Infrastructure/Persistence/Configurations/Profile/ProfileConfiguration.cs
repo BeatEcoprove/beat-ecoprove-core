@@ -128,12 +128,24 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasColumnName("eco_coins")
             .IsRequired();
 
-        builder.Property(profile => profile.UserName)
-            .HasColumnName("user_name")
+        builder.Property(profile => profile.DisplayName)
+            .HasColumnName("display_name")
             .HasMaxLength(256)
             .HasConversion(
                 userName => userName.Value,
-                value => UserName.Create(value).Value);
+                value => DisplayName.Create(value).Value);
+
+        builder.Property(profile => profile.FirstName)
+            .HasColumnName("first_name")
+            .HasMaxLength(256);
+        
+        builder.Property(profile => profile.LastName)
+            .HasColumnName("last_name")
+            .HasMaxLength(256);
+        
+        builder.Property(profile => profile.Biography)
+            .HasColumnName("biography")
+            .HasMaxLength(256);
 
         builder.OwnsOne(u => u.Phone, p =>
         {

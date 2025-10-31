@@ -29,7 +29,7 @@ public class ProviderMapperConfiguration : IRegister
             .MapWith(src => new StandardProviderResponse(
                 src.Id,
                 src.AvatarUrl,
-                src.UserName,
+                src.DisplayName,
                 src.TypeOption.ToString()   
             ));
     }

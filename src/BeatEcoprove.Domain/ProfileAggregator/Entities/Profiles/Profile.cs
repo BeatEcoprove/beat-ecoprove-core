@@ -16,15 +16,18 @@ namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
 {
     private const int ConvertConcurrencyRange = 10;
-    private readonly List<ClothEntry> _clothEntries = new();
-    private readonly List<BucketEntry> _bucketEntries = new();
+    private readonly List<ClothEntry> _clothEntries = [];
+    private readonly List<BucketEntry> _bucketEntries = [];
 
     protected Profile()
     {
     }
 
     protected Profile(
-        UserName userName,
+        DisplayName displayName,
+        string firstName,
+        string lastName,
+        string biography,
         Phone phone,
         double xP,
         int sustainabilityPoints,
@@ -32,7 +35,10 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
         UserType type)
     {
         Id = ProfileId.CreateUnique();
-        UserName = userName;
+        DisplayName = displayName;
+        FirstName = firstName;
+        LastName = lastName;
+        Biography = biography;
         Phone = phone;
         XP = xP;
         SustainabilityPoints = sustainabilityPoints;
@@ -42,7 +48,10 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
         EcoCoins = 0;
     }
 
-    public UserName UserName { get; protected set; } = null!;
+    public DisplayName DisplayName { get; protected set; } = null!;
+    public string FirstName { get; protected set; } = null!;
+    public string LastName { get; protected set; } = null!;
+    public string Biography { get; protected set; } = null!;
     public Phone Phone { get; protected set; } = null!;
     public double XP { get; set; }
     public int Level { get; set; }
@@ -64,13 +73,18 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
     {
         AuthId = authId;
     }
-
+    
+    public void SetProfileId(ProfileId profileId)
+    {
+        Id = profileId;
+    }
+    
     public ProfileDao ToDao()
     {
         return new ProfileDao(
             Id.Value,
             AuthId.Value,
-            UserName.Value,
+            DisplayName.Value,
             AvatarUrl,
             Type.ToString()!,
             this is Consumer
@@ -168,13 +182,13 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
 
     public void Update
     (
-        UserName? userName,
+        DisplayName? userName,
         Phone? phone
     )
     {
         if (userName is not null)
         {
-            UserName = userName;
+            DisplayName = userName;
         }
 
         if (phone is not null)

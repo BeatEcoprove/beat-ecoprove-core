@@ -15,6 +15,5 @@ public record AddStoreCommand
     string PostalCode,
     int Port,
     double Lat,
-    double Lon,
-    Stream Picture
+    double Lon
 ) : ICommand<ErrorOr<Store>>;

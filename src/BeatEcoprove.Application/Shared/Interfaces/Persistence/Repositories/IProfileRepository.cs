@@ -26,7 +26,7 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
         int pageSize = 10,
         int page = 1,
         CancellationToken cancellationToken = default);
-    Task<bool> ExistsUserByUserNameAsync(UserName userName, CancellationToken cancellationToken = default);
+    Task<bool> ExistsUserByUserNameAsync(DisplayName displayName, CancellationToken cancellationToken = default);
     Task<bool> CanProfileAccessBucket(ProfileId profileId, BucketId bucketId, CancellationToken cancellationToken = default);
     Task<bool> CanProfileAccessCloth(ProfileId profileId, ClothId clothId, CancellationToken cancellationToken = default);
     Task DeleteAsync(ProfileId id, CancellationToken cancellationToken);
@@ -46,7 +46,7 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
         int page = 1,
         CancellationToken cancellationToken = default);
     Task<Profile?> GetByUserNameAsync(
-        UserName username,
+        DisplayName username,
         CancellationToken cancellationToken = default);
     Task UpdateWorkerProfileSustainablePoints(
         List<ProfileId> workerProfileIds,

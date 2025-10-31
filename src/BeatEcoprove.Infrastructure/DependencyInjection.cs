@@ -1,4 +1,6 @@
-﻿using BeatEcoprove.Infrastructure.Authentication;
+﻿using BeatEcoprove.Domain;
+using BeatEcoprove.Domain.ProfileAggregator.Factories;
+using BeatEcoprove.Infrastructure.Authentication;
 using BeatEcoprove.Infrastructure.Broker;
 using BeatEcoprove.Infrastructure.EmailSender;
 using BeatEcoprove.Infrastructure.FileStorage;
@@ -25,6 +27,8 @@ public static class DependencyInjection
         services.AddServices();
         services.AddPersistenceLayer();
         services.AddMultiLanguage();
+
+        services.AddDomain();
         
         services.AddJwks();
         services.AddBroker();

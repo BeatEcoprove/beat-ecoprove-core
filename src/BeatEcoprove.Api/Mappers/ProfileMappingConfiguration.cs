@@ -14,7 +14,7 @@ public class ProfileMappingConfiguration : IRegister
             .MapWith((src) =>
                 new ProfileResponse(
                     src.Id.Value,
-                    src.UserName.Value,
+                    src.DisplayName.Value,
                     src.Level,
                     0,
                     src.SustainabilityPoints,
@@ -28,7 +28,7 @@ public class ProfileMappingConfiguration : IRegister
             .MapWith((src) =>
                 new ProfileClosetResponse(
                     src.Id.Value,
-                    src.UserName.Value,
+                    src.DisplayName.Value,
                     src.AvatarUrl
                 )
             );

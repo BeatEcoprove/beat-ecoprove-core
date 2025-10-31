@@ -9,41 +9,18 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Queries.GetProfile;
 
-internal sealed class GetProfileQueryHandler : IQueryHandler<GetProfileQuery, ErrorOr<Profile>>
+internal sealed class GetProfileQueryHandler(
+    IProfileManager profileManager, 
+    IProfileRepository profileRepository)
+    : IQueryHandler<GetProfileQuery, ErrorOr<Profile>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IProfileRepository _profileRepository;
-
-    public GetProfileQueryHandler(IProfileManager profileManager, IProfileRepository profileRepository)
-    {
-        _profileManager = profileManager;
-        _profileRepository = profileRepository;
-    }
-
-    public async Task<ErrorOr<Profile>> Handle(GetProfileQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Profile>> Handle(
+        GetProfileQuery request, 
+        CancellationToken cancellationToken)
     {
         var profileId = ProfileId.Create(request.ProfileId);
-        var username = UserName.Create(request.username);
+        var profile = await profileManager.GetProfileAsync(profileId, cancellationToken);
 
-        if (username.IsError)
-        {
-            return username.Errors;
-        }
-
-        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
-
-        if (profile.IsError)
-        {
-            return profile.Errors;
-        }
-
-        var getProfile = await _profileRepository.GetByUserNameAsync(username.Value, cancellationToken);
-
-        if (getProfile is null)
-        {
-            return Errors.Profile.NotFound;
-        }
-
-        return getProfile;
+        return profile.IsError ? profile.Errors : profile;
     }
 }

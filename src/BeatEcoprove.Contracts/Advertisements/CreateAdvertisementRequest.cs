@@ -10,10 +10,6 @@ public record CreateAdvertisementRequest
     string Description,
     DateOnly BeginAt,
     DateOnly EndAt,
-    IFormFile? Picture,
     string Type,
     int Quantity = 0
-) : IPictureRequest
-{
-    public Stream PictureStream => Picture != null ? Picture.OpenReadStream() : Stream.Null;
-}
+);

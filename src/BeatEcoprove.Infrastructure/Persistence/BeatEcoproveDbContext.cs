@@ -11,19 +11,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence;
 
-public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWork
+public class BeatEcoproveDbContext(
+    SoftDeleteInterceptor softDeleteInterceptor,
+    PublishDomainEventsInterceptor publishDomainEventsInterceptor)
+    : DbContext, IApplicationDbContext, IUnitOfWork
 {
-    private readonly SoftDeleteInterceptor _softDeleteInterceptor;
-    private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
-
-    public BeatEcoproveDbContext(
-        SoftDeleteInterceptor softDeleteInterceptor,
-        PublishDomainEventsInterceptor publishDomainEventsInterceptor)
-    {
-        _softDeleteInterceptor = softDeleteInterceptor;
-        _publishDomainEventsInterceptor = publishDomainEventsInterceptor;
-    }
-
     public DbSet<Profile> Profiles { get; init; } = null!;
     public DbSet<Cloth> Cloths { get; init; } = null!;
     public DbSet<Bucket> Buckets { get; init; } = null!;
@@ -35,8 +27,8 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(_softDeleteInterceptor);
-        optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
+        optionsBuilder.AddInterceptors(softDeleteInterceptor);
+        optionsBuilder.AddInterceptors(publishDomainEventsInterceptor);
 
         optionsBuilder.UseNpgsql(Env.Postgres.ConnectionString, builder =>
         {
@@ -59,7 +51,7 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
         modelBuilder
             .SetUpGlobalQueryFilters<ISoftDelete>((entity) => entity.DeletedAt == null);
 
-        BeatEcoproveSeeder.Seed(modelBuilder);
+        // BeatEcoproveSeeder.Seed(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 

@@ -27,7 +27,6 @@ public interface IAdvertisementService
         StoreId storeId,
         Advertisement advertisement,
         Profile profile,
-        Stream picture,
         CancellationToken cancellationToken = default);
 
     Task<ErrorOr<Advertisement>> DeleteAsync(

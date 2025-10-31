@@ -5,23 +5,22 @@ using ErrorOr;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
-public class UserName : ValueObject
+public class DisplayName : ValueObject
 {
-    public UserName() { }
+    public DisplayName() { }
 
-    private UserName(string value) => Value = value;
+    private DisplayName(string value) => Value = value;
 
     public string Value { get; private set; } = null!;
 
-    public static ErrorOr<UserName> Create(string value)
+    public static ErrorOr<DisplayName> Create(string value)
     {
-        // verify if is null or empty
         if (string.IsNullOrWhiteSpace(value))
         {
             return Errors.Username.InvalidUsername;
         }
 
-        return new UserName(value);
+        return new DisplayName(value);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
@@ -29,5 +28,5 @@ public class UserName : ValueObject
         yield return Value;
     }
 
-    public static implicit operator string(UserName userName) => userName.Value;
+    public static implicit operator string(DisplayName displayName) => displayName.Value;
 }

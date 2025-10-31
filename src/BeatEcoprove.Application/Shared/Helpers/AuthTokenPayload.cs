@@ -5,68 +5,38 @@ using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 
 namespace BeatEcoprove.Application.Shared.Helpers;
 
-public class AuthTokenPayload : TokenPayload
+public class AuthTokenPayload(
+    Guid accountId,
+    Guid profileId,
+    string email,
+    string userName,
+    string avatarUrl,
+    int level,
+    double levelPercentage,
+    int sustainablePoints,
+    int ecoScore,
+    int ecoCoins,
+    double currentXp,
+    double nextLevelXp,
+    UserType userType,
+    Tokens tokenType,
+    string role = "",
+    string storeId = "")
+    : TokenPayload(tokenType)
 {
-    private readonly Guid _accountId;
-    private readonly Guid _profileId;
-    private readonly int _level;
-    private readonly double _levelPercentage;
-    private readonly int _sustainablePoints;
-    private readonly int _ecoScore;
-    private readonly int _ecoCoins;
-    private readonly double _currentXp;
-    private readonly double _nextLevelXp;
-    private readonly string _role;
-    private readonly string _storeId;
-
-    public AuthTokenPayload(
-        Guid accountId,
-        Guid profileId,
-        string email,
-        string userName,
-        string avatarUrl,
-        int level,
-        double levelPercentage,
-        int sustainablePoints,
-        int ecoScore,
-        int ecoCoins,
-        double currentXp,
-        double nextLevelXp,
-        UserType userType,
-        Tokens tokenType,
-        string role = "",
-        string storeId = "") : base(tokenType)
-    {
-        _storeId = storeId;
-        _role = role;
-        _accountId = accountId;
-        _profileId = profileId;
-        Email = email;
-        UserName = userName;
-        AvatarUrl = avatarUrl;
-        _level = level;
-        _levelPercentage = levelPercentage;
-        _sustainablePoints = sustainablePoints;
-        _ecoScore = ecoScore;
-        _ecoCoins = ecoCoins;
-        _currentXp = currentXp;
-        _nextLevelXp = nextLevelXp;
-        UserType = userType;
-    }
-
-    public string AccountId => _accountId.ToString();
-    public string ProfileId => _profileId.ToString();
-    public string Email { get; }
-    public string UserName { get; }
-    public string AvatarUrl { get; }
-    public UserType UserType { get; }
-    public string Level => _level.ToString();
-    public string LevelPercentage => _levelPercentage.ToString(CultureInfo.CurrentCulture);
-    public string SustainablePoints => _sustainablePoints.ToString();
-    public string EcoScore => _ecoScore.ToString();
-    public string EcoCoins => _ecoCoins.ToString();
-    public string CurrentXp => _currentXp.ToString(CultureInfo.InvariantCulture);
-    public string NextLevelXp => _nextLevelXp.ToString(CultureInfo.InvariantCulture);
+    public string AccountId => accountId.ToString();
+    public string ProfileId => profileId.ToString();
+    public string Email { get; } = email;
+    public string UserName { get; } = userName;
+    public string AvatarUrl { get; } = avatarUrl;
+    public UserType UserType { get; } = userType;
+    public string Level => level.ToString();
+    public string LevelPercentage => levelPercentage.ToString(CultureInfo.CurrentCulture);
+    public string SustainablePoints => sustainablePoints.ToString();
+    public string EcoScore => ecoScore.ToString();
+    public string EcoCoins => ecoCoins.ToString();
+    public string CurrentXp => currentXp.ToString(CultureInfo.InvariantCulture);
+    public string NextLevelXp => nextLevelXp.ToString(CultureInfo.InvariantCulture);
 
     public override IDictionary<string, string> GetPayload()
     {
@@ -89,12 +59,14 @@ public class AuthTokenPayload : TokenPayload
             { UserClaims.Type, userType } 
         };
 
-        if (UserType.Equals(UserType.Employee))
+        if (!UserType.Equals(UserType.Employee))
         {
-            claims.Add(UserClaims.Role, _role);
-            claims.Add(UserClaims.StoreId, _storeId);
+            return claims;
         }
-        
+
+        claims.Add(UserClaims.Role, role);
+        claims.Add(UserClaims.StoreId, storeId);
+
         return claims;
     }
 }

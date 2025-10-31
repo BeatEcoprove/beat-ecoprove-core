@@ -68,7 +68,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                               ).FirstOrDefault()
                               select new ProviderDao(
                                   organization.Id,
-                                  organization.UserName,
+                                  organization.DisplayName,
                                   organization.AvatarUrl,
                                   organization.TypeOption,
                                   new(),
@@ -88,7 +88,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                                   let organization = profile as Organization
                                   where
                                       profile.Type.Equals(UserType.Organization) && organization != null &&
-                                      (search == null || ((string)profile.UserName).ToLower().Contains(search.ToLower()))
+                                      (search == null || ((string)profile.DisplayName).ToLower().Contains(search.ToLower()))
                                   select organization;
 
         getAllOrganizations = getAllOrganizations
@@ -104,7 +104,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         var getAllProfiles =
             from profile in DbContext.Profiles
             where
-                (search == null || ((string)profile.UserName).ToLower().Contains(search.ToLower()))
+                (search == null || ((string)profile.DisplayName).ToLower().Contains(search.ToLower()))
             select profile;
 
         getAllProfiles = getAllProfiles
@@ -115,11 +115,11 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<bool> ExistsUserByUserNameAsync(UserName userName, CancellationToken cancellationToken)
+    public async Task<bool> ExistsUserByUserNameAsync(DisplayName displayName, CancellationToken cancellationToken)
     {
         return await DbContext
             .Profiles
-            .AnyAsync(p => p.UserName == userName, cancellationToken);
+            .AnyAsync(p => p.DisplayName == displayName, cancellationToken);
     }
 
     public async Task<Profile?> GetProfileByAuthId(AuthId id, CancellationToken cancellationToken)
@@ -190,11 +190,11 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             .ToListAsync(cancellationToken);
     }
 
-    public Task<Profile?> GetByUserNameAsync(UserName username, CancellationToken cancellationToken)
+    public Task<Profile?> GetByUserNameAsync(DisplayName username, CancellationToken cancellationToken)
     {
         return DbContext
             .Profiles
-            .SingleOrDefaultAsync(p => p.UserName == username, cancellationToken);
+            .SingleOrDefaultAsync(p => p.DisplayName == username, cancellationToken);
     }
 
     public async Task UpdateWorkerProfileSustainablePoints(
@@ -301,7 +301,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             select new ProfileDao(
                 profile.Id.Value,
                 profile.AuthId.Value,
-                (string)profile.UserName,
+                (string)profile.DisplayName,
                 profile.AvatarUrl,
                 profile.Type.ToString()!,
                 false

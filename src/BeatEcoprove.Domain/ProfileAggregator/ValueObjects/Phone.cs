@@ -23,6 +23,17 @@ public class Phone : ValueObject
         return Create(Code, Value).Value;
     }
 
+    public static ErrorOr<Phone> Create(string phoneCompleted)
+    {
+        phoneCompleted = phoneCompleted.Trim().Replace(" ", "").Replace("-", "");
+        
+        var digitsOnly = phoneCompleted[1..];
+        var countryCode = "+" + digitsOnly[..^9];
+        var number = digitsOnly[^9..];
+        
+        return Create(countryCode, number);
+    }
+    
     public static ErrorOr<Phone> Create(string code, string value)
     {
         if (ShouldNotBeNull(code, value))

@@ -7,7 +7,6 @@ namespace BeatEcoprove.Application.FeedBacks.Commands.SubmitFeedBack;
 
 public record SubmitFeedBackCommand
 (
-    Guid AuthId,
     Guid ProfileId,
     string Title,
     string Description

@@ -27,5 +27,9 @@ public static partial class Errors
         public static Error NotFound => Error.Conflict(
             "Profile.NotFound",
             "Não foi possível encontrar o perfil.");
+        
+        public static Error AlreadyExists => Error.Conflict(
+            "Profile.AlreadyExists",
+            "Core.Profile.AlreadyExists");
     }
 }

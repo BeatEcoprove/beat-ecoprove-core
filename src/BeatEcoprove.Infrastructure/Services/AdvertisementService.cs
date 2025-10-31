@@ -15,28 +15,14 @@ using ErrorOr;
 
 namespace BeatEcoprove.Infrastructure.Services;
 
-public class AdvertisementService : IAdvertisementService
+public class AdvertisementService(
+    IStoreRepository storeRepository,
+    IAdvertisementRepository advertisementRepository,
+    IFileStorageProvider fileProvider,
+    IStoreService storeService,
+    IProfileRepository profileRepository)
+    : IAdvertisementService
 {
-    private readonly IStoreRepository _storeRepository;
-    private readonly IStoreService _storeService;
-    private readonly IAdvertisementRepository _advertisementRepository;
-    private readonly IFileStorageProvider _fileProvider;
-    private readonly IProfileRepository _profileRepository;
-
-    public AdvertisementService(
-        IStoreRepository storeRepository, 
-        IAdvertisementRepository advertisementRepository, 
-        IFileStorageProvider fileProvider, 
-        IStoreService storeService, 
-        IProfileRepository profileRepository)
-    {
-        _storeRepository = storeRepository;
-        _advertisementRepository = advertisementRepository;
-        _fileProvider = fileProvider;
-        _storeService = storeService;
-        _profileRepository = profileRepository;
-    }
-
     public async Task<ErrorOr<Advertisement>> GetAdvertAsync(
         AdvertisementId advertId, 
         Profile profile, 
@@ -44,7 +30,7 @@ public class AdvertisementService : IAdvertisementService
         CancellationToken cancellationToken = default)
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
-        var advert = await _advertisementRepository.GetByIdAsync(advertId, cancellationToken);
+        var advert = await advertisementRepository.GetByIdAsync(advertId, cancellationToken);
 
         if (advert is null)
         {
@@ -56,7 +42,7 @@ public class AdvertisementService : IAdvertisementService
             return advert;
         }
 
-        if (!await _advertisementRepository.HasProfileAccessToAdvert(advertId, profile.Id, isEmployee, cancellationToken))
+        if (!await advertisementRepository.HasProfileAccessToAdvert(advertId, profile.Id, isEmployee, cancellationToken))
         {
             return Errors.Advertisement.CannotPerformThis;
         }
@@ -74,7 +60,7 @@ public class AdvertisementService : IAdvertisementService
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
         
-         var adverts = await _advertisementRepository.GetAllAddsAsync(
+         var adverts = await advertisementRepository.GetAllAddsAsync(
             profile.Id,
             isEmployee,
             search: search,
@@ -90,7 +76,6 @@ public class AdvertisementService : IAdvertisementService
         StoreId storeId,
         Advertisement advertisement,
         Profile profile,
-        Stream picture,
         CancellationToken cancellationToken = default)
     {
         if (advertisement.InitDate >= advertisement.EndDate)
@@ -122,7 +107,7 @@ public class AdvertisementService : IAdvertisementService
 
         if (storeId.Value != Guid.Empty)
         {
-            var store = await _storeService.GetStoreAsync(storeId, profile, cancellationToken);
+            var store = await storeService.GetStoreAsync(storeId, profile, cancellationToken);
 
             if (store.IsError)
             {
@@ -134,7 +119,7 @@ public class AdvertisementService : IAdvertisementService
 
             store.Value.SustainablePoints -= advertisement.SustainablePoints;
 
-            var ownerProfile = await _profileRepository.GetByIdAsync(store.Value.Owner, cancellationToken);
+            var ownerProfile = await profileRepository.GetByIdAsync(store.Value.Owner, cancellationToken);
 
             if (ownerProfile is null)
             {
@@ -145,25 +130,16 @@ public class AdvertisementService : IAdvertisementService
         }
         else
         {
-            await _storeRepository.SubtractPoints(
+            await storeRepository.SubtractPoints(
                 profile.Id, 
                 advertisement.SustainablePoints, 
                 cancellationToken);
         }
         
         profile.SustainabilityPoints -= advertisement.SustainablePoints;
+        advertisement.SetPictureUrl($"https://robohash.org/{advertisement.Id.Value.ToString()}");
         
-        var avatarUrl = 
-            await _fileProvider
-                .UploadFileAsync(
-                    Buckets.AdvertisementBucket,
-                    ((Guid)advertisement.Id).ToString(), 
-                    picture,
-                    cancellationToken);
-                        
-        advertisement.SetPictureUrl(avatarUrl);
-        
-        await _advertisementRepository.AddAsync(advertisement, cancellationToken);
+        await advertisementRepository.AddAsync(advertisement, cancellationToken);
         
         return advertisement;
     }
@@ -175,7 +151,7 @@ public class AdvertisementService : IAdvertisementService
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
 
-        if (!await _advertisementRepository.HasProfileAccessToAdvert(
+        if (!await advertisementRepository.HasProfileAccessToAdvert(
                 advertisement.Id, 
                 profile.Id, 
                 isEmployee,
@@ -186,7 +162,7 @@ public class AdvertisementService : IAdvertisementService
 
         if (isEmployee)
         {
-            var worker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
+            var worker = await storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
             
             if (worker is null)
             {
@@ -199,13 +175,13 @@ public class AdvertisementService : IAdvertisementService
             }
         }
 
-        await _advertisementRepository.RemoveAsync(advertisement.Id, cancellationToken);
+        await advertisementRepository.RemoveAsync(advertisement.Id, cancellationToken);
         return advertisement;
     }
 
     private async Task<ErrorOr<Worker>> DoIfEmployee(Profile profile, CancellationToken cancellationToken)
     {
-        var worker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
+        var worker = await storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
 
         if (worker is null)
         {

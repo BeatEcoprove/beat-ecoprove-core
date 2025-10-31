@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Infrastructure.Configuration;
+using BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 using Microsoft.Extensions.DependencyInjection;
 

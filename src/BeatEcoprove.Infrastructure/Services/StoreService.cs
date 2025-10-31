@@ -17,35 +17,17 @@ using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 using ErrorOr;
 
-using Microsoft.IdentityModel.Tokens;
-
 namespace BeatEcoprove.Infrastructure.Services;
 
-public partial class StoreService : IStoreService
+public class StoreService(
+    IStoreRepository storeRepository,
+    IFileStorageProvider fileStorageProvider,
+    IProfileRepository profileRepository,
+    IMaintenanceServiceRepository maintenanceServiceRepository,
+    IPasswordGenerator passwordGenerator,
+    IClosetService closetService)
+    : IStoreService
 {
-    private readonly IStoreRepository _storeRepository;
-    private readonly IFileStorageProvider _fileStorageProvider;
-    private readonly IProfileRepository _profileRepository;
-    private readonly IMaintenanceServiceRepository _maintenanceServiceRepository;
-    private readonly IPasswordGenerator _passwordGenerator;
-    private readonly IClosetService _closetService;
-
-    public StoreService(
-        IStoreRepository storeRepository,
-        IFileStorageProvider fileStorageProvider,
-        IProfileRepository profileRepository,
-        IMaintenanceServiceRepository maintenanceServiceRepository,
-        IPasswordGenerator passwordGenerator,
-        IClosetService closetService)
-    {
-        _storeRepository = storeRepository;
-        _fileStorageProvider = fileStorageProvider;
-        _profileRepository = profileRepository;
-        _maintenanceServiceRepository = maintenanceServiceRepository;
-        _passwordGenerator = passwordGenerator;
-        _closetService = closetService;
-    }
-
     public async Task GivePointsTo(
         Store store,
         Profile owner,
@@ -63,7 +45,7 @@ public partial class StoreService : IStoreService
             .Select(worker => worker.Profile)
             .ToList();
 
-        await _profileRepository.UpdateWorkerProfileSustainablePoints(
+        await profileRepository.UpdateWorkerProfileSustainablePoints(
             workerProfileIds,
             store.SustainablePoints,
             cancellationToken);
@@ -72,7 +54,7 @@ public partial class StoreService : IStoreService
     public async Task<List<Order>> GetAllStoresAsync(ProfileId owner, GetAllStoreInput input,
         CancellationToken cancellationToken = default)
     {
-        var stores = await _storeRepository.GetAllStoresAsync(
+        var stores = await storeRepository.GetAllStoresAsync(
             owner,
             input.Search,
             input.Services,
@@ -93,7 +75,7 @@ public partial class StoreService : IStoreService
     {
         bool isEmployee = profile.Type.Equals(UserType.Employee);
 
-        var stores = await _storeRepository.GetOwningStoreAsync(
+        var stores = await storeRepository.GetOwningStoreAsync(
             profile.Id,
             isEmployee,
             input.Search,
@@ -111,12 +93,12 @@ public partial class StoreService : IStoreService
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
 
-        if (!await _storeRepository.HasAccessToStore(id, profile, isEmployee, cancellationToken))
+        if (!await storeRepository.HasAccessToStore(id, profile, isEmployee, cancellationToken))
         {
             return Errors.Store.DontHaveAccessToStore;
         }
 
-        var store = await _storeRepository.GetByIdAsync(id, cancellationToken);
+        var store = await storeRepository.GetByIdAsync(id, cancellationToken);
 
         if (store is null)
         {
@@ -129,7 +111,6 @@ public partial class StoreService : IStoreService
     public async Task<ErrorOr<Store>> CreateStoreAsync(
         Store store,
         Profile profile,
-        Stream picture,
         CancellationToken cancellationToken)
     {
         if (!profile.Type.Equals(UserType.Organization))
@@ -137,22 +118,14 @@ public partial class StoreService : IStoreService
             return Errors.Store.CantCreateStore;
         }
 
-        if (await _storeRepository.ExistsAnyStoreWithName(store.Name, cancellationToken))
+        if (await storeRepository.ExistsAnyStoreWithName(store.Name, cancellationToken))
         {
             return Errors.Store.StoreAlreadyExistsName;
         }
 
-        var avatarUrl =
-            await _fileStorageProvider
-                .UploadFileAsync(
-                    Buckets.ProfileBucket,
-                    ((Guid)store.Id).ToString(),
-                    picture,
-                    cancellationToken);
+        store.SetPictureUrl($"https://robohash.org/{store.Id.Value.ToString()}");
 
-        store.SetPictureUrl(avatarUrl);
-
-        await _storeRepository.AddAsync(store, cancellationToken);
+        await storeRepository.AddAsync(store, cancellationToken);
         return store;
     }
 
@@ -164,7 +137,7 @@ public partial class StoreService : IStoreService
             return Errors.Store.DontHaveAccessToStore;
         }
 
-        var deleted = await _storeRepository.DeleteStoreAsync(store, cancellationToken);
+        var deleted = await storeRepository.DeleteStoreAsync(store, cancellationToken);
 
         if (!deleted)
         {
@@ -180,26 +153,26 @@ public partial class StoreService : IStoreService
         ClothId clothId,
         CancellationToken cancellationToken = default)
     {
-        if (!await _profileRepository.CanProfileAccessCloth(owner, clothId, cancellationToken))
+        if (!await profileRepository.CanProfileAccessCloth(owner, clothId, cancellationToken))
         {
             return Errors.Profile.CannotFindCloth;
         }
 
-        var profile = await _profileRepository.GetByIdAsync(owner, cancellationToken);
+        var profile = await profileRepository.GetByIdAsync(owner, cancellationToken);
 
         if (profile is null)
         {
             return Errors.Profile.NotFound;
         }
 
-        var cloth = await _closetService.GetCloth(profile, clothId, cancellationToken);
+        var cloth = await closetService.GetCloth(profile, clothId, cancellationToken);
 
         if (cloth.IsError)
         {
             return cloth.Errors;
         }
 
-        var maintenance = await _maintenanceServiceRepository.GetMaintenanceServiceByName(
+        var maintenance = await maintenanceServiceRepository.GetMaintenanceServiceByName(
             "Lavar",
             cancellationToken);
 
@@ -240,14 +213,14 @@ public partial class StoreService : IStoreService
             return Errors.Order.IsAlreadyCompleted;
         }
 
-        var owner = await _profileRepository.GetByIdAsync(ownerId, cancellationToken);
+        var owner = await profileRepository.GetByIdAsync(ownerId, cancellationToken);
 
         if (owner is null)
         {
             return Errors.Profile.NotFound;
         }
 
-        var cloth = await _closetService.GetCloth(
+        var cloth = await closetService.GetCloth(
             owner,
             order.Cloth,
             cancellationToken);
@@ -263,6 +236,18 @@ public partial class StoreService : IStoreService
         return order;
     }
 
+    private static Task<ErrorOr<AuthId>> CreateAccount(
+        string email,
+        string password,
+        Profile profile,
+        Stream stream,
+        CancellationToken cancellationToken)
+    {
+        var authId = AuthId.Create(Guid.NewGuid());
+        profile.SetAuthId(authId);
+        return Task.FromResult<ErrorOr<AuthId>>(authId);
+    }
+    
     public async Task<ErrorOr<(Worker, Password)>> RegisterWorkerAsync(
         Store store,
         Profile profile,
@@ -273,7 +258,7 @@ public partial class StoreService : IStoreService
 
         if (isEmployee)
         {
-            var foundWorker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
+            var foundWorker = await storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
 
             if (foundWorker is null)
             {
@@ -291,21 +276,24 @@ public partial class StoreService : IStoreService
             return Errors.Worker.NotAllowedName;
         }
 
-        if (!await _storeRepository.HasAccessToStore(store.Id, profile, isEmployee, cancellationToken))
+        if (!await storeRepository.HasAccessToStore(store.Id, profile, isEmployee, cancellationToken))
         {
             return Errors.Store.DontHaveAccessToStore;
         }
 
-        var password = _passwordGenerator.GeneratePassword(6, 16);
-        var userName = UserName.Create(input.Name);
+        var password = passwordGenerator.GeneratePassword(6, 16);
+        var displayName = DisplayName.Create(input.Name);
 
-        if (userName.IsError)
+        if (displayName.IsError)
         {
-            return userName.Errors;
+            return displayName.Errors;
         }
 
         var employee = Employee.Create(
-            userName.Value,
+            displayName.Value,
+            "",
+            "",
+            "",
             profile.Phone.Clone()
         );
 
@@ -336,7 +324,7 @@ public partial class StoreService : IStoreService
 
         if (isEmployee)
         {
-            var foundWorker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
+            var foundWorker = await storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
 
             if (foundWorker is null)
             {
@@ -349,22 +337,22 @@ public partial class StoreService : IStoreService
             }
         }
 
-        var worker = await _storeRepository.GetWorkerAsync(workerId, cancellationToken);
+        var worker = await storeRepository.GetWorkerAsync(workerId, cancellationToken);
 
         if (worker is null)
         {
             return Errors.Worker.NotFound;
         }
 
-        var workerProfile = await _profileRepository.GetByIdAsync(worker.Profile, cancellationToken);
+        var workerProfile = await profileRepository.GetByIdAsync(worker.Profile, cancellationToken);
 
         if (workerProfile is null)
         {
             return Errors.Profile.NotFound;
         }
 
-        await _profileRepository.DeleteAsync(workerProfile.Id, cancellationToken);
-        await _storeRepository.RemoveWorkerAsync(worker.Id, cancellationToken);
+        await profileRepository.DeleteAsync(workerProfile.Id, cancellationToken);
+        await storeRepository.RemoveWorkerAsync(worker.Id, cancellationToken);
 
         return worker;
     }
@@ -374,12 +362,12 @@ public partial class StoreService : IStoreService
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
 
-        if (!await _storeRepository.HasAccessToStore(store.Id, profile, isEmployee, cancellationToken))
+        if (!await storeRepository.HasAccessToStore(store.Id, profile, isEmployee, cancellationToken))
         {
             return Errors.Store.DontHaveAccessToStore;
         }
 
-        var worker = await _storeRepository.GetWorkerAsync(input.WorkerId, cancellationToken);
+        var worker = await storeRepository.GetWorkerAsync(input.WorkerId, cancellationToken);
 
         if (worker is null)
         {
@@ -388,7 +376,7 @@ public partial class StoreService : IStoreService
 
         if (isEmployee)
         {
-            var foundWorker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
+            var foundWorker = await storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
 
             if (foundWorker is null)
             {

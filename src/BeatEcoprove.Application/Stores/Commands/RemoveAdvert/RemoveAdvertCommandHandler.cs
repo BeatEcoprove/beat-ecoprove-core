@@ -11,45 +11,33 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Stores.Commands.RemoveAdvert;
 
-internal sealed class RemoveAdvertCommandHandler : ICommandHandler<RemoveAdvertCommand, ErrorOr<Advertisement>>
+internal sealed class RemoveAdvertCommandHandler(
+    IProfileManager profileManager,
+    IAdvertisementService advertisementService,
+    IAdvertisementRepository advertisementRepository,
+    IUnitOfWork unitOfWork)
+    : ICommandHandler<RemoveAdvertCommand, ErrorOr<Advertisement>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IAdvertisementService _advertisementService;
-    private readonly IAdvertisementRepository _advertisementRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public RemoveAdvertCommandHandler(
-        IProfileManager profileManager,
-        IAdvertisementService advertisementService,
-        IAdvertisementRepository advertisementRepository,
-        IUnitOfWork unitOfWork)
-    {
-        _profileManager = profileManager;
-        _advertisementService = advertisementService;
-        _advertisementRepository = advertisementRepository;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<ErrorOr<Advertisement>> Handle(RemoveAdvertCommand request, CancellationToken cancellationToken)
     {
         var profileId = ProfileId.Create(request.ProfileId);
         var advertId = AdvertisementId.Create(request.AdvertId);
 
-        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
 
-        var advert = await _advertisementRepository.GetByIdAsync(advertId, cancellationToken);
+        var advert = await advertisementRepository.GetByIdAsync(advertId, cancellationToken);
 
         if (advert is null)
         {
             return Errors.Advertisement.NotFound;
         }
 
-        var deleteResult = await _advertisementService.DeleteAsync(
+        var deleteResult = await advertisementService.DeleteAsync(
             advert,
             profile.Value,
             cancellationToken);
@@ -59,7 +47,7 @@ internal sealed class RemoveAdvertCommandHandler : ICommandHandler<RemoveAdvertC
             return deleteResult.Errors;
         }
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return advert;
     }

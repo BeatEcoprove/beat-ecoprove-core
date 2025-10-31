@@ -35,7 +35,6 @@ public interface IStoreService
     Task<ErrorOr<Store>> CreateStoreAsync(
         Store store,
         Profile profile,
-        Stream avatarPicture,
         CancellationToken cancellationToken = default);
     Task<ErrorOr<Store>> DeleteStoreAsync(
         Store store,

@@ -10,12 +10,8 @@ public record CreateStoreRequest
     string Country,
     string Locality,
     string Street,
-    string PostalCode,
+    string ZipCode,
     int Port,
     double Lat,
-    double Lon,
-    IFormFile? Picture
-) : IPictureRequest
-{
-    public Stream PictureStream => Picture?.OpenReadStream() ?? Stream.Null;
-}
+    double Lon
+);

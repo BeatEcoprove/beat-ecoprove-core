@@ -11,24 +11,14 @@ using NetTopologySuite.Geometries;
 
 namespace BeatEcoprove.Application.Stores.Commands.AddStore;
 
-internal sealed class AddStoreCommandHandler : ICommandHandler<AddStoreCommand, ErrorOr<Store>>
+internal sealed class AddStoreCommandHandler(
+    IProfileManager profileManager,
+    IStoreService storeService,
+    IStoreRepository storeRepository,
+    IUnitOfWork unitOfWork)
+    : ICommandHandler<AddStoreCommand, ErrorOr<Store>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IStoreService _storeService;
-    private readonly IStoreRepository _storeRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public AddStoreCommandHandler(
-        IProfileManager profileManager,
-        IStoreService storeService,
-        IStoreRepository storeRepository,
-        IUnitOfWork unitOfWork)
-    {
-        _profileManager = profileManager;
-        _storeService = storeService;
-        _storeRepository = storeRepository;
-        _unitOfWork = unitOfWork;
-    }
+    private readonly IStoreRepository _storeRepository = storeRepository;
 
     public async Task<ErrorOr<Store>> Handle(AddStoreCommand request, CancellationToken cancellationToken)
     {
@@ -52,7 +42,7 @@ internal sealed class AddStoreCommandHandler : ICommandHandler<AddStoreCommand, 
             return address.Errors;
         }
 
-        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -66,14 +56,13 @@ internal sealed class AddStoreCommandHandler : ICommandHandler<AddStoreCommand, 
             new Point(new Coordinate(request.Lat, request.Lon))
         );
 
-        var storeResult = await _storeService.CreateStoreAsync(
+        var storeResult = await storeService.CreateStoreAsync(
             store,
             profile.Value,
-            request.Picture,
             cancellationToken
         );
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return storeResult;
     }

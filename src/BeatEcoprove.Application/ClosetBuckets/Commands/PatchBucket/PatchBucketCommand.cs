@@ -3,11 +3,10 @@ using BeatEcoprove.Domain.ClosetAggregator;
 
 using ErrorOr;
 
-namespace BeatEcoprove.Application.ClosetBuckets.Commands;
+namespace BeatEcoprove.Application.ClosetBuckets.Commands.PatchBucket;
 
 public record PatchBucketCommand
 (
-    Guid AuthId,
     Guid ProfileId,
     Guid BucketId,
     string Name

@@ -303,7 +303,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
                             worker.Profile == profile.Id
                         select new WorkerDao(
                             worker.Id,
-                            (string)profile.UserName,
+                            (string)profile.DisplayName,
                             worker.Role.ToString()
                         );
 
@@ -319,10 +319,10 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
                          where
                                  store.Id == storeId &&
                                  worker.Profile == profile.Id &&
-                                 (search == null || ((string)profile.UserName).ToLower().Contains(search.ToLower()))
+                                 (search == null || ((string)profile.DisplayName).ToLower().Contains(search.ToLower()))
                          select new WorkerDao(
                              worker.Id,
-                             (string)profile.UserName,
+                             (string)profile.DisplayName,
                              worker.Role.ToString()
                          );
 

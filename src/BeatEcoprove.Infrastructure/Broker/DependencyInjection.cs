@@ -14,11 +14,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {
-    private static void AddConsumers()
-    {
-        
-    }
-    
     public static IServiceCollection AddBroker(this IServiceCollection services)
     {
         services.AddMassTransit(x =>
@@ -30,7 +25,6 @@ public static class DependencyInjection
                 rider.AddConsumers(typeof(BeatEcoprove.Application.DependencyInjection).Assembly);
 
                 var authTopic = new TopicBuilder<IAuthEvent>("auth_events", "core_auth_consumers")
-                    .WithConsumer<ProfileCreatedEvent, ProfileCreatedEventConsumer>()
                     .WithConsumer<UserCreatedEvent, UserCreatedEventConsumer>()
                     .WithProducer(rider);
 

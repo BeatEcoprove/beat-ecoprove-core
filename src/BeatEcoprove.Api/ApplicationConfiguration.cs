@@ -1,6 +1,8 @@
 ﻿using BeatEcoprove.Api.Middlewares;
 using BeatEcoprove.Application.Shared.Multilanguage;
 
+using Carter;
+
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.FileProviders;
 
@@ -73,9 +75,10 @@ public static class ApplicationConfiguration
 
         app.UsePathBase("/api");
         app.MapControllers();
+        app.UseRouting();
+        app.MapCarter();
 
         app.UseAuthorization();
-        // app.AddCustomMiddlewares(); -> disable profile middleware
         app.AddLocalFileStorage();
 
         return app;

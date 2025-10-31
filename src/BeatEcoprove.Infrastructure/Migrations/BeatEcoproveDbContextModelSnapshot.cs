@@ -18,7 +18,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
@@ -86,45 +86,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasDiscriminator<int>("Type").HasValue(1);
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.AuthAggregator.Auth", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("email");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_enabled");
-
-                    b.Property<Guid>("MainProfileId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("main_profile_id");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("password");
-
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("salt");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("auths", (string)null);
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Bucket", b =>
@@ -290,168 +251,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasIndex("MaintenanceService");
 
                     b.ToTable("maintenance_service_actions", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("aeef60ff-7006-49b0-bc9c-26b049411434"),
-                            Badge = "public/default/wash/hand.png",
-                            Description = "Lavar à mão com água e sabão",
-                            EcoScore = 10,
-                            MaintenanceService = new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"),
-                            SustainablePoints = 100,
-                            Title = "Lavar à mão"
-                        },
-                        new
-                        {
-                            Id = new Guid("a7910197-97ba-441a-a4b9-9353650b22ad"),
-                            Badge = "public/default/wash/less30.png",
-                            Description = "Lavar a menos de 30ºC",
-                            EcoScore = -1,
-                            MaintenanceService = new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"),
-                            SustainablePoints = 2,
-                            Title = "A menos de 30ºC"
-                        },
-                        new
-                        {
-                            Id = new Guid("bab6b0f1-4841-4c0a-b31d-35cb0d794a82"),
-                            Badge = "public/default/wash/less50.png",
-                            Description = "Lavar a menos de 50ºC",
-                            EcoScore = -2,
-                            MaintenanceService = new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"),
-                            SustainablePoints = 1,
-                            Title = "A menos de 50ºC"
-                        },
-                        new
-                        {
-                            Id = new Guid("c1794ceb-9750-411d-8a48-f047f52253c9"),
-                            Badge = "public/default/wash/less70.png",
-                            Description = "Lavar a menos de 70ºC",
-                            EcoScore = -2,
-                            MaintenanceService = new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"),
-                            SustainablePoints = 1,
-                            Title = "A menos de 70ºC"
-                        },
-                        new
-                        {
-                            Id = new Guid("bf296acc-c032-42b3-8ae3-8b08addfd66b"),
-                            Badge = "public/default/wash/less95.png",
-                            Description = "Lavar a menos de 95ºC",
-                            EcoScore = -2,
-                            MaintenanceService = new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"),
-                            SustainablePoints = 1,
-                            Title = "A menos de 95ºC"
-                        },
-                        new
-                        {
-                            Id = new Guid("320d38a2-9067-49c4-849b-db85766a8c2b"),
-                            Badge = "public/default/wash/dry.png",
-                            Description = "Lavar a seco",
-                            EcoScore = -3,
-                            MaintenanceService = new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"),
-                            SustainablePoints = 0,
-                            Title = "A seco"
-                        },
-                        new
-                        {
-                            Id = new Guid("b8ff55b2-af07-47c0-9428-5e24596afc68"),
-                            Badge = "public/default/service.png",
-                            Description = "Escolhe uma lavandaria",
-                            EcoScore = 10,
-                            MaintenanceService = new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"),
-                            SustainablePoints = 100,
-                            Title = "Serviço de lavandaria"
-                        },
-                        new
-                        {
-                            Id = new Guid("344a0c07-eb30-490c-a7e8-eda8ac310d9f"),
-                            Badge = "public/default/dry/air.png",
-                            Description = "Secar ao ar livre",
-                            EcoScore = 0,
-                            MaintenanceService = new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"),
-                            SustainablePoints = 2,
-                            Title = "Ao ar livre"
-                        },
-                        new
-                        {
-                            Id = new Guid("a85c6baa-0cea-441e-8545-bb99877118e1"),
-                            Badge = "public/default/dry/machine.png",
-                            Description = "Secar na máquina",
-                            EcoScore = -1,
-                            MaintenanceService = new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"),
-                            SustainablePoints = 1,
-                            Title = "Na máquina"
-                        },
-                        new
-                        {
-                            Id = new Guid("bf2026c0-359c-423d-9216-0edd70b874dc"),
-                            Badge = "public/default/service.png",
-                            Description = "Escolhe um serviço de secagem",
-                            EcoScore = 10,
-                            MaintenanceService = new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"),
-                            SustainablePoints = 100,
-                            Title = "Serviço de Secagem"
-                        },
-                        new
-                        {
-                            Id = new Guid("50fdf9dd-a510-452f-9149-61db12696b79"),
-                            Badge = "public/default/iron/less110.png",
-                            Description = "Engomar a menos de 110ºC",
-                            EcoScore = -1,
-                            MaintenanceService = new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"),
-                            SustainablePoints = 1,
-                            Title = "A menos de 110ºC"
-                        },
-                        new
-                        {
-                            Id = new Guid("0489437f-e69d-46b4-8efd-71a49333550d"),
-                            Badge = "public/default/iron/less150.png",
-                            Description = "Engomar a menos de 150ºC",
-                            EcoScore = -1,
-                            MaintenanceService = new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"),
-                            SustainablePoints = 1,
-                            Title = "A menos de 150ºC"
-                        },
-                        new
-                        {
-                            Id = new Guid("636302c3-a457-400c-8352-2852bf610ebf"),
-                            Badge = "public/default/iron/less200.png",
-                            Description = "Engomar a menos de 200ºC",
-                            EcoScore = -1,
-                            MaintenanceService = new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"),
-                            SustainablePoints = 1,
-                            Title = "A menos de 200ºC"
-                        },
-                        new
-                        {
-                            Id = new Guid("f11a3aef-3d2a-490c-b7ee-02e695d6c47c"),
-                            Badge = "public/default/service.png",
-                            Description = "Escolhe um serviço de engomadoria",
-                            EcoScore = 10,
-                            MaintenanceService = new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"),
-                            SustainablePoints = 100,
-                            Title = "Serviço de Engomadoria"
-                        },
-                        new
-                        {
-                            Id = new Guid("a41ee2b3-70ab-4574-9c32-0ee81b7b0e9f"),
-                            Badge = "public/default/repair.png",
-                            Description = "Arranjar a peça pelo próprio",
-                            EcoScore = 2,
-                            MaintenanceService = new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"),
-                            SustainablePoints = 3,
-                            Title = "Pelo Próprio"
-                        },
-                        new
-                        {
-                            Id = new Guid("f50a6b8b-5861-40ba-9084-3d7f1ff98253"),
-                            Badge = "public/default/service.png",
-                            Description = "Escolhe um serviço de Reparação",
-                            EcoScore = 10,
-                            MaintenanceService = new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"),
-                            SustainablePoints = 100,
-                            Title = "Serviço de Reparação"
-                        });
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Entities.MaintenanceService", b =>
@@ -484,178 +283,13 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("maintenance_services", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"),
-                            Badge = "public/default/wash.png",
-                            Description = "De que forma pretende lavar?",
-                            Title = "Lavar"
-                        },
-                        new
-                        {
-                            Id = new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"),
-                            Badge = "public/default/dry.png",
-                            Description = "De que forma pretende secar?",
-                            Title = "Secar"
-                        },
-                        new
-                        {
-                            Id = new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"),
-                            Badge = "public/default/iron.png",
-                            Description = "De que forma pretende engomar?",
-                            Title = "Engomar"
-                        },
-                        new
-                        {
-                            Id = new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"),
-                            Badge = "public/default/repair.png",
-                            Description = "De que forma pretende arranjar a peça?",
-                            Title = "Reparar"
-                        });
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Entities.GroupInvite", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime?>("AcceptedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("accepted_at");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTime?>("DeclinedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("declined_at");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<Guid>("Group")
-                        .HasColumnType("uuid")
-                        .HasColumnName("group_id");
-
-                    b.Property<Guid>("Inviter")
-                        .HasColumnType("uuid")
-                        .HasColumnName("inviter_id");
-
-                    b.Property<int>("Permission")
-                        .HasColumnType("integer")
-                        .HasColumnName("permission");
-
-                    b.Property<Guid>("Target")
-                        .HasColumnType("uuid")
-                        .HasColumnName("target_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Group");
-
-                    b.HasIndex("Inviter");
-
-                    b.HasIndex("Target");
-
-                    b.ToTable("group_invites", (string)null);
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Entities.GroupMember", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<Guid>("Group")
-                        .HasColumnType("uuid")
-                        .HasColumnName("group_id");
-
-                    b.Property<int>("Permission")
-                        .HasColumnType("integer")
-                        .HasColumnName("permission");
-
-                    b.Property<Guid>("Profile")
-                        .HasColumnType("uuid")
-                        .HasColumnName("profile_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Group");
-
-                    b.HasIndex("Profile");
-
-                    b.ToTable("group_members", (string)null);
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Group", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("AvatarPicture")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("avatar_picture");
-
-                    b.Property<Guid>("CreatorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("creator_id");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("description");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_public");
-
-                    b.Property<int>("MembersCount")
-                        .HasColumnType("integer")
-                        .HasColumnName("members_count");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<int>("SustainablePoints")
-                        .HasColumnType("integer")
-                        .HasColumnName("sustainable_points");
-
-                    b.Property<double>("Xp")
-                        .HasColumnType("double precision")
-                        .HasColumnName("xp");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
-
-                    b.ToTable("groups", (string)null);
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     b.Property<Guid>("AuthId")
                         .HasColumnType("uuid")
@@ -667,9 +301,21 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("avatar_url");
 
+                    b.Property<string>("Biography")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("biography");
+
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("display_name");
 
                     b.Property<int>("EcoCoins")
                         .HasColumnType("integer")
@@ -678,6 +324,18 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.Property<int>("EcoScore")
                         .HasColumnType("integer")
                         .HasColumnName("eco_score");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("last_name");
 
                     b.Property<int>("Level")
                         .HasColumnType("integer")
@@ -691,19 +349,11 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("type");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("user_name");
-
                     b.Property<double>("XP")
                         .HasColumnType("double precision")
                         .HasColumnName("xp");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthId");
 
                     b.ToTable("profiles", (string)null);
 
@@ -737,32 +387,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("brands", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a0a204c5-067c-46b8-8ad8-9f72a1100eeb"),
-                            BrandAvatar = "public/default/brands/salsa.png",
-                            Name = "Salsa"
-                        },
-                        new
-                        {
-                            Id = new Guid("ae921096-f72b-4b77-8562-ad49ab137d68"),
-                            BrandAvatar = "public/default/brands/losan.png",
-                            Name = "Losan"
-                        },
-                        new
-                        {
-                            Id = new Guid("0d810f3b-2f17-49a0-9faf-320c30393e22"),
-                            BrandAvatar = "public/default/brands/mo.png",
-                            Name = "MO"
-                        },
-                        new
-                        {
-                            Id = new Guid("1066f7be-78b8-4704-b444-bc6c11057b25"),
-                            BrandAvatar = "public/default/brands/zippy.png",
-                            Name = "Zippy"
-                        });
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.Shared.Entities.Color", b =>
@@ -790,134 +414,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("colors", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("b1c577cc-498a-4f54-9c30-54a0eef365a3"),
-                            Hex = "FF000000",
-                            Name = "Black"
-                        },
-                        new
-                        {
-                            Id = new Guid("a3895e31-4048-48fb-83d1-8315448b12c1"),
-                            Hex = "FFFFFFFF",
-                            Name = "White"
-                        },
-                        new
-                        {
-                            Id = new Guid("9169de9c-87f0-40a7-8381-8a5b1107ad19"),
-                            Hex = "FFFFE69F",
-                            Name = "Amarelo"
-                        },
-                        new
-                        {
-                            Id = new Guid("607c29b2-e0a8-4c0e-9903-a9d95e335135"),
-                            Hex = "FF98B3C8",
-                            Name = "Azul Claro"
-                        },
-                        new
-                        {
-                            Id = new Guid("02e1621a-31de-428f-bfe8-12ce16303cfa"),
-                            Hex = "FF29394A",
-                            Name = "Azul Escuro"
-                        },
-                        new
-                        {
-                            Id = new Guid("dfb2b324-6205-4200-b617-7371495b9b9c"),
-                            Hex = "FFF2E7D4",
-                            Name = "Amarelo Bebê"
-                        },
-                        new
-                        {
-                            Id = new Guid("21077620-0f70-4b79-adcb-26747d1f5d03"),
-                            Hex = "FFC3A572",
-                            Name = "Amarelo Claro"
-                        },
-                        new
-                        {
-                            Id = new Guid("679480a2-707b-45ca-9bd6-cc8643877fa6"),
-                            Hex = "FFFF6D6D",
-                            Name = "Vermelho Claro"
-                        },
-                        new
-                        {
-                            Id = new Guid("9b4ec4c5-cb66-4b10-a433-a85d72652593"),
-                            Hex = "FF948066",
-                            Name = "Castanho Claro"
-                        },
-                        new
-                        {
-                            Id = new Guid("e72157a6-64f3-4d47-ac2b-e67dd9148f04"),
-                            Hex = "FF4A2D16",
-                            Name = "Castanho"
-                        },
-                        new
-                        {
-                            Id = new Guid("20648049-1121-4037-912a-0b5ae4fe8ca1"),
-                            Hex = "FF4C4C4C",
-                            Name = "Cinzento Claro"
-                        },
-                        new
-                        {
-                            Id = new Guid("737af9e9-d7e6-45a3-93db-66352b62d1af"),
-                            Hex = "FFBE5967",
-                            Name = "Rosa"
-                        },
-                        new
-                        {
-                            Id = new Guid("9039f788-7265-474d-b352-302233dea969"),
-                            Hex = "FF8B5F3C",
-                            Name = "Castanho Bebê"
-                        },
-                        new
-                        {
-                            Id = new Guid("c24acdb0-b7ff-4dd6-bd06-6f3f7bc13e01"),
-                            Hex = "FFF58221",
-                            Name = "Laranja"
-                        },
-                        new
-                        {
-                            Id = new Guid("27b5e9e4-c2cc-487e-a47e-42ccc0ff7a82"),
-                            Hex = "FFD2AAC5",
-                            Name = "Roxo Claro"
-                        },
-                        new
-                        {
-                            Id = new Guid("c114ae9d-fe77-437e-a3ca-44d5a606efd2"),
-                            Hex = "FFC0C0C0",
-                            Name = "Cinzento Bebê"
-                        },
-                        new
-                        {
-                            Id = new Guid("92957cca-6e3b-4512-a813-243f0da7b148"),
-                            Hex = "FFF9C7C4",
-                            Name = "Rosa Claro"
-                        },
-                        new
-                        {
-                            Id = new Guid("64332e3c-fbff-403d-b450-6cf764d67a98"),
-                            Hex = "FFD62598",
-                            Name = "Roxo"
-                        },
-                        new
-                        {
-                            Id = new Guid("e18956f5-22a8-4a42-be44-a17227a05958"),
-                            Hex = "FF509C75",
-                            Name = "Verde"
-                        },
-                        new
-                        {
-                            Id = new Guid("460345a7-22c3-4739-92a5-bc15b7dbc8ec"),
-                            Hex = "FFC2BC8B",
-                            Name = "Verde Lima"
-                        },
-                        new
-                        {
-                            Id = new Guid("0dc52312-73b4-45cd-97c2-7ba0a0684195"),
-                            Hex = "FFDA252E",
-                            Name = "Vermelho"
-                        });
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.Shared.Entities.FeedBack", b =>
@@ -1344,59 +840,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Entities.GroupInvite", b =>
-                {
-                    b.HasOne("BeatEcoprove.Domain.GroupAggregator.Group", null)
-                        .WithMany("Invites")
-                        .HasForeignKey("Group")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", null)
-                        .WithMany()
-                        .HasForeignKey("Inviter")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", null)
-                        .WithMany()
-                        .HasForeignKey("Target")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Entities.GroupMember", b =>
-                {
-                    b.HasOne("BeatEcoprove.Domain.GroupAggregator.Group", null)
-                        .WithMany("Members")
-                        .HasForeignKey("Group")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", null)
-                        .WithMany()
-                        .HasForeignKey("Profile")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Group", b =>
-                {
-                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", null)
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", b =>
                 {
-                    b.HasOne("BeatEcoprove.Domain.AuthAggregator.Auth", null)
-                        .WithMany()
-                        .HasForeignKey("AuthId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.OwnsMany("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.BucketEntry", "BucketEntries", b1 =>
                         {
                             b1.Property<Guid>("ProfileId")
@@ -1739,13 +1184,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Entities.MaintenanceService", b =>
                 {
                     b.Navigation("MaintenanceActions");
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Group", b =>
-                {
-                    b.Navigation("Invites");
-
-                    b.Navigation("Members");
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.StoreAggregator.Entities.Order", b =>

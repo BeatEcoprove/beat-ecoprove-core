@@ -8,19 +8,11 @@ using ErrorOr;
 
 namespace BeatEcoprove.Infrastructure.Services;
 
-public class ProfileManager : IProfileManager
+public class ProfileManager(IProfileRepository profileRepository) : IProfileManager
 {
-    private readonly IProfileRepository _profileRepository;
-
-    public ProfileManager(
-        IProfileRepository profileRepository)
-    {
-        _profileRepository = profileRepository;
-    }
-
     public async Task<ErrorOr<Profile>> GetProfileAsync(Guid profileId, CancellationToken cancellationToken = default)
     {
-        var profile = await _profileRepository.GetByIdAsync(ProfileId.Create(profileId), cancellationToken);
+        var profile = await profileRepository.GetByIdAsync(ProfileId.Create(profileId), cancellationToken);
 
         if (profile is null)
         {
@@ -33,7 +25,7 @@ public class ProfileManager : IProfileManager
     public async Task<ErrorOr<List<ProfileId>>> GetNestedProfileIds(Guid mainProfileId, CancellationToken cancellationToken = default)
     {
         var profileId = ProfileId.Create(mainProfileId);
-        var profile = await _profileRepository.GetByIdAsync(profileId, cancellationToken);
+        var profile = await profileRepository.GetByIdAsync(profileId, cancellationToken);
 
         if (profile is null)
         {
@@ -41,6 +33,6 @@ public class ProfileManager : IProfileManager
         }
 
         // Return all nested profileIds
-        return await _profileRepository.GetNestedProfileIds(profileId, cancellationToken);
+        return await profileRepository.GetNestedProfileIds(profileId, cancellationToken);
     }
 }

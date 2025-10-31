@@ -8,14 +8,17 @@ public class Consumer : Profile
     private Consumer() { }
 
     private Consumer(
-        UserName userName,
+        DisplayName displayName,
+        string firstName,
+        string lastName,
+        string biography,
         Phone phone,
         double xP,
         int sustainabilityPoints,
         int ecoScore,
         DateOnly bornDate,
         Gender gender)
-        : base(userName, phone, xP, sustainabilityPoints, ecoScore, UserType.Consumer)
+        : base(displayName, firstName, lastName, biography, phone, xP, sustainabilityPoints, ecoScore, UserType.Consumer)
     {
         BornDate = bornDate;
         Gender = gender;
@@ -26,13 +29,19 @@ public class Consumer : Profile
     public Gender Gender { get; private set; }
 
     public static Consumer Create(
-        UserName userName,
+        DisplayName displayName,
+        string firstName,
+        string lastName,
+        string biography,
         Phone phone,
         DateOnly bornDate,
         Gender gender)
     {
         return new Consumer(
-            userName,
+            displayName,
+            firstName,
+            lastName,
+            biography,
             phone,
             0.0,
             0,
