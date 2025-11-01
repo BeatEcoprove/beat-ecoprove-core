@@ -921,7 +921,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                             b1.HasKey("ProfileId");
 
-                            b1.ToTable("profiles");
+                            b1.ToTable("profiles", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ProfileId");
@@ -1039,7 +1039,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                             b1.HasKey("StoreId");
 
-                            b1.ToTable("stores");
+                            b1.ToTable("stores", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("StoreId");
@@ -1057,7 +1057,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                                     b2.HasKey("AddressStoreId");
 
-                                    b2.ToTable("stores");
+                                    b2.ToTable("stores", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("AddressStoreId");
@@ -1126,7 +1126,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                             b1.HasKey("OrganizationId");
 
-                            b1.ToTable("profiles");
+                            b1.ToTable("profiles", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrganizationId");
@@ -1144,7 +1144,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                                     b2.HasKey("AddressOrganizationId");
 
-                                    b2.ToTable("profiles");
+                                    b2.ToTable("profiles", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("AddressOrganizationId");

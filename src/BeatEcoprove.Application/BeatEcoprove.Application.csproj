@@ -11,6 +11,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.10" />
         <PackageReference Include="MediatR" Version="13.1.0" />
         <PackageReference Include="Mapster" Version="9.0.0-pre01" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.10" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
         <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
     </ItemGroup>
