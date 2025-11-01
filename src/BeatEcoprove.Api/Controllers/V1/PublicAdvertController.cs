@@ -17,8 +17,11 @@ public class PublicAdvertController : ApiCarterModule
         var publicAdvert = CreateVersionedGroup(app, "public/adverts")
             .RequireAuthorization();
 
-        publicAdvert.MapGet("{advertId:guid}", GetById);
-        publicAdvert.MapGet(string.Empty, GetHomeAds);
+        publicAdvert.MapGet("{advertId:guid}", GetById)
+            .RequireScopes("adverts:view");
+        
+        publicAdvert.MapGet(string.Empty, GetHomeAds)
+            .RequireScopes("adverts:view");
     }
 
     private static async Task<IResult> GetById(

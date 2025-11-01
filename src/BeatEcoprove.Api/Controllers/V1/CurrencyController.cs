@@ -40,6 +40,6 @@ public class CurrencyController : ApiCarterModule
                     mapper.Map<Conversionresult>(response)),
                 errors => errors.ToProblemDetails(localizer)
             );
-        });
+        }).RequireScopes("currency:convert");
     }
 }

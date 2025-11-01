@@ -24,8 +24,11 @@ public class OutfitController : ApiCarterModule
         var outfit = CreateVersionedGroup(app, "profiles/closet")
             .RequireAuthorization();
 
-        outfit.MapPatch("cloth/{clothId:guid}/usage", RegisterClothUsage);
-        outfit.MapGet("outfit", GetCurrentOutfit);
+        outfit.MapPatch("cloth/{clothId:guid}/usage", RegisterClothUsage)
+            .RequireScopes("cloth:create");
+        
+        outfit.MapGet("outfit", GetCurrentOutfit)
+            .RequireScopes("outfit:view");
     }
 
     private static Task<ErrorOr<DailyUseActivity>> UseCloth(

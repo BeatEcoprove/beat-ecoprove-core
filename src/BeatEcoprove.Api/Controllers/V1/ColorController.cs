@@ -30,6 +30,6 @@ public class ColorController : ApiCarterModule
                     mapper.Map<ColorResponse>(color)),
                 errors => errors.ToProblemDetails(localizer)
             );
-        });
+        }).RequireScopes("color:view");
     }
 }

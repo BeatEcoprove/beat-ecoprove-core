@@ -20,11 +20,20 @@ public class WorkerController : ApiCarterModule
         var worker = CreateVersionedGroup(app, "stores/{storeId}/workers")
             .RequireAuthorization();
 
-        worker.MapGet(string.Empty, GetWorkers);
-        worker.MapGet("{workerId:guid}", GetWorkerById);
-        worker.MapPost(String.Empty, CreateWorker);
-        worker.MapDelete("{workerId:guid}", DeleteWorker);
-        worker.MapPatch("{workerId:guid}/switch", ChangePermission);
+        worker.MapGet(string.Empty, GetWorkers)
+            .RequireScopes("worker:view");
+        
+        worker.MapGet("{workerId:guid}", GetWorkerById)
+            .RequireScopes("worker:view");
+        
+        worker.MapPost(String.Empty, CreateWorker)
+            .RequireScopes("worker:create");
+        
+        worker.MapDelete("{workerId:guid}", DeleteWorker)
+            .RequireScopes("worker:delete");
+        
+        worker.MapPatch("{workerId:guid}/switch", ChangePermission)
+            .RequireScopes("worker:switch");
     }
 
     private static async Task<IResult> GetWorkers(

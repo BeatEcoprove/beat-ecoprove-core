@@ -30,6 +30,6 @@ public class BrandController : ApiCarterModule
                     mapper.Map<BrandResponse>(brand)),
                 errors => errors.ToProblemDetails(localizer)
             );
-        });
+        }).RequireScopes("brands:view");
     }
 }

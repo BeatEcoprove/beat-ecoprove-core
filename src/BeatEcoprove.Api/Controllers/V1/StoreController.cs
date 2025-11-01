@@ -19,10 +19,17 @@ public class StoreController : ApiCarterModule
         var stores = CreateVersionedGroup(app, "stores")
             .RequireAuthorization();
 
-        stores.MapGet(string.Empty, GetOwningStores);
-        stores.MapGet("{storeId:guid}", GetStoreById);
-        stores.MapPost(string.Empty, CreateStore);
-        stores.MapDelete("{storeId:guid}", DeleteStoreById);
+        stores.MapGet(string.Empty, GetOwningStores)
+            .RequireScopes("store:view");
+        
+        stores.MapGet("{storeId:guid}", GetStoreById)
+            .RequireScopes("store:view");
+        
+        stores.MapPost(string.Empty, CreateStore)
+            .RequireScopes("store:create");
+        
+        stores.MapDelete("{storeId:guid}", DeleteStoreById)
+            .RequireScopes("store:delete");
     }
 
     private static async Task<IResult> GetOwningStores(

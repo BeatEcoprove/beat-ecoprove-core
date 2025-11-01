@@ -31,6 +31,6 @@ public class ServicesController : ApiCarterModule
                     mapper.Map<List<MaintenanceServiceResponse>>(response)),
                 errors => errors.ToProblemDetails(localizer)
             );
-        });
+        }).RequireScopes("service:view");
     }
 }

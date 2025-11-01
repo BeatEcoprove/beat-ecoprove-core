@@ -17,8 +17,11 @@ public class RatingController : ApiCarterModule
         var ratting = CreateVersionedGroup(app, "stores/{storeId:guid}/ratings")
             .RequireAuthorization();
 
-        ratting.MapGet(string.Empty, GetStoreRatings);
-        ratting.MapPost(string.Empty, CreateRating);
+        ratting.MapGet(string.Empty, GetStoreRatings)
+            .RequireScopes("ratings:view");
+        
+        ratting.MapPost(string.Empty, CreateRating)
+            .RequireScopes("ratings:create");
     }
 
     private static async Task<IResult> GetStoreRatings(

@@ -20,10 +20,17 @@ public class OrderController : ApiCarterModule
         var order = CreateVersionedGroup(app, "orders")
             .RequireAuthorization();
 
-        order.MapGet("{orderId:guid}/stores/{storeId:guid}", GetOrdersById);
-        order.MapGet(String.Empty, GetOrders);
-        order.MapPost(String.Empty, CreateOrder);
-        order.MapPatch("{orderId:guid}", CompleteOrder);
+        order.MapGet("{orderId:guid}/stores/{storeId:guid}", GetOrdersById)
+            .RequireScopes("order:view");
+        
+        order.MapGet(String.Empty, GetOrders)
+            .RequireScopes("order:view");
+        
+        order.MapPost(String.Empty, CreateOrder)
+            .RequireScopes("order:create");
+        
+        order.MapPatch("{orderId:guid}", CompleteOrder)
+            .RequireScopes("order:update");
     }
 
     private static async Task<IResult> GetOrdersById(

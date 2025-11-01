@@ -22,14 +22,22 @@ public class ProviderController : ApiCarterModule
         var providers = CreateVersionedGroup(app, "providers")
             .RequireAuthorization();
 
-        providers.MapGet(string.Empty, GetAllProviders);
-        providers.MapGet("{providerId:guid}", GetProviderById);
+        providers.MapGet(string.Empty, GetAllProviders)
+            .RequireScopes("providers:view");
+        
+        providers.MapGet("{providerId:guid}", GetProviderById)
+            .RequireScopes("providers:view");
 
         var stores = providers.MapGroup("{providerId:guid}/stores");
-        stores.MapGet(String.Empty, GetStores);
-        stores.MapGet("{storeId:guid}", GetStoreById);
+        
+        stores.MapGet(String.Empty, GetStores)
+            .RequireScopes("stores:view");
+        
+        stores.MapGet("{storeId:guid}", GetStoreById)
+            .RequireScopes("stores:view");
 
-        providers.MapGet(String.Empty, GetProviderAdverts);
+        providers.MapGet(String.Empty, GetProviderAdverts)
+            .RequireScopes("adverts:view");
     }
 
     private static async Task<IResult> GetAllProviders(

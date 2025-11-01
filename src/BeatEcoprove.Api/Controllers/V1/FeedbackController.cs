@@ -39,6 +39,6 @@ public class FeedbackController : ApiCarterModule
                     mapper.Map<FeedBackResponse>(response)),
                 errors => errors.ToProblemDetails(localizer)
             );
-        });
+        }).RequireScopes("feedback:create");
     }
 }

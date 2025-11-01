@@ -19,10 +19,17 @@ public class AdvertisementController : ApiCarterModule
         var advertisement = CreateVersionedGroup(app, "stores/{storeId:guid}/adverts")
             .RequireAuthorization();
 
-        advertisement.MapGet(string.Empty, GetMyAdverts);
-        advertisement.MapGet("{advertId:guid}", GetAdvertById);
-        advertisement.MapPost(string.Empty, CreateAdvert);
-        advertisement.MapDelete("{advertId:guid}", DeleteAdvert);
+        advertisement.MapGet(string.Empty, GetMyAdverts)
+            .RequireScopes("adverts:view");
+        
+        advertisement.MapGet("{advertId:guid}", GetAdvertById)
+            .RequireScopes("adverts:view");
+        
+        advertisement.MapPost(string.Empty, CreateAdvert)
+            .RequireScopes("adverts:create");
+        
+        advertisement.MapDelete("{advertId:guid}", DeleteAdvert)
+            .RequireScopes("adverts:delete");
     }
 
     private static async Task<IResult> GetMyAdverts(

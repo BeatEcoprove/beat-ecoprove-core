@@ -40,6 +40,6 @@ public class BucketController : ApiCarterModule
                     mapper.Map<BucketResponse>(response)),
                 errors => errors.ToProblemDetails(localizer)
             );
-        });
+        }).RequireScopes("bucket:update");
     }
 }

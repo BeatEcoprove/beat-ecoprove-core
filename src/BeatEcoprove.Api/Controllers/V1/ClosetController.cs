@@ -33,21 +33,36 @@ public class ClosetController : ApiCarterModule
 
         var closetCloth = closet.MapGroup("cloths");
 
-        closetCloth.MapPost(String.Empty, CreateClothToCloset);
-        closetCloth.MapGet("{clothId:guid}/buckets", GetClothBuckets);
-        closetCloth.MapGet("{clothId:guid}", GetClothById);
-        closetCloth.MapDelete("{clothId:guid}", DeleteClothFromCloset);
+        closetCloth.MapPost(String.Empty, CreateClothToCloset)
+            .RequireScopes("cloth:create");
+        
+        closetCloth.MapGet("{clothId:guid}/buckets", GetClothBuckets)
+            .RequireScopes("cloth:view");
+        
+        closetCloth.MapGet("{clothId:guid}", GetClothById)
+            .RequireScopes("cloth:view");
+        
+        closetCloth.MapDelete("{clothId:guid}", DeleteClothFromCloset)
+            .RequireScopes("cloth:delete");
 
         var closetBucket = closet.MapGroup("buckets");
 
-        closetBucket.MapPost(String.Empty, CreateBucketToCloset);
-        closetBucket.MapGet("{bucketId:guid}", GetBucketById);
-        closetBucket.MapDelete("{bucketId:guid}", DeleteBucketFromCloset);
+        closetBucket.MapPost(String.Empty, CreateBucketToCloset)
+            .RequireScopes("bucket:create");
+        
+        closetBucket.MapGet("{bucketId:guid}", GetBucketById)
+            .RequireScopes("bucket:view");
+        
+        closetBucket.MapDelete("{bucketId:guid}", DeleteBucketFromCloset)
+            .RequireScopes("bucket:delete");
 
         var clothBucket = closetCloth.MapGroup("buckets");
 
-        clothBucket.MapPost("{bucketId:guid}", CreateClothsToBucket);
-        clothBucket.MapPut("{bucketId:guid}", DeleteClothFromBucket);
+        clothBucket.MapPost("{bucketId:guid}", CreateClothsToBucket)
+            .RequireScopes("bucket:create");
+        
+        clothBucket.MapPut("{bucketId:guid}", DeleteClothFromBucket)
+            .RequireScopes("bucket:delete");
     }
 
     private static async Task<IResult> GetCloset(
