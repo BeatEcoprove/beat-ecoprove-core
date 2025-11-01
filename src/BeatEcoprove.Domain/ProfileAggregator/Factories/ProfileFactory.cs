@@ -8,7 +8,7 @@ namespace BeatEcoprove.Domain.ProfileAggregator.Factories;
 internal sealed class ProfileFactory : IProfileFactory
 {
     public ErrorOr<Profile> CreateProfile(
-        ProfileDetails details, 
+        ProfileDetails details,
         ProfileSpecificDetails profileSpecific)
     {
         var profile = profileSpecific switch
@@ -21,12 +21,12 @@ internal sealed class ProfileFactory : IProfileFactory
         profile.Value.SetProfileId(details.Id);
         profile.Value.SetAuthId(details.AuthId);
         profile.Value.SetProfileAvatar($"https://robohash.org/{profile.Value.Id.Value.ToString()}");
-        
+
         return profile;
     }
 
     private static ErrorOr<Profile> CreateConsumer(
-        ProfileDetails details, 
+        ProfileDetails details,
         ConsumerDetails consumerDetails)
     {
         return Consumer.Create(
@@ -39,9 +39,9 @@ internal sealed class ProfileFactory : IProfileFactory
             consumerDetails.Gender
         );
     }
-    
+
     private static ErrorOr<Profile> CreateOrganization(
-        ProfileDetails details, 
+        ProfileDetails details,
         OrganizationDetails orgDetails)
     {
         return Organization.Create(

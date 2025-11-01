@@ -11,29 +11,21 @@ using Mapster;
 
 namespace BeatEcoprove.Application.Closet.Queries.GetCurrentOutfit;
 
-internal sealed class GetCurrentOutfitQueryHandler : IQueryHandler<GetCurrentOutfitQuery, ErrorOr<BucketResult>>
+internal sealed class GetCurrentOutfitQueryHandler(
+    IProfileManager profileManager,
+    IActivityRepository activityRepository)
+    : IQueryHandler<GetCurrentOutfitQuery, ErrorOr<BucketResult>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IActivityRepository _activityRepository;
-
-    public GetCurrentOutfitQueryHandler(
-        IProfileManager profileManager,
-        IActivityRepository activityRepository)
-    {
-        _profileManager = profileManager;
-        _activityRepository = activityRepository;
-    }
-
     public async Task<ErrorOr<BucketResult>> Handle(GetCurrentOutfitQuery request, CancellationToken cancellationToken)
     {
-        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
 
-        var outfit = await _activityRepository.GetCurrentOutfitAsync(profile.Value.Id, cancellationToken);
+        var outfit = await activityRepository.GetCurrentOutfitAsync(profile.Value.Id, cancellationToken);
         var cloths = outfit.Select(cloth => cloth.Adapt<ClothResult>()).ToList();
 
         var outfitBucket = Bucket.Create("Outfit");

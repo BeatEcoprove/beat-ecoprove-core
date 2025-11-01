@@ -49,8 +49,8 @@ public class ProfileCheckerMiddleware(
             return Errors.Token.InvalidToken;
         }
 
-        if (!claims.TryGetValue(UserClaims.AccountId, out var authId) 
-            || !Guid.TryParse(authId, out var parsedAuthId) 
+        if (!claims.TryGetValue(UserClaims.AccountId, out var authId)
+            || !Guid.TryParse(authId, out var parsedAuthId)
             || !claims.TryGetValue(UserClaims.Email, out var email))
         {
             return Errors.Token.InvalidToken;

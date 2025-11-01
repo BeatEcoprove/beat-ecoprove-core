@@ -10,7 +10,7 @@ namespace BeatEcoprove.Infrastructure.Persistence.Configurations.ServiceProvider
 public class WorkerConfiguration : IEntityTypeConfiguration<Worker>
 {
     private const string WorkerTable = "workers";
-    
+
     public void Configure(EntityTypeBuilder<Worker> builder)
     {
         builder.ToTable(WorkerTable);
@@ -32,32 +32,32 @@ public class WorkerConfiguration : IEntityTypeConfiguration<Worker>
                 storeId => storeId.Value,
                 value => StoreId.Create(value)
             );
-        
-            builder.Property(worker => worker.Profile)
-                .HasColumnName("profile")
-                .ValueGeneratedNever()
-                .HasConversion(
-                    storeId => storeId.Value,
-                    value => ProfileId.Create(value)
-                )
-                .IsRequired();
 
-            builder.HasOne<Domain.ProfileAggregator.Entities.Profiles.Profile>()
-                .WithMany()
-                .HasForeignKey(worker => worker.Profile);
+        builder.Property(worker => worker.Profile)
+            .HasColumnName("profile")
+            .ValueGeneratedNever()
+            .HasConversion(
+                storeId => storeId.Value,
+                value => ProfileId.Create(value)
+            )
+            .IsRequired();
 
-            builder.Property(worker => worker.Role)
-                .HasColumnName("role")
-                .IsRequired();
+        builder.HasOne<Domain.ProfileAggregator.Entities.Profiles.Profile>()
+            .WithMany()
+            .HasForeignKey(worker => worker.Profile);
 
-            builder.Property(worker => worker.JoinedAt)
-                .HasColumnName("joined_at")
-                .IsRequired();
+        builder.Property(worker => worker.Role)
+            .HasColumnName("role")
+            .IsRequired();
 
-            builder.Property(worker => worker.ExitAt)
-                .HasColumnName("exit_at");
+        builder.Property(worker => worker.JoinedAt)
+            .HasColumnName("joined_at")
+            .IsRequired();
 
-            builder.Property(worker => worker.DeletedAt)
-                .HasColumnName("deleted_at");
+        builder.Property(worker => worker.ExitAt)
+            .HasColumnName("exit_at");
+
+        builder.Property(worker => worker.DeletedAt)
+            .HasColumnName("deleted_at");
     }
 }

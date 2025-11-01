@@ -20,14 +20,14 @@ public class Store : ServiceProvider<StoreId, Guid>, IGamingObject
     private readonly List<Order> _orderEntries = new();
     private readonly List<Worker> _workerEntries = new();
     private readonly List<Rating> _ratingEntries = new();
-    
+
     private Store() { }
-    
+
     private Store(
         StoreId id,
-        ProfileId owner, 
-        string name, 
-        Address address, 
+        ProfileId owner,
+        string name,
+        Address address,
         Point localization
     ) : base(owner, localization, 0)
     {
@@ -50,8 +50,8 @@ public class Store : ServiceProvider<StoreId, Guid>, IGamingObject
 
     public static Store Create(
         ProfileId owner,
-        string name, 
-        Address address, 
+        string name,
+        Address address,
         Point coordinates)
     {
         return new Store(
@@ -76,10 +76,10 @@ public class Store : ServiceProvider<StoreId, Guid>, IGamingObject
         {
             return 0;
         }
-        
+
         return _ratingEntries.Sum(s => s.Rate) / _ratingEntries.Count;
     }
-    
+
     public Worker AddWorker(Profile profile, WorkerType type)
     {
         var worker = Worker.Create(
@@ -91,11 +91,11 @@ public class Store : ServiceProvider<StoreId, Guid>, IGamingObject
         _workerEntries.Add(worker);
         return worker;
     }
-    
+
     public ErrorOr<Worker> SwitchWorkerPermission(Worker worker, WorkerType type)
     {
         var foundWorker = _workerEntries.FirstOrDefault(w => w.Id == worker.Id);
-        
+
         if (foundWorker is null)
         {
             return Errors.Worker.DoesNotBelongToStore;
@@ -107,7 +107,7 @@ public class Store : ServiceProvider<StoreId, Guid>, IGamingObject
         {
             return shouldUpgradeRole.Errors;
         }
-        
+
         return worker;
     }
     public OrderCloth RegisterOrderCloth(ProfileId owner, ClothId cloth, List<MaintenanceServiceId> services)
@@ -129,7 +129,7 @@ public class Store : ServiceProvider<StoreId, Guid>, IGamingObject
         var orderBucket = OrderBucket.Create(
             this.Id,
             owner,
-            bucket, 
+            bucket,
             services
         );
 
@@ -158,12 +158,12 @@ public class Store : ServiceProvider<StoreId, Guid>, IGamingObject
             user.Id,
             rate
         );
-            
+
         if (rating.IsError)
         {
             return rating.Errors;
-        }            
-            
+        }
+
         _ratingEntries.Add(rating.Value);
         return rating;
     }

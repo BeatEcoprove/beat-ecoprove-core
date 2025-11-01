@@ -86,7 +86,7 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
         return colorIds;
     }
 
-    private ErrorOr<dynamic> ValidateParams(ErrorOr<string>? order)
+    private static ErrorOr<dynamic> ValidateParams(ErrorOr<string>? order)
     {
         if (order is not null && order.Value.IsError)
         {
@@ -97,7 +97,7 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
     }
 
 
-    private ErrorOr<string>? GetOrderBy(string orderBy)
+    private static ErrorOr<string>? GetOrderBy(string orderBy)
     {
         return orderBy switch
         {

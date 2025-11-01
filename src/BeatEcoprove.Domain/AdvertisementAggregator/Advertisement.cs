@@ -9,15 +9,15 @@ namespace BeatEcoprove.Domain.AdvertisementAggregator;
 public class Advertisement : AggregateRoot<AdvertisementId, Guid>
 {
     private const int AddCost = 150;
-    
+
     protected Advertisement() { }
-    
+
     protected Advertisement(
-        ProfileId creator, 
-        string title, 
-        string description, 
-        DateTimeOffset initDate, 
-        DateTimeOffset endDate, 
+        ProfileId creator,
+        string title,
+        string description,
+        DateTimeOffset initDate,
+        DateTimeOffset endDate,
         int sustainablePoints)
     {
         Id = AdvertisementId.CreateUnique();
@@ -33,25 +33,25 @@ public class Advertisement : AggregateRoot<AdvertisementId, Guid>
     public ProfileId Creator { get; private set; } = null!;
     public string Title { get; private set; } = null!;
     public string Description { get; private set; } = null!;
-    public DateTimeOffset InitDate { get; private set; } 
+    public DateTimeOffset InitDate { get; private set; }
     public DateTimeOffset EndDate { get; private set; }
     public string Picture { get; private set; } = null!;
     public int SustainablePoints { get; private set; } = 150;
     public virtual AdvertisementType Type { get; protected init; } = AdvertisementType.Advertisement;
-    
+
     public static Advertisement Create(
-        ProfileId creator, 
-        string title, 
-        string description, 
-        DateTimeOffset initDate, 
+        ProfileId creator,
+        string title,
+        string description,
+        DateTimeOffset initDate,
         DateTimeOffset endDate)
     {
         return new Advertisement(
             creator,
             title,
-            description, 
-            initDate, 
-            endDate, 
+            description,
+            initDate,
+            endDate,
             AddCost
         );
     }

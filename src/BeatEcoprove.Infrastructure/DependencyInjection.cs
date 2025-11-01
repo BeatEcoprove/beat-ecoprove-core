@@ -1,5 +1,4 @@
 ﻿using BeatEcoprove.Domain;
-using BeatEcoprove.Domain.ProfileAggregator.Factories;
 using BeatEcoprove.Infrastructure.Authentication;
 using BeatEcoprove.Infrastructure.Broker;
 using BeatEcoprove.Infrastructure.EmailSender;
@@ -29,10 +28,10 @@ public static class DependencyInjection
         services.AddMultiLanguage();
 
         services.AddDomain();
-        
+
         services.AddJwks();
         services.AddBroker();
-        
+
         return services;
     }
 }

@@ -25,25 +25,25 @@ internal sealed class CreateConsumerCommandHandler(
 ) : ICommandHandler<CreateConsumerCommand, ErrorOr<Profile>>
 {
     public async Task<ErrorOr<Profile>> Handle(
-        CreateConsumerCommand request, 
+        CreateConsumerCommand request,
         CancellationToken cancellationToken)
     {
         var validationResult = await profileCreateService.ValidateConsumerDetails(request.Personal, cancellationToken);
-        
+
         if (validationResult.IsError)
             return validationResult.Errors;
-        
+
         (DisplayName displayName, Phone phone, Gender gender) = validationResult.Value;
-        
+
         var profileId = ProfileId.Create(request.ProfileId);
-        
+
         var authValidation = await profileCreateService.ValidateAuthEntry(profileId);
-        
+
         if (authValidation.IsError)
             return authValidation.Errors;
-        
+
         var authId = authValidation.Value;
-        
+
         var foundProfile = await profileRepository.GetByIdAsync(profileId, cancellationToken);
 
         if (foundProfile is not null)

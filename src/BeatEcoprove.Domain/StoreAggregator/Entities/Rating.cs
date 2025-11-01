@@ -16,7 +16,7 @@ public class Rating
         User = user;
         Rate = rate;
     }
-    
+
     public StoreId Store { get; private set; } = null!;
     public ProfileId User { get; private set; } = null!;
     public double Rate { get; private set; } = 0D;
@@ -32,7 +32,7 @@ public class Rating
         {
             return Errors.Store.RateNotAllowed;
         }
-        
+
         return new Rating(store, user, rate);
     }
 

@@ -12,55 +12,41 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.CreateCloth;
 
-public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, ErrorOr<ClothResult>>
+public class CreateClothCommandHandler(
+    IUnitOfWork unitOfWork,
+    IColorRepository colorRepository,
+    IProfileManager profileManager,
+    IClosetService closetService,
+    IBrandRepository brandRepository)
+    : ICommandHandler<CreateClothCommand, ErrorOr<ClothResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IColorRepository _colorRepository;
-    private readonly IProfileManager _profileManager;
-    private readonly IClosetService _closetService;
-    private readonly IBrandRepository _brandRepository;
-
-    public CreateClothCommandHandler(
-        IUnitOfWork unitOfWork,
-        IColorRepository colorRepository,
-        IProfileManager profileManager,
-        IClosetService closetService,
-        IBrandRepository brandRepository)
-    {
-        _unitOfWork = unitOfWork;
-        _colorRepository = colorRepository;
-        _profileManager = profileManager;
-        _closetService = closetService;
-        _brandRepository = brandRepository;
-    }
-
     public async Task<ErrorOr<ClothResult>> Handle(
         CreateClothCommand request,
         CancellationToken cancellationToken)
     {
-        var profile = await _profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
 
-        var colorId = await _colorRepository.GetByHexValueAsync(request.Color, cancellationToken);
+        var colorId = await colorRepository.GetByHexValueAsync(request.Color, cancellationToken);
 
         if (colorId is null)
         {
             return Errors.Color.BadHexValue;
         }
 
-        var brandId = await _brandRepository.GetBrandIdByNameAsync(request.Brand, cancellationToken);
+        var brandId = await brandRepository.GetBrandIdByNameAsync(request.Brand, cancellationToken);
 
         if (brandId is null)
         {
             return Errors.Brand.ThereIsNoBrandName;
         }
 
-        var clothType = _closetService.GetClothType(request.ClothType);
-        var clothSize = _closetService.GetClothSize(request.ClothSize);
+        var clothType = closetService.GetClothType(request.ClothType);
+        var clothSize = closetService.GetClothSize(request.ClothSize);
 
         var shouldBeValidTypes = clothType.AddValidate(clothSize);
 
@@ -83,15 +69,14 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
             return cloth.Errors;
         }
 
-        var clothResult = await _closetService.AddClothToCloset(
+        var clothResult = await closetService.AddClothToCloset(
             profile.Value,
             cloth.Value,
             request.Brand,
             request.Color,
-            request.ClothAvatar,
             cancellationToken);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return clothResult;
     }

@@ -8,7 +8,6 @@ using BeatEcoprove.Api.Middlewares;
 using Carter;
 
 using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
 
 namespace BeatEcoprove.Api;
 
@@ -64,14 +63,14 @@ public static class DependencyInjection
     {
         services.AddTelemetry();
         services.AddApiVersion();
-        
+
         services.AddMiddlewares();
-        
+
         services.ConfigureHttpJsonOptions(options =>
         {
             options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
         });
-        
+
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();

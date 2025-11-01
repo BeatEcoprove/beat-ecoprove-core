@@ -34,7 +34,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         _brandRepository = brandRepository;
     }
 
-    private ErrorOr<List<ClothType>>? GetCategory(string categories)
+    private static ErrorOr<List<ClothType>>? GetCategory(string categories)
     {
         List<ClothType> clothTypes = new();
 
@@ -51,7 +51,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         return clothTypes;
     }
 
-    private ErrorOr<List<ClothSize>>? GetSize(string size)
+    private static ErrorOr<List<ClothSize>>? GetSize(string size)
     {
         List<ClothSize> clothSizes = new();
 
@@ -69,7 +69,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         return clothSizes;
     }
 
-    private ErrorOr<string>? GetOrderBy(string orderBy)
+    private static ErrorOr<string>? GetOrderBy(string orderBy)
     {
         return orderBy switch
         {
@@ -216,7 +216,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
             bucketList);
     }
 
-    private ErrorOr<dynamic> ValidateParams(ErrorOr<string>? order)
+    private static ErrorOr<dynamic> ValidateParams(ErrorOr<string>? order)
     {
         if (order is not null && order.Value.IsError)
         {

@@ -6,5 +6,5 @@ public record LevelUpContent
     double Xp
 )
 {
-    public string Message => "Parabéns! Subiu de Nível!";
+    public static string Message => "Parabéns! Subiu de Nível!";
 };

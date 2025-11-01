@@ -1,5 +1,4 @@
 using BeatEcoprove.Application.Shared.Extensions;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
@@ -247,7 +246,7 @@ public class StoreService(
         profile.SetAuthId(authId);
         return Task.FromResult<ErrorOr<AuthId>>(authId);
     }
-    
+
     public async Task<ErrorOr<(Worker, Password)>> RegisterWorkerAsync(
         Store store,
         Profile profile,

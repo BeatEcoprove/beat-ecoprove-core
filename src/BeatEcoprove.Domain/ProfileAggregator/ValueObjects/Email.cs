@@ -7,7 +7,7 @@ using ErrorOr;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
-public class Email : ValueObject
+public partial class Email : ValueObject
 {
     private const string EmailRegexPattern = @"^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$";
 
@@ -24,7 +24,7 @@ public class Email : ValueObject
             return Errors.Email.EmptyEmail;
         }
 
-        if (!Regex.IsMatch(value, EmailRegexPattern))
+        if (!MyRegex().IsMatch(value))
         {
             return Errors.Email.InvalidEmail;
         }
@@ -38,4 +38,7 @@ public class Email : ValueObject
     }
 
     public static implicit operator string(Email email) => email.Value;
+
+    [GeneratedRegex(EmailRegexPattern)]
+    private static partial Regex MyRegex();
 }

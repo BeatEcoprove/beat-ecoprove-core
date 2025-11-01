@@ -7,8 +7,6 @@ using MapsterMapper;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Mvc;
-
 namespace BeatEcoprove.Api.Controllers.V1;
 
 public class BucketController : ApiCarterModule
@@ -36,7 +34,7 @@ public class BucketController : ApiCarterModule
                     bucketId,
                     request.Name
                 ), cancellationToken);
-            
+
             return result.Match(
                 response => Results.Ok(
                     mapper.Map<BucketResponse>(response)),

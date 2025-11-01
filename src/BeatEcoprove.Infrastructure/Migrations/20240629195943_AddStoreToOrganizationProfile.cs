@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
 using NetTopologySuite.Geometries;
 
 #nullable disable
@@ -274,7 +274,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("0096181c-d722-4b50-ac62-f627c9bef4a6"), "public/default/brands/mo.png", null, "MO" },
@@ -285,7 +285,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("02a23eb3-0b4a-4385-8e2e-5ab054bf9ec1"), null, "FFFF6D6D", "Vermelho Claro" },
@@ -350,6 +350,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 table: "stores",
                 column: "owner");
         }
+        private static readonly string[] columns = new[] { "id", "brand_avatar", "deleted_at", "name" };
+        private static readonly string[] columnsArray = new[] { "id", "deleted_at", "hex", "name" };
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -588,7 +590,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("41ceff9e-ab2d-451b-8620-1ab4bb11b01e"), "public/default/brands/zippy.png", null, "Zippy" },
@@ -599,7 +601,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("20fc9439-bfbc-464d-a926-9cb3611a60b8"), null, "FFFFE69F", "Amarelo" },

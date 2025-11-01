@@ -7,6 +7,5 @@ namespace BeatEcoprove.Application.Closet.Queries.GetCurrentOutfit;
 
 public record GetCurrentOutfitQuery
 (
-    Guid AuthId,
     Guid ProfileId
 ) : IQuery<ErrorOr<BucketResult>>;

@@ -22,17 +22,17 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
         CancellationToken cancellationToken = default)
     {
         var getAllAdverts = from advert in DbContext.Set<Advertisement>()
-            where 
-                (search == null || ((string)advert.Title).ToLower().Contains(search.ToLower()))
-            select advert;
-        
+                            where
+                                (search == null || ((string)advert.Title).Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                            select advert;
+
         getAllAdverts = getAllAdverts
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
-        
+
         return await getAllAdverts.ToListAsync(cancellationToken);
     }
-    
+
     public async Task<List<Advertisement>> GetAllAddsAsync(
         ProfileId profile,
         bool isEmployee = false,
@@ -42,24 +42,24 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
         CancellationToken cancellationToken = default)
     {
         var getAllAdverts = from advert in DbContext.Set<Advertisement>()
-            from store in DbContext.Set<Store>()
-            from worker in store.Workers
-            where 
-                (
-                    isEmployee && advert.Store == null 
-                    ||
-                    isEmployee && advert.Store == store.Id && worker.Profile == profile && worker.Store == store.Id
-                    ||
-                    advert.Creator == profile
-                ) &&
-                (search == null || ((string)advert.Title).ToLower().Contains(search.ToLower()))
-            select advert;
-       
+                            from store in DbContext.Set<Store>()
+                            from worker in store.Workers
+                            where
+                                (
+                                    isEmployee && advert.Store == null
+                                    ||
+                                    isEmployee && advert.Store == store.Id && worker.Profile == profile && worker.Store == store.Id
+                                    ||
+                                    advert.Creator == profile
+                                ) &&
+                                (search == null || ((string)advert.Title).Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                            select advert;
+
         getAllAdverts = getAllAdverts
             .Distinct()
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
-        
+
         return (await getAllAdverts.ToListAsync(cancellationToken));
     }
 
@@ -67,36 +67,36 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
         CancellationToken cancellationToken = default)
     {
         var getAdds = from advert in DbContext.Set<Advertisement>()
-            where 
-                advert.Creator == providerId &&
-                (search == null || ((string)advert.Title).ToLower().Contains(search.ToLower()))
-            select advert;
+                      where
+                          advert.Creator == providerId &&
+                          (search == null || ((string)advert.Title).Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                      select advert;
 
         getAdds = getAdds
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
-        
+
         return await getAdds.ToListAsync(cancellationToken);
     }
 
     public async Task<bool> HasProfileAccessToAdvert(
-        AdvertisementId advertId, 
+        AdvertisementId advertId,
         ProfileId profile,
         bool isEmployee = false,
         CancellationToken cancellationToken = default)
     {
         var hasAccess = from advert in DbContext.Set<Advertisement>()
-            from store in DbContext.Set<Store>()
-            from worker in store.Workers
-            where 
-                 (
-                    isEmployee && advert.Store == null 
-                    ||
-                    isEmployee && advert.Store == store.Id && worker.Profile == profile && worker.Store == store.Id
-                    ||
-                    advert.Creator == profile
-                ) 
-            select advert;
+                        from store in DbContext.Set<Store>()
+                        from worker in store.Workers
+                        where
+                             (
+                                isEmployee && advert.Store == null
+                                ||
+                                isEmployee && advert.Store == store.Id && worker.Profile == profile && worker.Store == store.Id
+                                ||
+                                advert.Creator == profile
+                            )
+                        select advert;
 
         return await hasAccess.AnyAsync(cancellationToken);
     }

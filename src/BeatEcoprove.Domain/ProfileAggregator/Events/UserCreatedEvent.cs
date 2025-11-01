@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 using BeatEcoprove.Domain.Shared.Broker;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Events;

@@ -26,17 +26,18 @@ public class AdvertisementController : ApiCarterModule
     }
 
     private static async Task<IResult> GetMyAdverts(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
-        Guid storeId, 
-        string? search, 
-        int? page, 
+        Guid storeId,
+        string? search,
+        int? page,
         int? pageSize,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 GetMyAdvertsQuery(
                     profileId,
@@ -46,47 +47,49 @@ public class AdvertisementController : ApiCarterModule
                     pageSize ?? 10
                 ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<AdvertisementResponse>>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> GetAdvertById(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
-        Guid advertId, 
-        CancellationToken cancellationToken) {
+        Guid advertId,
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                          
+
         var result = await sender.Send(new
                 GetAdvertByIdQuery(
                     profileId,
                     advertId
                 ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<AdvertisementResponse>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> CreateAdvert(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
-        Guid storeId, 
+        Guid storeId,
         CreateAdvertisementRequest request,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                          
+
         var result = await sender.Send(new
             CreateAddCommand(
                 profileId,
@@ -99,36 +102,36 @@ public class AdvertisementController : ApiCarterModule
                 request.Quantity
             ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<AdvertisementResponse>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
-    }   
-    
+    }
+
     private static async Task<IResult> DeleteAdvert(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
-        Guid storeId, 
-        Guid advertId, 
-        CreateAdvertisementRequest request,
-        CancellationToken cancellationToken) {
+        Guid storeId,
+        Guid advertId,
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                          
+
         var result = await sender.Send(new
             RemoveAdvertCommand(
-                profileId, 
+                profileId,
                 advertId
             ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<AdvertisementResponse>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
-    }   
+    }
 }

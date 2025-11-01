@@ -24,18 +24,19 @@ public class StoreController : ApiCarterModule
         stores.MapPost(string.Empty, CreateStore);
         stores.MapDelete("{storeId:guid}", DeleteStoreById);
     }
-    
+
     private static async Task<IResult> GetOwningStores(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
-        string? search, 
-        int page, 
+        string? search,
+        int page,
         int pageSize,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 GetOwningStoresQuery(
                     profileId,
@@ -44,46 +45,48 @@ public class StoreController : ApiCarterModule
                     pageSize
                 ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<StoreResponse>>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> GetStoreById(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 GetStoreByIdQuery(
                     profileId,
                     storeId
                 ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<StoreResponse>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> CreateStore(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         CreateStoreRequest request,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 AddStoreCommand(
                     profileId,
@@ -97,30 +100,31 @@ public class StoreController : ApiCarterModule
                     request.Lon
                 ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<StoreResponse>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> DeleteStoreById(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
             DeleteStoreByIdCommand(
                 profileId,
                 storeId
             ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<StoreResponse>(result)),

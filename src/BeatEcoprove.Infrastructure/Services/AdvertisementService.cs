@@ -1,4 +1,3 @@
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
@@ -24,8 +23,8 @@ public class AdvertisementService(
     : IAdvertisementService
 {
     public async Task<ErrorOr<Advertisement>> GetAdvertAsync(
-        AdvertisementId advertId, 
-        Profile profile, 
+        AdvertisementId advertId,
+        Profile profile,
         bool checkAuthorization = true,
         CancellationToken cancellationToken = default)
     {
@@ -36,7 +35,7 @@ public class AdvertisementService(
         {
             return Errors.Advertisement.NotFound;
         }
-        
+
         if (!checkAuthorization)
         {
             return advert;
@@ -52,22 +51,22 @@ public class AdvertisementService(
 
     public async Task<ErrorOr<List<Advertisement>>> GetMyAdvertsAsync(
         StoreId storeId,
-        Profile profile, 
-        string? search = null, 
-        int page = 1, 
+        Profile profile,
+        string? search = null,
+        int page = 1,
         int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
-        
-         var adverts = await advertisementRepository.GetAllAddsAsync(
-            profile.Id,
-            isEmployee,
-            search: search,
-            page: page,
-            pageSize: pageSize,
-            cancellationToken: cancellationToken
-        );
+
+        var adverts = await advertisementRepository.GetAllAddsAsync(
+           profile.Id,
+           isEmployee,
+           search: search,
+           page: page,
+           pageSize: pageSize,
+           cancellationToken: cancellationToken
+       );
 
         return adverts;
     }
@@ -82,7 +81,7 @@ public class AdvertisementService(
         {
             return Errors.Advertisement.DateMustBeValid;
         }
-        
+
         if (profile.Type.Equals(UserType.Consumer))
         {
             return Errors.Advertisement.CannotPerformThis;
@@ -99,7 +98,7 @@ public class AdvertisementService(
 
             storeId = result.Value.Store;
         }
-        
+
         if (profile.SustainabilityPoints < advertisement.SustainablePoints)
         {
             return Errors.Advertisement.DontHaveEnoughPoint;
@@ -113,7 +112,7 @@ public class AdvertisementService(
             {
                 return store.Errors;
             }
-            
+
             advertisement.SetStore(storeId);
             advertisement.SetMainProfile(store.Value.Owner);
 
@@ -131,29 +130,29 @@ public class AdvertisementService(
         else
         {
             await storeRepository.SubtractPoints(
-                profile.Id, 
-                advertisement.SustainablePoints, 
+                profile.Id,
+                advertisement.SustainablePoints,
                 cancellationToken);
         }
-        
+
         profile.SustainabilityPoints -= advertisement.SustainablePoints;
         advertisement.SetPictureUrl($"https://robohash.org/{advertisement.Id.Value.ToString()}");
-        
+
         await advertisementRepository.AddAsync(advertisement, cancellationToken);
-        
+
         return advertisement;
     }
 
     public async Task<ErrorOr<Advertisement>> DeleteAsync(
-        Advertisement advertisement, 
-        Profile profile, 
+        Advertisement advertisement,
+        Profile profile,
         CancellationToken cancellationToken = default)
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
 
         if (!await advertisementRepository.HasProfileAccessToAdvert(
-                advertisement.Id, 
-                profile.Id, 
+                advertisement.Id,
+                profile.Id,
                 isEmployee,
                 cancellationToken))
         {
@@ -163,12 +162,12 @@ public class AdvertisementService(
         if (isEmployee)
         {
             var worker = await storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
-            
+
             if (worker is null)
             {
                 return Errors.Worker.NotFound;
             }
-    
+
             if (worker.Role != WorkerType.Manager)
             {
                 return Errors.Store.DontHaveAccessToStore;

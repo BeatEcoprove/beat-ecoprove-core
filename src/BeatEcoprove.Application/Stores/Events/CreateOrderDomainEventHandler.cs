@@ -12,16 +12,16 @@ namespace BeatEcoprove.Application.Stores.Events;
 public class CreateOrderDomainEventHandler : INotificationHandler<CreateOrderDomainEvent>
 {
     private const int RegisterOrderSustainablePoints = 30;
-    
+
     private readonly IProfileRepository _profileRepository;
     private readonly IStoreService _storeService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IGamingService _gamingService;
 
     public CreateOrderDomainEventHandler(
-        IProfileRepository profileRepository, 
-        IStoreService storeService, 
-        IUnitOfWork unitOfWork, 
+        IProfileRepository profileRepository,
+        IStoreService storeService,
+        IUnitOfWork unitOfWork,
         IGamingService gamingService)
     {
         _profileRepository = profileRepository;
@@ -58,7 +58,7 @@ public class CreateOrderDomainEventHandler : INotificationHandler<CreateOrderDom
         owner.EcoScore += 100;
         _gamingService.GainXp(owner, 10);
         _gamingService.GainXp(store.Value, 10);
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

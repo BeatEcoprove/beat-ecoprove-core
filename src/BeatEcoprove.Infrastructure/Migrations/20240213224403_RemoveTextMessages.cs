@@ -242,7 +242,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("396f0f88-6b86-4877-a6fa-5c103e494738"), "public/default/brands/mo.png", null, "MO" },
@@ -253,7 +253,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("06bd9801-e50f-492d-b5ac-9f3cd80f4abf"), null, "FF29394A", "Azul Escuro" },
@@ -313,6 +313,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     { new Guid("f0d866bd-7458-4045-bda7-509e0a6432cb"), "public/default/wash/hand.png", null, "Lavar à mão com água e sabão", 10, new Guid("f4fabe42-b5c0-4508-aea7-d2edcfefecb6"), 100, "Lavar à mão" }
                 });
         }
+        private static readonly string[] columns = new[] { "id", "brand_avatar", "deleted_at", "name" };
+        private static readonly string[] columnsArray = new[] { "id", "deleted_at", "hex", "name" };
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -572,7 +574,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("7041b578-6dee-46f5-9306-5fa027a1e166"), "public/default/brands/mo.png", null, "MO" },
@@ -583,7 +585,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("0ad4a7d3-b69a-43d3-91bc-64600efca0d6"), null, "FFDA252E", "Vermelho" },

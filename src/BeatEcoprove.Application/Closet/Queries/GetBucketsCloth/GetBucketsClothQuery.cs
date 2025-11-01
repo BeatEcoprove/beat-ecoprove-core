@@ -7,7 +7,6 @@ namespace BeatEcoprove.Application.Closet.Queries.GetBucketsCloth;
 
 public record GetBucketsClothQuery
 (
-    Guid AuthId,
     Guid ProfileId,
     Guid ClothId
 ) : IQuery<ErrorOr<List<BucketResult>>>;

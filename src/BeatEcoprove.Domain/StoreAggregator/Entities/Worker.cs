@@ -13,8 +13,8 @@ public class Worker : Entity<WorkerId>
     private Worker() { }
 
     private Worker(
-        StoreId store, 
-        WorkerId id,  
+        StoreId store,
+        WorkerId id,
         ProfileId profile,
         WorkerType role)
     {
@@ -46,7 +46,7 @@ public class Worker : Entity<WorkerId>
         {
             return Errors.Worker.CannotChangeToSamePermission;
         }
-        
+
         Role = role;
         return role;
     }

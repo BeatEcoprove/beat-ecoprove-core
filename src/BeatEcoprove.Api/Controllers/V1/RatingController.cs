@@ -1,9 +1,7 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.PostRating;
-using BeatEcoprove.Application.Stores.Queries.GetAdevertById;
 using BeatEcoprove.Application.Stores.Queries.GetStoreRatings;
-using BeatEcoprove.Contracts.Advertisements;
 using BeatEcoprove.Contracts.Store;
 
 using MapsterMapper;
@@ -22,18 +20,19 @@ public class RatingController : ApiCarterModule
         ratting.MapGet(string.Empty, GetStoreRatings);
         ratting.MapPost(string.Empty, CreateRating);
     }
-    
+
     private static async Task<IResult> GetStoreRatings(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
-        int page, 
+        int page,
         int pageSize,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 GetStoreRatingsQuery(
                     profileId,
@@ -42,24 +41,25 @@ public class RatingController : ApiCarterModule
                     pageSize
                 ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<RatingResponse>>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> CreateRating(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         CreatePostRating request,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 PostRatingCommand(
                     profileId,
@@ -67,7 +67,7 @@ public class RatingController : ApiCarterModule
                     request.Rating
                 ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<RatingResponse>(result)),

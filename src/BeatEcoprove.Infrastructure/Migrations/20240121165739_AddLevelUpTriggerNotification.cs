@@ -154,7 +154,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("7f386d60-27b9-4c0d-b13b-c01ba2729693"), "...", null, "Salsa" },
@@ -164,7 +164,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("1fa130a8-0514-4dcf-b4f6-3255ff3d033b"), null, "FFFF0000", "Red" },
@@ -238,6 +238,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
              
         """);
         }
+        private static readonly string[] columns = new[] { "id", "brand_avatar", "deleted_at", "name" };
+        private static readonly string[] columnsArray = new[] { "id", "deleted_at", "hex", "name" };
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -384,7 +386,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("36ce016d-b9de-48b0-a0d8-35d4f9501c62"), "...", null, "MO" },
@@ -394,7 +396,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("5d5155a4-9bad-425f-8444-a2c65291db07"), null, "FF00FF00", "Green" },

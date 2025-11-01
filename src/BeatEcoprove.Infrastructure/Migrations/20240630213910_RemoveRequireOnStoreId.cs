@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -240,7 +239,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("298bfa53-cc2e-4876-8761-71af6b299ff8"), "public/default/brands/salsa.png", null, "Salsa" },
@@ -251,7 +250,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("16292f3b-76d2-4b50-ab4e-92de2b592b41"), null, "FF000000", "Black" },
@@ -311,6 +310,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     { new Guid("ecbd01e7-3322-4c0a-9c08-5eae2beda57e"), "public/default/wash/dry.png", null, "Lavar a seco", -3, new Guid("fea92981-527b-44f0-a782-f03331998d3b"), 0, "A seco" }
                 });
         }
+        private static readonly string[] columns = new[] { "id", "brand_avatar", "deleted_at", "name" };
+        private static readonly string[] columnsArray = new[] { "id", "deleted_at", "hex", "name" };
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -542,7 +543,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("282bcd21-e36d-4400-9c63-1ed7da7a1f6b"), "public/default/brands/zippy.png", null, "Zippy" },
@@ -553,7 +554,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("0bfb4fe7-eb25-4c94-adae-06377c9d6c8e"), null, "FFC0C0C0", "Cinzento Bebê" },

@@ -4,4 +4,3 @@ public record AllProfilesResponse
 (
     List<ProfileResponse> Users
 );
-

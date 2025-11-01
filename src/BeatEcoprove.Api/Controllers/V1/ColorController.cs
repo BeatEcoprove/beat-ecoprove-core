@@ -24,7 +24,7 @@ public class ColorController : ApiCarterModule
         {
             var result =
                 await sender.Send(new GetColorsQuery());
-            
+
             return result.Match(
                 color => Results.Ok(
                     mapper.Map<ColorResponse>(color)),

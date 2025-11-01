@@ -1,16 +1,20 @@
+using System.Diagnostics.CodeAnalysis;
+
 using Carter;
 
 namespace BeatEcoprove.Api.Controllers.V1;
 
-public abstract class ApiCarterModule: CarterModule
+public abstract class ApiCarterModule : CarterModule
 {
-    protected RouteGroupBuilder CreateVersionedGroup(
-        IEndpointRouteBuilder app, 
-        string path)
+    protected static RouteGroupBuilder CreateVersionedGroup(
+        IEndpointRouteBuilder app,
+        [StringSyntax("Route")] string path)
     {
-        return app.MapGroup($"/v{{version:apiVersion}}/{path.TrimStart('/')}")
+        var versionedGroup = app.MapGroup($"v{{version:apiVersion}}")
             .WithApiVersionSet(app.NewApiVersionSet()
                 .HasApiVersion(ApiVersions.Current)
                 .Build());
+
+        return versionedGroup.MapGroup(path);
     }
 }

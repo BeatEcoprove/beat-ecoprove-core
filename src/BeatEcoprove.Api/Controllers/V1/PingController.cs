@@ -6,7 +6,7 @@ public class PingController : ApiCarterModule
     {
         var ping = CreateVersionedGroup(app, "health");
 
-        ping.MapGet(string.Empty, () => 
+        ping.MapGet(string.Empty, () =>
             Results.Ok(new { Message = "The server is online" }));
     }
 }

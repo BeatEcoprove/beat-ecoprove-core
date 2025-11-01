@@ -11,7 +11,7 @@ public class UserCreatedEventConsumer(
 ) : IConsumer<UserCreatedEvent>
 {
     private readonly TimeSpan _expire = TimeSpan.FromMinutes(15);
-    
+
     public async Task Consume(ConsumeContext<UserCreatedEvent> context)
     {
         var message = context.Message;

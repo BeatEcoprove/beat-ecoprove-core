@@ -14,7 +14,7 @@ namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Advertisement;
 public class AdvertisementConfiguration : IEntityTypeConfiguration<Domain.AdvertisementAggregator.Advertisement>
 {
     private const string AdvertisementTable = "advertisements";
-    
+
     public void Configure(EntityTypeBuilder<Domain.AdvertisementAggregator.Advertisement> builder)
     {
         builder.ToTable(AdvertisementTable);
@@ -44,7 +44,7 @@ public class AdvertisementConfiguration : IEntityTypeConfiguration<Domain.Advert
             .HasColumnName("store")
             .ValueGeneratedNever()
             .HasConversion(
-                storeId => storeId.Value, 
+                storeId => storeId.Value,
                 value => StoreId.Create(value)
             ).IsRequired(required: false);
 
@@ -56,7 +56,7 @@ public class AdvertisementConfiguration : IEntityTypeConfiguration<Domain.Advert
             .HasColumnName("title")
             .HasMaxLength(50)
             .IsRequired();
-        
+
         builder.Property(add => add.Description)
                     .HasColumnName("description")
                     .HasMaxLength(500)
@@ -82,7 +82,7 @@ public class AdvertisementConfiguration : IEntityTypeConfiguration<Domain.Advert
             .HasValue<Domain.AdvertisementAggregator.Advertisement>(AdvertisementType.Advertisement)
             .HasValue<Voucher>(AdvertisementType.Voucher)
             .HasValue<Promotion>(AdvertisementType.Promotion);
-        
+
         builder.Property(a => a.Type)
             .HasColumnName("type")
             .HasConversion(new AdvertisementTypeConverter())

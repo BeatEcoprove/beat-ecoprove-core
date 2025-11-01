@@ -7,7 +7,6 @@ namespace BeatEcoprove.Application.Cloths.Queries.GetClothMaintenanceStatus;
 
 public record GetClothMaintenanceStatusQuery
 (
-    Guid AuthId,
     Guid ProfileId,
     Guid ClothId
 ) : IQuery<ErrorOr<ClothMaintenanceStatus>>;

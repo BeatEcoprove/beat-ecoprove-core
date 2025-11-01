@@ -9,8 +9,11 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using Respawn;
+
 using StackExchange.Redis;
+
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 
@@ -33,12 +36,13 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     private readonly RedisContainer _redisContainer = new RedisBuilder()
         .WithImage("redis:latest")
         .Build();
+    private static readonly string[] options = new[] { "public" };
 
     protected override IHostBuilder? CreateHostBuilder()
     {
         Env.Postgres.ConnectionString = _dbContainer.GetConnectionString();
         Env.Redis.ConnectionString = _redisContainer.GetConnectionString();
-        
+
         return base.CreateHostBuilder();
     }
 
@@ -142,7 +146,7 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
         _respawner = await Respawner.CreateAsync(dbConnection, new RespawnerOptions()
         {
             DbAdapter = DbAdapter.Postgres,
-            SchemasToInclude = new[] { "public" }
+            SchemasToInclude = options
         });
     }
 

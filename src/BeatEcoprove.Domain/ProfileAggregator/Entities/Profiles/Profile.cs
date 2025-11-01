@@ -73,12 +73,12 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
     {
         AuthId = authId;
     }
-    
+
     public void SetProfileId(ProfileId profileId)
     {
         Id = profileId;
     }
-    
+
     public ProfileDao ToDao()
     {
         return new ProfileDao(

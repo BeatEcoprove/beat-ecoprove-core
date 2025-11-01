@@ -5,13 +5,14 @@ using BeatEcoprove.Domain.Shared.Broker;
 namespace BeatEcoprove.Infrastructure.EmailSender;
 
 public record EmailQueueEvent(
-    string Recipient, 
+    string Recipient,
     string Template,
     Dictionary<string, string> Variables
-) : IEmailEvent  {
-    public Guid Id => Guid.NewGuid();
-    
-    public string SendAt => DateTime.UtcNow.ToString(
+) : IEmailEvent
+{
+    public static Guid Id => Guid.NewGuid();
+
+    public static string SendAt => DateTime.UtcNow.ToString(
         "yyyy-MM-ddTHH:mm:ss.fffffffK",
         CultureInfo.InvariantCulture
     );

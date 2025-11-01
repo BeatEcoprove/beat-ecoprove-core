@@ -55,7 +55,7 @@ internal sealed class CreateNestedProfileCommandHandler(
             userName.Value,
             string.Empty,
             String.Empty,
-            String.Empty, 
+            String.Empty,
             phone.Value,
             request.BornDate,
             gender

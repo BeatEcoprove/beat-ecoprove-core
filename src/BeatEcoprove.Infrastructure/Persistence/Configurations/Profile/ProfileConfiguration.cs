@@ -102,7 +102,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasConversion(
                 id => id.Value,
                 value => ProfileId.Create(value));
-        
+
         builder.Property(profile => profile.AuthId)
             .HasColumnName("auth_id")
             .ValueGeneratedNever()
@@ -138,11 +138,11 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
         builder.Property(profile => profile.FirstName)
             .HasColumnName("first_name")
             .HasMaxLength(256);
-        
+
         builder.Property(profile => profile.LastName)
             .HasColumnName("last_name")
             .HasMaxLength(256);
-        
+
         builder.Property(profile => profile.Biography)
             .HasColumnName("biography")
             .HasMaxLength(256);

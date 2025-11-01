@@ -3,12 +3,12 @@ namespace BeatEcoprove.Contracts.Advertisements;
 public class AdvertisementResponse
 {
     public AdvertisementResponse(
-        Guid id, 
-        string title, 
-        string description, 
+        Guid id,
+        string title,
+        string description,
         string picture,
-        DateTimeOffset beginAt, 
-        DateTimeOffset endAt, 
+        DateTimeOffset beginAt,
+        DateTimeOffset endAt,
         string type)
     {
         Id = id;

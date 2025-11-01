@@ -23,15 +23,15 @@ public static class JwtAuthentication
                         RequireHttps = false,
                     }
                 );
-        
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    
+
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    
+
                     ClockSkew = TimeSpan.FromMinutes(5)
                 };
 
@@ -40,7 +40,7 @@ public static class JwtAuthentication
                     OnAuthenticationFailed = context => Task.CompletedTask
                 };
             });
-        
+
         return services;
     }
 }

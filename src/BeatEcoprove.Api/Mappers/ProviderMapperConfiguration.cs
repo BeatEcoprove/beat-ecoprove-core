@@ -24,13 +24,13 @@ public class ProviderMapperConfiguration : IRegister
                 )).ToList(),
                 src.TotalRanking
             ));
-        
+
         config.NewConfig<Organization, StandardProviderResponse>()
             .MapWith(src => new StandardProviderResponse(
                 src.Id,
                 src.AvatarUrl,
                 src.DisplayName,
-                src.TypeOption.ToString()   
+                src.TypeOption.ToString()
             ));
     }
 }

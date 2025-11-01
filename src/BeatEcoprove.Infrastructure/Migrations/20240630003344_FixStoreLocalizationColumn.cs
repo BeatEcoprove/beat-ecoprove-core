@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
 using NetTopologySuite.Geometries;
 
 #nullable disable
@@ -249,7 +249,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("3683deae-b289-491b-8d2d-cfc88c964c89"), "public/default/brands/losan.png", null, "Losan" },
@@ -260,7 +260,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("01a8e673-e4f4-4561-bd77-5cf2d01e80f3"), null, "FFBE5967", "Rosa" },
@@ -320,6 +320,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     { new Guid("f25b89a6-17cd-4b07-a86d-b2d38421cf7a"), "public/default/service.png", null, "Escolhe uma lavandaria", 10, new Guid("4792b066-55ce-48d3-94e6-7edad62855fa"), 100, "Serviço de lavandaria" }
                 });
         }
+        private static readonly string[] columns = new[] { "id", "brand_avatar", "deleted_at", "name" };
+        private static readonly string[] columnsArray = new[] { "id", "deleted_at", "hex", "name" };
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -559,7 +561,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("05a36638-b5fb-458c-9b71-66db91c748eb"), "public/default/brands/mo.png", null, "MO" },
@@ -570,7 +572,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("03f5fbb2-3957-4f57-829e-91afe49986fc"), null, "FFD2AAC5", "Roxo Claro" },

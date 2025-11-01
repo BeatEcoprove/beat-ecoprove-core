@@ -7,7 +7,7 @@ using ErrorOr;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
-public class PostalCode : ValueObject
+public partial class PostalCode : ValueObject
 {
     private const string PostalCodeRegexPattern = @"^\d{4}(-\d{3})?$";
 
@@ -24,7 +24,7 @@ public class PostalCode : ValueObject
             return Errors.PostalCode.EmptyPostalCode;
         }
 
-        if (!Regex.IsMatch(value, PostalCodeRegexPattern))
+        if (!MyRegex().IsMatch(value))
         {
             return Errors.PostalCode.InvalidPostalCode;
         }
@@ -38,4 +38,7 @@ public class PostalCode : ValueObject
     }
 
     public static implicit operator string(PostalCode postalCode) => postalCode.Value;
+
+    [GeneratedRegex(PostalCodeRegexPattern)]
+    private static partial Regex MyRegex();
 }

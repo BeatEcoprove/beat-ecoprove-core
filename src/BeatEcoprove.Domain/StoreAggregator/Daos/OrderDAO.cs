@@ -8,10 +8,10 @@ public class OrderDAO
 {
     public OrderDAO(
         OrderId id,
-        StoreId storeId, 
-        Profile owner, 
-        OrderStatus status, 
-        DateTimeOffset? acceptedAt, 
+        StoreId storeId,
+        Profile owner,
+        OrderStatus status,
+        DateTimeOffset? acceptedAt,
         OrderType type)
     {
         Id = id;
@@ -24,7 +24,7 @@ public class OrderDAO
 
     public OrderId Id { get; private set; }
     public StoreId StoreId { get; private set; }
-    public Profile Owner{ get; private set; }
+    public Profile Owner { get; private set; }
     public OrderStatus Status { get; private set; }
     public DateTimeOffset? AcceptedAt { get; set; } = null;
     public List<MaintenanceOrderDao> MaintenanceServices { get; set; } = new();

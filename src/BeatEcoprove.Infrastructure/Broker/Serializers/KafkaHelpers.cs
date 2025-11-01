@@ -7,16 +7,16 @@ public static class KafkaHelpers
     private static string GetEventType(Type type)
     {
         var typeName = type.Name;
-        
+
         if (typeName.EndsWith("Event", StringComparison.Ordinal))
         {
             typeName = typeName[..^5];
         }
-        
+
         return string.Concat(
-            typeName.Select((c, i) => 
-                i > 0 && char.IsUpper(c) 
-                    ? "_" + char.ToLower(c) 
+            typeName.Select((c, i) =>
+                i > 0 && char.IsUpper(c)
+                    ? "_" + char.ToLower(c)
                     : char.ToLower(c).ToString()
             )
         );

@@ -35,7 +35,7 @@ public static class ClaimsExtensions
 
         return userType.Value;
     }
- 
+
     public static string GetEmail(this ClaimsPrincipal claims)
     {
         var claimList = claims.Claims;

@@ -21,7 +21,7 @@ public class KafkaBrokerDeserializer<IEvent> : IDeserializer<IEvent>
     {
         _eventTypes[eventType] = typeof(TEvent);
     }
-    
+
     public void Register<TEvent>() where TEvent : IBrokerEvent
     {
         var eventType = KafkaHelpers.GetEventType<TEvent>();
@@ -30,15 +30,15 @@ public class KafkaBrokerDeserializer<IEvent> : IDeserializer<IEvent>
 
     public IEvent Deserialize(
         ReadOnlySpan<byte> data,
-        bool isNull, 
+        bool isNull,
         SerializationContext context)
     {
         if (isNull) return null!;
 
         var json = Encoding.UTF8.GetString(data);
         var doc = JsonDocument.Parse(json);
-        
-        if (!doc.RootElement.TryGetProperty("event_type", out var eventTypeElement) 
+
+        if (!doc.RootElement.TryGetProperty("event_type", out var eventTypeElement)
             || !doc.RootElement.TryGetProperty("payload", out var payloadElement))
             return null!;
 

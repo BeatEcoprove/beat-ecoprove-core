@@ -23,20 +23,20 @@ public class ProfileController() : ApiCarterModule()
 
         profiles.MapPost("/client", CreateClientProfile)
             .RequireScopes("profile:create");
-        
+
         profiles.MapPost("/organization", CreateOrganizationProfile)
             .RequireScopes("profile:create");
 
         profiles.MapGet("/me", GetMe)
             .RequireScopes("profile:view");
-        
+
         profiles.MapGet(String.Empty, GetProfiles)
             .RequireScopes("profile:view");
-        
+
         // TODO: did not test this one
         profiles.MapDelete("{id:guid}", DeleteProfile)
             .RequireScopes("profile:delete");
-        
+
         // TODO: this failed
         profiles.MapPut("{id:guid}", UpdateProfile)
             .RequireScopes("profile:update");
@@ -46,12 +46,13 @@ public class ProfileController() : ApiCarterModule()
         => context.User.GetProfileId() == profileId;
 
     private static async Task<IResult> CreateClientProfile(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         CreateClientProfileRequest request,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
 
         if (!VerifyProfileId(context, request.ProfileId))
         {
@@ -62,7 +63,7 @@ public class ProfileController() : ApiCarterModule()
             );
         }
 
-        var result= await sender
+        var result = await sender
             .Send(new CreateConsumerCommand(
                 request.ProfileId,
                 new PersonalInfoInput(
@@ -75,10 +76,10 @@ public class ProfileController() : ApiCarterModule()
                     request.PhoneNumber
                 )
             ), cancellationToken);
-        
+
         return result.Match(
             profile => Results.Created(
-                $"/v1/profiles/{result.Value.Id}", 
+                $"/v1/profiles/{result.Value.Id}",
                 mapper.Map<ProfileResponse>(profile)),
             errors => errors.ToProblemDetails(localizer)
         );
@@ -135,7 +136,7 @@ public class ProfileController() : ApiCarterModule()
         CancellationToken cancellationToken)
     {
         var result = await sender
-            .Send(new GetProfileQuery(context.User.GetProfileId()), 
+            .Send(new GetProfileQuery(context.User.GetProfileId()),
                 cancellationToken);
 
         return result.Match(
@@ -144,7 +145,7 @@ public class ProfileController() : ApiCarterModule()
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> GetProfiles(
         ISender sender,
         IMapper mapper,
@@ -161,7 +162,7 @@ public class ProfileController() : ApiCarterModule()
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> DeleteProfile(
         ISender sender,
         IMapper mapper,
@@ -178,9 +179,9 @@ public class ProfileController() : ApiCarterModule()
                 detail: "Is not possible to delete the profile that it's being used"
             );
         }
-        
+
         var result = await sender
-            .Send(new DeleteNestedProfileCommand(id), 
+            .Send(new DeleteNestedProfileCommand(id),
                 cancellationToken);
 
         return result.Match(
@@ -189,7 +190,7 @@ public class ProfileController() : ApiCarterModule()
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> UpdateProfile(
         ISender sender,
         IMapper mapper,
@@ -219,4 +220,4 @@ public class ProfileController() : ApiCarterModule()
             errors => errors.ToProblemDetails(localizer)
         );
     }
-} 
+}

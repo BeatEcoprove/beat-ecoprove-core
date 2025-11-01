@@ -7,7 +7,7 @@ using ErrorOr;
 
 namespace BeatEcoprove.Domain.Shared.Entities;
 
-public class Color : Entity<ColorId>
+public partial class Color : Entity<ColorId>
 {
     private const string HexRegex = "^FF(?:[0-9a-fA-F]{3}){1,2}$";
 
@@ -32,7 +32,7 @@ public class Color : Entity<ColorId>
 
     private static bool IsValidHex(string hex)
     {
-        return Regex.IsMatch(hex, HexRegex);
+        return MyRegex().IsMatch(hex);
     }
 
     public static ErrorOr<Color> Create(string name, string hex)
@@ -73,4 +73,7 @@ public class Color : Entity<ColorId>
     }
 
     public static implicit operator string(Color color) => color.Hex;
+
+    [GeneratedRegex(HexRegex)]
+    private static partial Regex MyRegex();
 }

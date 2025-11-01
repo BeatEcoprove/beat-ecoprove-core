@@ -7,7 +7,6 @@ namespace BeatEcoprove.Application.Cloths.Commands.CloseMaintenanceActivity;
 
 public record CloseMaintenanceActivityCommand
 (
-    Guid AuthId,
     Guid ProfileId,
     Guid ClothId,
     Guid MaintenanceActivityId

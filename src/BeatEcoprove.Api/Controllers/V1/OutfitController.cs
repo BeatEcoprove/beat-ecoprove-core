@@ -1,0 +1,106 @@
+using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.Closet.Commands.RegisterClothUsage;
+using BeatEcoprove.Application.Closet.Commands.RemoveClothFromOutfit;
+using BeatEcoprove.Application.Closet.Queries.GetCurrentOutfit;
+using BeatEcoprove.Application.Shared.Multilanguage;
+using BeatEcoprove.Contracts.Activities;
+using BeatEcoprove.Contracts.Profile;
+using BeatEcoprove.Domain.ClosetAggregator.Entities;
+
+using ErrorOr;
+
+using Mapster;
+
+using MapsterMapper;
+
+using MediatR;
+
+namespace BeatEcoprove.Api.Controllers.V1;
+
+public class OutfitController : ApiCarterModule
+{
+    public override void AddRoutes(IEndpointRouteBuilder app)
+    {
+        var outfit = CreateVersionedGroup(app, "profiles/closet")
+            .RequireAuthorization();
+
+        outfit.MapPatch("cloth/{clothId:guid}/usage", RegisterClothUsage);
+        outfit.MapGet("outfit", GetCurrentOutfit);
+    }
+
+    private static Task<ErrorOr<DailyUseActivity>> UseCloth(
+        ISender sender,
+        Guid profileId,
+        Guid clothId,
+        bool use = false,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return use switch
+        {
+            true => sender.Send(new
+            {
+                ProfileId = profileId,
+                ClothId = clothId
+            }.Adapt<RegisterClothUsageCommand>(),
+                cancellationToken
+            ),
+            false => sender.Send(new
+            {
+                ProfileId = profileId,
+                ClothId = clothId
+            }.Adapt<RemoveClothFromOutfitCommand>(),
+                cancellationToken
+            ),
+        };
+    }
+
+    private static async Task<IResult> RegisterClothUsage(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture localizer,
+        HttpContext context,
+        Guid clothId,
+        bool? use,
+        CancellationToken cancellationToken)
+    {
+        var profileId = context.User.GetProfileId();
+
+        var result = await UseCloth(
+            sender,
+            profileId,
+            clothId,
+            use: use ?? false,
+            cancellationToken
+        );
+
+        return result.Match(
+            response => Results.Ok(
+                mapper.Map<DailyActivityResponse>(response)),
+            errors => errors.ToProblemDetails(localizer)
+        );
+    }
+
+    private static async Task<IResult> GetCurrentOutfit(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture localizer,
+        HttpContext context,
+        CancellationToken cancellationToken)
+    {
+        var profileId = context.User.GetProfileId();
+
+        var result = await sender.Send(new
+        {
+            ProfileId = profileId
+        }.Adapt<GetCurrentOutfitQuery>(),
+            cancellationToken
+        );
+
+        return result.Match(
+            profile => Results.Ok(
+                mapper.Map<ProfileResponse>(profile)),
+            errors => errors.ToProblemDetails(localizer)
+        );
+    }
+}

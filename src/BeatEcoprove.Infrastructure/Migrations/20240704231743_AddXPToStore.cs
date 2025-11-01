@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -318,6 +317,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
             //         { new Guid("f50a6b8b-5861-40ba-9084-3d7f1ff98253"), "public/default/service.png", null, "Escolhe um serviço de Reparação", 10, new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"), 100, "Serviço de Reparação" }
             //     });
         }
+        private static readonly string[] columns = new[] { "id", "brand_avatar", "deleted_at", "name" };
+        private static readonly string[] columnsArray = new[] { "id", "deleted_at", "hex", "name" };
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -553,7 +554,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("02ab46c0-15d2-48e6-a9e7-3bad1c870316"), "public/default/brands/mo.png", null, "MO" },
@@ -564,7 +565,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("04414364-8389-41db-a9be-13d98c27a6ae"), null, "FF4C4C4C", "Cinzento Claro" },

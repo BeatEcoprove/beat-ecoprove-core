@@ -13,7 +13,7 @@ public class MailSender(
     private static readonly List<Mail> Mails = [];
 
     public async Task SendMailAsync(
-        Mail mail, 
+        Mail mail,
         CancellationToken cancellationToken = default)
     {
         await emailPublisher.Produce(

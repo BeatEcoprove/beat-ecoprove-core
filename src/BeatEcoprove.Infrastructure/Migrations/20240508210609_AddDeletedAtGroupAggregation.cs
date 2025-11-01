@@ -1,6 +1,4 @@
-﻿using System;
-
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -254,6 +252,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 table: "group_invites",
                 newName: "deleted_at");
         }
+        private static readonly string[] columns = new[] { "id", "brand_avatar", "deleted_at", "name" };
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -500,7 +499,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("3468ec3a-97c8-4cca-92ed-d61de93c1cac"), "public/default/brands/losan.png", null, "Losan" },

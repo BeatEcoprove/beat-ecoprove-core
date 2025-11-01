@@ -3,7 +3,7 @@ namespace BeatEcoprove.Api.Middlewares;
 public class ScopeAuthorizationMiddleware(params string[] requiredScopes) : IEndpointFilter
 {
     public async ValueTask<object?> InvokeAsync(
-        EndpointFilterInvocationContext context, 
+        EndpointFilterInvocationContext context,
         EndpointFilterDelegate next)
     {
         var user = context.HttpContext.User;

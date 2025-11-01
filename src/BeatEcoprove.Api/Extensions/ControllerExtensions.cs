@@ -8,12 +8,12 @@ namespace BeatEcoprove.Api.Extensions;
 public static class ControllerExtensions
 {
     public static RouteHandlerBuilder RequireScopes(
-        this RouteHandlerBuilder builder, 
+        this RouteHandlerBuilder builder,
         params string[] scopes)
     {
         return builder.AddEndpointFilter(new ScopeAuthorizationMiddleware(scopes));
     }
-    
+
     public static IResult ToProblemDetails(this List<Error> errors, ILanguageCulture localizer)
     {
         if (errors.Count == 0)

@@ -19,7 +19,7 @@ public partial class Errors
         public static Error DateMustBeValid => Error.Conflict(
             "Advertisement.DateMustBeValid",
             "Por favor, definina uma intervalo de tempo válido");
-        
+
         public static Error NotFound => Error.NotFound(
             "Advertisement.NotFound",
             "Nenhum anúncio foi encontrado.");

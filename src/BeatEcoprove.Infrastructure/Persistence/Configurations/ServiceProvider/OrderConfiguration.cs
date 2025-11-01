@@ -12,7 +12,7 @@ namespace BeatEcoprove.Infrastructure.Persistence.Configurations.ServiceProvider
 public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
     private const string OrderTable = "store_orders";
-    
+
     public void Configure(EntityTypeBuilder<Order> builder)
     {
         builder.ToTable(OrderTable);
@@ -67,11 +67,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder.Property(order => order.AcceptedAt)
             .HasColumnName("accepted_at");
-        
+
         builder.HasDiscriminator(u => u.Type)
             .HasValue<OrderCloth>(OrderType.Cloth)
              .HasValue<OrderBucket>(OrderType.Bucket);
-        
+
         builder.Property(a => a.Type)
             .HasColumnName("type")
             .HasConversion(new OrderTypeConverter())

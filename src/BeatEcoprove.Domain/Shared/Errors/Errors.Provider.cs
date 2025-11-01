@@ -8,6 +8,6 @@ public partial class Errors
     {
         public static Error NotFound => Error.NotFound(
             "Provider.NotFound",
-            "Não foi encontrado nenhum seriço");        
+            "Não foi encontrado nenhum seriço");
     }
 }

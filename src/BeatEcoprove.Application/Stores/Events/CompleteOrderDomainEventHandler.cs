@@ -10,18 +10,18 @@ using MediatR;
 namespace BeatEcoprove.Application.Stores.Events;
 
 internal sealed class CompleteOrderDomainEventHandler : INotificationHandler<CompleteOrderDomainEvent>
-{ 
+{
     private const int CompleteOrderSustainablePoints = 35;
-        
+
     private readonly IProfileRepository _profileRepository;
     private readonly IStoreService _storeService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IGamingService _gamingService;
 
     public CompleteOrderDomainEventHandler(
-        IProfileRepository profileRepository, 
-        IStoreService storeService, 
-        IUnitOfWork unitOfWork, 
+        IProfileRepository profileRepository,
+        IStoreService storeService,
+        IUnitOfWork unitOfWork,
         IGamingService gamingService)
     {
         _profileRepository = profileRepository;
@@ -29,7 +29,7 @@ internal sealed class CompleteOrderDomainEventHandler : INotificationHandler<Com
         _unitOfWork = unitOfWork;
         _gamingService = gamingService;
     }
-    
+
     public async Task Handle(CompleteOrderDomainEvent notification, CancellationToken cancellationToken)
     {
         var storeId = StoreId.Create(notification.Store);
@@ -54,11 +54,11 @@ internal sealed class CompleteOrderDomainEventHandler : INotificationHandler<Com
             owner,
             CompleteOrderSustainablePoints,
             cancellationToken);
-        
+
         owner.EcoScore += 120;
-        _gamingService.GainXp(owner, 5);        
-        _gamingService.GainXp(store.Value, 5);        
-        
+        _gamingService.GainXp(owner, 5);
+        _gamingService.GainXp(store.Value, 5);
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

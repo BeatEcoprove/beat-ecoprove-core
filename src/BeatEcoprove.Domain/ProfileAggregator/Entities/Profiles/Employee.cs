@@ -8,14 +8,14 @@ public class Employee : Profile
     private Employee() { }
 
     private Employee(
-        DisplayName displayName, 
+        DisplayName displayName,
         string firstName,
         string lastName,
         string biography,
-        Phone phone, 
-        double xP, 
-        int sustainabilityPoints, 
-        int ecoScore, 
+        Phone phone,
+        double xP,
+        int sustainabilityPoints,
+        int ecoScore,
         UserType type) : base(displayName, firstName, lastName, biography, phone, xP, sustainabilityPoints, ecoScore, type)
     {
         Type = UserType.Employee;

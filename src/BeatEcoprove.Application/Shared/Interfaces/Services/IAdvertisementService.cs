@@ -14,15 +14,15 @@ public interface IAdvertisementService
         Profile profile,
         bool checkAuthorization = true,
         CancellationToken cancellationToken = default);
-    
+
     Task<ErrorOr<List<Advertisement>>> GetMyAdvertsAsync(
         StoreId storeId,
-        Profile profile, 
-        string? search = null, 
-        int page = 1, 
+        Profile profile,
+        string? search = null,
+        int page = 1,
         int pageSize = 10,
-        CancellationToken cancellationToken = default);    
-    
+        CancellationToken cancellationToken = default);
+
     Task<ErrorOr<Advertisement>> CreateAdd(
         StoreId storeId,
         Advertisement advertisement,

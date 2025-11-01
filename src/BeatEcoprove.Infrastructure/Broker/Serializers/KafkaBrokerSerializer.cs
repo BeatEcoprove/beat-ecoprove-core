@@ -25,7 +25,7 @@ public class KafkaBrokerSerializer<TEvent> : ISerializer<TEvent>
             data,
             KafkaHelpers.GetEventType(data)
         );
-        
+
         return JsonSerializer.SerializeToUtf8Bytes(
             @event,
             _options

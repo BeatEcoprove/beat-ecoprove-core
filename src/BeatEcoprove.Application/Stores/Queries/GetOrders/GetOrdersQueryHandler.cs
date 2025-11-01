@@ -36,7 +36,7 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
         _maintenanceServiceRepository = maintenanceServiceRepository;
     }
 
-    private ErrorOr<dynamic> ValidateParams(ErrorOr<string>? order)
+    private static ErrorOr<dynamic> ValidateParams(ErrorOr<string>? order)
     {
         if (order is not null && order.Value.IsError)
         {

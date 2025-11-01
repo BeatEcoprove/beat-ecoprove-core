@@ -41,7 +41,7 @@ public class AuthTokenPayload(
     public override IDictionary<string, string> GetPayload()
     {
         var userType = UserType.GetUserType();
-        
+
         var claims = new Dictionary<string, string>
         {
             { UserClaims.AccountId, AccountId },
@@ -56,7 +56,7 @@ public class AuthTokenPayload(
             { UserClaims.EcoCoins, EcoCoins },
             { UserClaims.CurrentXp, CurrentXp },
             { UserClaims.NextLevelXp, NextLevelXp },
-            { UserClaims.Type, userType } 
+            { UserClaims.Type, userType }
         };
 
         if (!UserType.Equals(UserType.Employee))

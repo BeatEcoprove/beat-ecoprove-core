@@ -20,7 +20,7 @@ public class ServiceProvider<TId, TIdType> : AggregateRoot<TId, TIdType>
         Localization = localization;
         SustainablePoints = sustainablePoints;
     }
-    
+
     public ProfileId Owner { get; private set; } = null!;
     public Point Localization { get; private set; } = null!;
     public int SustainablePoints { get; set; }

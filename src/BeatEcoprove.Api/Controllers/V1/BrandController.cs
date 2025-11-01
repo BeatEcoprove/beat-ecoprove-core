@@ -24,7 +24,7 @@ public class BrandController : ApiCarterModule
         {
             var result =
                 await sender.Send(new GetAllBrandsQuery());
-            
+
             return result.Match(
                 brand => Results.Ok(
                     mapper.Map<BrandResponse>(brand)),

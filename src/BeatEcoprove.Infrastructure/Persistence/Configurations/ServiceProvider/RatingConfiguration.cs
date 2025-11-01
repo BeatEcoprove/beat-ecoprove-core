@@ -10,7 +10,7 @@ namespace BeatEcoprove.Infrastructure.Persistence.Configurations.ServiceProvider
 public class RatingConfiguration : IEntityTypeConfiguration<Rating>
 {
     private const string RatingTable = "store_ratings";
-    
+
     public void Configure(EntityTypeBuilder<Rating> builder)
     {
         builder.ToTable(RatingTable);

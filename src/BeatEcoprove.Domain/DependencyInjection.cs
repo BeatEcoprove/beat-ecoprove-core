@@ -10,7 +10,7 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddScoped<IProfileFactory, ProfileFactory>();
-        
+
         return services;
     }
 }

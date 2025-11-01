@@ -51,4 +51,5 @@ public class PasswordGenerator : IPasswordGenerator
         randomValue %= range;
 
         return (int)(minValue + randomValue);
-    }}
+    }
+}

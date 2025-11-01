@@ -7,7 +7,6 @@ namespace BeatEcoprove.Application.Closet.Commands.RegisterClothUsage;
 
 public record RegisterClothUsageCommand
 (
-    Guid AuthId,
     Guid ProfileId,
     Guid ClothId
 ) : ICommand<ErrorOr<DailyUseActivity>>;

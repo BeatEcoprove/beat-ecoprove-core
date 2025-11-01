@@ -19,7 +19,7 @@ public class OrderBucketConfiguration : IEntityTypeConfiguration<OrderBucket>
                 value => BucketId.Create(value)
             )
             .IsRequired();
-        
+
         builder.HasOne<Bucket>()
             .WithMany()
             .HasForeignKey(orderBucket => orderBucket.Bucket);

@@ -28,21 +28,22 @@ public class ProviderController : ApiCarterModule
         var stores = providers.MapGroup("{providerId:guid}/stores");
         stores.MapGet(String.Empty, GetStores);
         stores.MapGet("{storeId:guid}", GetStoreById);
-        
+
         providers.MapGet(String.Empty, GetProviderAdverts);
     }
-    
+
     private static async Task<IResult> GetAllProviders(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
-        string? search, 
-        int page, 
+        string? search,
+        int page,
         int pageSize,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 GetAllStandardProvidersQuery(
                     profileId,
@@ -51,59 +52,61 @@ public class ProviderController : ApiCarterModule
                     pageSize
                 ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<StandardProviderResponse>>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> GetProviderById(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         Guid providerId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 GetProviderByIdQuery(
                     profileId,
                     providerId
                 ), cancellationToken
         );
-         
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<ProviderResponse>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> GetStores(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         Guid providerId,
-        string? search, 
-        int page, 
+        string? search,
+        int page,
         int pageSize,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 GetProviderStoresQuery(
-                    profileId, 
-                    providerId, 
-                    search, 
-                    page, 
+                    profileId,
+                    providerId,
+                    search,
+                    page,
                     pageSize
                 ), cancellationToken
         );
-         
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<StoreResponse>>(result)),
@@ -111,15 +114,16 @@ public class ProviderController : ApiCarterModule
         );
     }
     private static async Task<IResult> GetStoreById(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         Guid providerId,
         Guid storeId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-                        
+
         var result = await sender.Send(new
                 GetProviderStoreByIdQuery(
                     profileId,
@@ -127,34 +131,35 @@ public class ProviderController : ApiCarterModule
                     storeId
                 ), cancellationToken
         );
-         
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<StoreResponse>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
     }
-    
+
     private static async Task<IResult> GetProviderAdverts(
-        ISender sender, 
+        ISender sender,
         IMapper mapper,
         ILanguageCulture localizer,
         HttpContext context,
         Guid providerId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken)
+    {
         var profileId = context.User.GetProfileId();
-        
+
         var result = await sender.Send(new
                 GetProviderAdvertsQuery(
-                    profileId, 
+                    profileId,
                     providerId
                 ), cancellationToken
         );
-        
+
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<AdvertisementResponse>>(result)),
             errors => errors.ToProblemDetails(localizer)
         );
-    }   
+    }
 }

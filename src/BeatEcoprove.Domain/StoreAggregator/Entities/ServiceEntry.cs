@@ -6,7 +6,7 @@ namespace BeatEcoprove.Domain.StoreAggregator.Entities;
 public class ServiceEntry
 {
     private ServiceEntry() { }
-    
+
     private ServiceEntry(OrderId order, MaintenanceServiceId service)
     {
         Service = service;

@@ -7,12 +7,10 @@ namespace BeatEcoprove.Application.Closet.Commands.CreateCloth;
 
 public record CreateClothCommand
 (
-    Guid AuthId,
     Guid ProfileId,
     string Name,
     string ClothType,
     string ClothSize,
     string Brand,
-    string Color,
-    Stream ClothAvatar
+    string Color
 ) : ICommand<ErrorOr<ClothResult>>;

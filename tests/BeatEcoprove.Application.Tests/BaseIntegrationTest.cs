@@ -1,4 +1,5 @@
 ﻿using MediatR;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BeatEcoprove.Application.Tests;

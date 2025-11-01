@@ -9,12 +9,15 @@ namespace BeatEcoprove.Infrastructure.Migrations
     /// <inheritdoc />
     public partial class SeedApplicationValues : Migration
     {
+        private static readonly string[] columns = new[] { "id", "brand_avatar", "deleted_at", "name" };
+        private static readonly string[] columnsArray = new[] { "id", "deleted_at", "hex", "name" };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("36ce016d-b9de-48b0-a0d8-35d4f9501c62"), "...", null, "MO" },
@@ -24,7 +27,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("5d5155a4-9bad-425f-8444-a2c65291db07"), null, "FF00FF00", "Green" },

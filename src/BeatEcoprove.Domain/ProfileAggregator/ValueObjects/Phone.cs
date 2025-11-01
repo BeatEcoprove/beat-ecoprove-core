@@ -26,14 +26,14 @@ public class Phone : ValueObject
     public static ErrorOr<Phone> Create(string phoneCompleted)
     {
         phoneCompleted = phoneCompleted.Trim().Replace(" ", "").Replace("-", "");
-        
+
         var digitsOnly = phoneCompleted[1..];
         var countryCode = "+" + digitsOnly[..^9];
         var number = digitsOnly[^9..];
-        
+
         return Create(countryCode, number);
     }
-    
+
     public static ErrorOr<Phone> Create(string code, string value)
     {
         if (ShouldNotBeNull(code, value))
@@ -56,7 +56,7 @@ public class Phone : ValueObject
 
     private static bool ValidateCountryCode(string code)
     {
-        return code.Contains("+") && code.Length <= 4;
+        return code.Contains('+') && code.Length <= 4;
     }
 
     private static bool ShouldHaveLength(string value, int length)

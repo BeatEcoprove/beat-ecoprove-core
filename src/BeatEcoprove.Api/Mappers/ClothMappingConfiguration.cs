@@ -102,7 +102,7 @@ public class ClothMappingConfiguration : IRegister
             .MapWith((source) => ToClosetResponse(source));
     }
 
-    private List<ClothResponse> ConvertCloth<T>(List<T> cloths, Bucket bucket)
+    private static List<ClothResponse> ConvertCloth<T>(List<T> cloths, Bucket bucket)
         where T : IClothResult
     {
         var clothesInBucket = cloths
@@ -112,7 +112,7 @@ public class ClothMappingConfiguration : IRegister
         return clothesInBucket.Select(cloth => cloth.Adapt<ClothResponse>()).ToList();
     }
 
-    private BucketResponse ToBucketResponse<T>(Bucket bucket, List<T> cloths)
+    private static BucketResponse ToBucketResponse<T>(Bucket bucket, List<T> cloths)
         where T : IClothResult
     {
         return new BucketResponse(

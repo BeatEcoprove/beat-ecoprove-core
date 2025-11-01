@@ -268,7 +268,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("72ebdcd9-4d9f-4911-8a70-84f7e8d08079"), "...", null, "MO" },
@@ -278,7 +278,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("003685cc-db4f-4f8e-b99c-0747e53965ba"), null, "FFFFE69F", "Amarelo" },
@@ -356,6 +356,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
         }
+        private static readonly string[] columns = new[] { "id", "brand_avatar", "deleted_at", "name" };
+        private static readonly string[] columnsArray = new[] { "id", "deleted_at", "hex", "name" };
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -599,7 +601,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+                columns: columns,
                 values: new object[,]
                 {
                     { new Guid("58842ef7-4552-4081-a90d-71506268d7c7"), "...", null, "Tifosi" },
@@ -609,7 +611,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
+                columns: columnsArray,
                 values: new object[,]
                 {
                     { new Guid("1070141a-ac5b-49b9-a852-0bfc3c351fae"), null, "FFFF6D6D", "Vermelho Claro" },

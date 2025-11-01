@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Text.Json.Serialization;
 
 namespace BeatEcoprove.Domain.Shared.Broker;
 
@@ -9,7 +8,7 @@ public class BaseEvent<TEvent>(TEvent @event, string eventType) : IBrokerEvent
     where TEvent : IBrokerEvent
 {
     public int Version => 1;
-    
+
     public Guid Key { get; init; } = Guid.NewGuid();
 
     public Metadata Metadata { get; init; } = new("core_service");

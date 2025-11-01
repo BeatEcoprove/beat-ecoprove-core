@@ -3,7 +3,6 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.Events;
 using BeatEcoprove.Domain.ProfileAggregator.Factories;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -25,29 +24,29 @@ internal sealed class CreateOrganizationCommandHandler(
 ) : ICommandHandler<CreateOrganizationCommand, ErrorOr<Profile>>
 {
     public async Task<ErrorOr<Profile>> Handle(
-        CreateOrganizationCommand request, 
+        CreateOrganizationCommand request,
         CancellationToken cancellationToken)
     {
         var validationResult = await profileCreateService.ValidateOrganizationDetails(request.Detail, cancellationToken);
-        
+
         if (validationResult.IsError)
             return validationResult.Errors;
-        
+
         (DisplayName displayName, Phone phone, Address address) = validationResult.Value;
-        
+
         var profileId = ProfileId.Create(request.ProfileId);
         var authValidation = await profileCreateService.ValidateAuthEntry(profileId);
-        
+
         if (authValidation.IsError)
             return authValidation.Errors;
-        
+
         var authId = authValidation.Value;
 
         var foundProfile = await profileRepository.GetByIdAsync(profileId, cancellationToken);
 
         if (foundProfile is not null)
             return Errors.Profile.AlreadyExists;
-        
+
         var profile = profileFactory.CreateProfile(
             new ProfileDetails(
                 profileId,
@@ -66,7 +65,7 @@ internal sealed class CreateOrganizationCommandHandler(
 
         await profileRepository.AddAsync(profile.Value, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         await publishAuthEvents.Produce(
             new ProfileCreatedEvent(
                 profile.Value.AuthId,
