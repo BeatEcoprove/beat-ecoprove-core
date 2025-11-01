@@ -20,6 +20,9 @@ public class BeatEcoproveDbContext(
     public DbSet<Cloth> Cloths { get; init; } = null!;
     public DbSet<Bucket> Buckets { get; init; } = null!;
 
+    public Task MigrateAsync(CancellationToken cancellationToken = default)
+        => this.Database.MigrateAsync(cancellationToken);
+
     public string GetConnectionString()
     {
         return Env.Postgres.ConnectionString;

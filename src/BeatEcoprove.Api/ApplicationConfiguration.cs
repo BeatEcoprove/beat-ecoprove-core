@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Api.Middlewares;
+﻿using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Api.Middlewares;
 using BeatEcoprove.Application.Shared.Multilanguage;
 
 using Carter;
@@ -70,7 +71,7 @@ public static class ApplicationConfiguration
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
         app.UseHttpsRedirection();
 
         app.UsePathBase("/api");

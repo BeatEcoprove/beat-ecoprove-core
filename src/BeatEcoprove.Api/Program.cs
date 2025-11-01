@@ -1,6 +1,9 @@
 using BeatEcoprove.Api;
+using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application;
 using BeatEcoprove.Infrastructure;
+using BeatEcoprove.Infrastructure.Persistence;
+using BeatEcoprove.Infrastructure.Persistence.Shared;
 
 using DotNetEnv;
 
@@ -16,6 +19,9 @@ builder.Services
 
 var app = builder
     .Build();
+
+await app.Services.EnsureMigrations<IApplicationDbContext>(
+    migrate: true);
 
 app.MapPrometheusScrapingEndpoint();
 app.SetupConfiguration();
