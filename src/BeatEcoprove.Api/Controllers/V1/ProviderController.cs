@@ -24,15 +24,15 @@ public class ProviderController : ApiCarterModule
 
         providers.MapGet(string.Empty, GetAllProviders)
             .RequireScopes("providers:view");
-        
+
         providers.MapGet("{providerId:guid}", GetProviderById)
             .RequireScopes("providers:view");
 
         var stores = providers.MapGroup("{providerId:guid}/stores");
-        
+
         stores.MapGet(String.Empty, GetStores)
             .RequireScopes("stores:view");
-        
+
         stores.MapGet("{storeId:guid}", GetStoreById)
             .RequireScopes("stores:view");
 

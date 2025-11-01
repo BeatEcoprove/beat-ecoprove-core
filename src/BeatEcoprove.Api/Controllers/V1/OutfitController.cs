@@ -26,7 +26,7 @@ public class OutfitController : ApiCarterModule
 
         outfit.MapPatch("cloth/{clothId:guid}/usage", RegisterClothUsage)
             .RequireScopes("cloth:create");
-        
+
         outfit.MapGet("outfit", GetCurrentOutfit)
             .RequireScopes("outfit:view");
     }

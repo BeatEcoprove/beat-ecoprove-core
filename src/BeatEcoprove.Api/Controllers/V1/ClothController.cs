@@ -27,16 +27,16 @@ public class ClothController : ApiCarterModule
 
         cloth.MapGet(String.Empty, GetAvailableServices)
             .RequireScopes("services:view");
-        
+
         cloth.MapPost("{serviceId:guid}/perform/{actionId:guid}", PerformService)
             .RequireScopes("services:update");
-        
+
         cloth.MapPost("{maintenanceActivityId:guid}/finish", CloseAction)
             .RequireScopes("maintenance:view");
-        
+
         cloth.MapPatch("current", GetClothMaintenanceStatus)
             .RequireScopes("maintenance:view");
-        
+
         cloth.MapPatch("history", GetClothHistory)
             .RequireScopes("cloth:history");
     }

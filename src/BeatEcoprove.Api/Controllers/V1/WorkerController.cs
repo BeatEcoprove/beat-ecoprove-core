@@ -22,16 +22,16 @@ public class WorkerController : ApiCarterModule
 
         worker.MapGet(string.Empty, GetWorkers)
             .RequireScopes("worker:view");
-        
+
         worker.MapGet("{workerId:guid}", GetWorkerById)
             .RequireScopes("worker:view");
-        
+
         worker.MapPost(String.Empty, CreateWorker)
             .RequireScopes("worker:create");
-        
+
         worker.MapDelete("{workerId:guid}", DeleteWorker)
             .RequireScopes("worker:delete");
-        
+
         worker.MapPatch("{workerId:guid}/switch", ChangePermission)
             .RequireScopes("worker:switch");
     }

@@ -21,13 +21,13 @@ public class AdvertisementController : ApiCarterModule
 
         advertisement.MapGet(string.Empty, GetMyAdverts)
             .RequireScopes("adverts:view");
-        
+
         advertisement.MapGet("{advertId:guid}", GetAdvertById)
             .RequireScopes("adverts:view");
-        
+
         advertisement.MapPost(string.Empty, CreateAdvert)
             .RequireScopes("adverts:create");
-        
+
         advertisement.MapDelete("{advertId:guid}", DeleteAdvert)
             .RequireScopes("adverts:delete");
     }

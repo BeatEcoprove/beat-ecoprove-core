@@ -2,7 +2,6 @@ using BeatEcoprove.Api;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application;
 using BeatEcoprove.Infrastructure;
-using BeatEcoprove.Infrastructure.Persistence;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 
 using DotNetEnv;

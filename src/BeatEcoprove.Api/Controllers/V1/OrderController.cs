@@ -22,13 +22,13 @@ public class OrderController : ApiCarterModule
 
         order.MapGet("{orderId:guid}/stores/{storeId:guid}", GetOrdersById)
             .RequireScopes("order:view");
-        
+
         order.MapGet(String.Empty, GetOrders)
             .RequireScopes("order:view");
-        
+
         order.MapPost(String.Empty, CreateOrder)
             .RequireScopes("order:create");
-        
+
         order.MapPatch("{orderId:guid}", CompleteOrder)
             .RequireScopes("order:update");
     }

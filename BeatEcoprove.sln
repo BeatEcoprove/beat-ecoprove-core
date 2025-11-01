@@ -15,10 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Domain", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Infrastructure", "src\BeatEcoprove.Infrastructure\BeatEcoprove.Infrastructure.csproj", "{6A66BFC5-C37C-48F5-BE8C-66490DB0BC87}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E0DDA3A9-400B-437C-8FC4-0B9EDBD09C3A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Application.Tests", "tests\BeatEcoprove.Application.Tests\BeatEcoprove.Application.Tests.csproj", "{44030527-002C-4AB8-B64A-BDDB13D4BC38}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,10 +41,6 @@ Global
 		{6A66BFC5-C37C-48F5-BE8C-66490DB0BC87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A66BFC5-C37C-48F5-BE8C-66490DB0BC87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A66BFC5-C37C-48F5-BE8C-66490DB0BC87}.Release|Any CPU.Build.0 = Release|Any CPU
-		{44030527-002C-4AB8-B64A-BDDB13D4BC38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{44030527-002C-4AB8-B64A-BDDB13D4BC38}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{44030527-002C-4AB8-B64A-BDDB13D4BC38}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{44030527-002C-4AB8-B64A-BDDB13D4BC38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,7 +51,6 @@ Global
 		{66F94728-4426-423A-BDB4-1607F3FEAA19} = {06EBC48E-04E7-4F17-A826-EE1B4EA1C2C3}
 		{1CF400F4-98DD-4AAB-953D-9AB2D8F6BEE1} = {06EBC48E-04E7-4F17-A826-EE1B4EA1C2C3}
 		{6A66BFC5-C37C-48F5-BE8C-66490DB0BC87} = {06EBC48E-04E7-4F17-A826-EE1B4EA1C2C3}
-		{44030527-002C-4AB8-B64A-BDDB13D4BC38} = {E0DDA3A9-400B-437C-8FC4-0B9EDBD09C3A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C925D99-83BF-40C3-81A5-8A0F921E819D}

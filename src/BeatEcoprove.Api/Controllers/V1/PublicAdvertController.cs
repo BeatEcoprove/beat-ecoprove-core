@@ -19,7 +19,7 @@ public class PublicAdvertController : ApiCarterModule
 
         publicAdvert.MapGet("{advertId:guid}", GetById)
             .RequireScopes("adverts:view");
-        
+
         publicAdvert.MapGet(string.Empty, GetHomeAds)
             .RequireScopes("adverts:view");
     }

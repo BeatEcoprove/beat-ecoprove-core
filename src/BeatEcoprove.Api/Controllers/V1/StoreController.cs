@@ -21,13 +21,13 @@ public class StoreController : ApiCarterModule
 
         stores.MapGet(string.Empty, GetOwningStores)
             .RequireScopes("store:view");
-        
+
         stores.MapGet("{storeId:guid}", GetStoreById)
             .RequireScopes("store:view");
-        
+
         stores.MapPost(string.Empty, CreateStore)
             .RequireScopes("store:create");
-        
+
         stores.MapDelete("{storeId:guid}", DeleteStoreById)
             .RequireScopes("store:delete");
     }

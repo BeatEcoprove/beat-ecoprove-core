@@ -35,13 +35,13 @@ public class ClosetController : ApiCarterModule
 
         closetCloth.MapPost(String.Empty, CreateClothToCloset)
             .RequireScopes("cloth:create");
-        
+
         closetCloth.MapGet("{clothId:guid}/buckets", GetClothBuckets)
             .RequireScopes("cloth:view");
-        
+
         closetCloth.MapGet("{clothId:guid}", GetClothById)
             .RequireScopes("cloth:view");
-        
+
         closetCloth.MapDelete("{clothId:guid}", DeleteClothFromCloset)
             .RequireScopes("cloth:delete");
 
@@ -49,10 +49,10 @@ public class ClosetController : ApiCarterModule
 
         closetBucket.MapPost(String.Empty, CreateBucketToCloset)
             .RequireScopes("bucket:create");
-        
+
         closetBucket.MapGet("{bucketId:guid}", GetBucketById)
             .RequireScopes("bucket:view");
-        
+
         closetBucket.MapDelete("{bucketId:guid}", DeleteBucketFromCloset)
             .RequireScopes("bucket:delete");
 
@@ -60,7 +60,7 @@ public class ClosetController : ApiCarterModule
 
         clothBucket.MapPost("{bucketId:guid}", CreateClothsToBucket)
             .RequireScopes("bucket:create");
-        
+
         clothBucket.MapPut("{bucketId:guid}", DeleteClothFromBucket)
             .RequireScopes("bucket:delete");
     }

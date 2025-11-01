@@ -19,7 +19,7 @@ public class RatingController : ApiCarterModule
 
         ratting.MapGet(string.Empty, GetStoreRatings)
             .RequireScopes("ratings:view");
-        
+
         ratting.MapPost(string.Empty, CreateRating)
             .RequireScopes("ratings:create");
     }

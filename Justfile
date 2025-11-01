@@ -24,7 +24,7 @@ clean:
     dotnet clean {{solution}}
     
 # Format project code
-project-format:
+format:
     dotnet format
     
 # Push migrations to database
