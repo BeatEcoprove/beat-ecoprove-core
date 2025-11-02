@@ -65,6 +65,8 @@ public static class ApplicationConfiguration
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
+        app.MapCarter();
+        
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -76,7 +78,6 @@ public static class ApplicationConfiguration
         app.UsePathBase("/api");
         app.MapControllers();
         app.UseRouting();
-        app.MapCarter();
 
         app.UseAuthorization();
         app.AddLocalFileStorage();

@@ -22,6 +22,7 @@ public class OutfitController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var outfit = CreateVersionedGroup(app, "profiles/closet")
+            .WithName("Outfit")
             .RequireAuthorization();
 
         outfit.MapPatch("cloth/{clothId:guid}/usage", RegisterClothUsage)

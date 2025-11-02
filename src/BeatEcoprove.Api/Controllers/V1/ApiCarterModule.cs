@@ -10,7 +10,7 @@ public abstract class ApiCarterModule : CarterModule
         IEndpointRouteBuilder app,
         [StringSyntax("Route")] string path)
     {
-        var versionedGroup = app.MapGroup($"v{{version:apiVersion}}")
+        var versionedGroup = app.MapGroup($"/v{{version:apiVersion}}")
             .WithApiVersionSet(app.NewApiVersionSet()
                 .HasApiVersion(ApiVersions.Current)
                 .Build());

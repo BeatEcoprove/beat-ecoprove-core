@@ -19,7 +19,8 @@ public class ProfileController() : ApiCarterModule()
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var profiles = CreateVersionedGroup(app, "profiles")
-                .RequireAuthorization();
+            .WithName("Profiles")
+            .RequireAuthorization();
 
         profiles.MapPost("/client", CreateClientProfile)
             .RequireScopes("profile:create");
@@ -202,13 +203,13 @@ public class ProfileController() : ApiCarterModule()
     {
         var result = await sender
             .Send(new UpdateProfileCommand(
-                id,
-                new UpdateInput(
-                       request.FirstName,
-                       request.LastName,
-                       request.DisplayName,
-                       request.Gender,
-                       request.PhoneNumber
+                    id,
+                    new UpdateInput(
+                        request.FirstName,
+                        request.LastName,
+                        request.DisplayName,
+                        request.Gender,
+                        request.PhoneNumber
                     )
                 ),
                 cancellationToken

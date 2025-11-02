@@ -23,6 +23,7 @@ public class ClothController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var cloth = CreateVersionedGroup(app, "profiles/closet/cloth/{clothId:guid}/services")
+            .WithName("Cloth")
             .RequireAuthorization();
 
         cloth.MapGet(String.Empty, GetAvailableServices)

@@ -14,6 +14,7 @@ public class CurrencyController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var currency = CreateVersionedGroup(app, "extensions/currency")
+            .WithName("Currency")
             .RequireAuthorization();
 
         currency.MapGet("convert", async (

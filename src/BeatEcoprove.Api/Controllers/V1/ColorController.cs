@@ -14,6 +14,7 @@ public class ColorController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var colors = CreateVersionedGroup(app, "extensions/colors")
+            .WithName("Colors")
             .RequireAuthorization();
 
         colors.MapGet(String.Empty, async (

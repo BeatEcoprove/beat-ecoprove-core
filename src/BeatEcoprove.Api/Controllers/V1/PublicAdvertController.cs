@@ -15,6 +15,7 @@ public class PublicAdvertController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var publicAdvert = CreateVersionedGroup(app, "public/adverts")
+            .WithName("PublicAdvert")
             .RequireAuthorization();
 
         publicAdvert.MapGet("{advertId:guid}", GetById)

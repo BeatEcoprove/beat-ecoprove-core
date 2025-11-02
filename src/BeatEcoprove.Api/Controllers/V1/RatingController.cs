@@ -15,6 +15,7 @@ public class RatingController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var ratting = CreateVersionedGroup(app, "stores/{storeId:guid}/ratings")
+            .WithName("Ratings")
             .RequireAuthorization();
 
         ratting.MapGet(string.Empty, GetStoreRatings)

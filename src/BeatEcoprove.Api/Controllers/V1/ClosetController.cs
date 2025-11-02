@@ -27,6 +27,7 @@ public class ClosetController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var closet = CreateVersionedGroup(app, "profiles/closet")
+            .WithName("Closet")
             .RequireAuthorization();
 
         closet.MapGet(string.Empty, GetCloset);

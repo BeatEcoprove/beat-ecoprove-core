@@ -18,6 +18,7 @@ public class WorkerController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var worker = CreateVersionedGroup(app, "stores/{storeId}/workers")
+            .WithName("Workers")
             .RequireAuthorization();
 
         worker.MapGet(string.Empty, GetWorkers)

@@ -13,8 +13,7 @@ builder.Services.AddControllers();
 builder.Services
     .AddPresentation()
     .AddApplication()
-    .AddInfrastructure(builder.Configuration)
-    .AddSwagger();
+    .AddInfrastructure(builder.Configuration);
 
 var app = builder
     .Build();

@@ -42,8 +42,9 @@ public static class SwaggerConfiguration
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Api Playground",
+                Title = "Core Service",
                 Version = "v1",
+                Description = "Core Service API",
             });
 
             c.AddSecurityDefinition("token", new OpenApiSecurityScheme

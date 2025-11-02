@@ -14,6 +14,7 @@ public class FeedbackController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var feedback = CreateVersionedGroup(app, "extensions/feedback")
+            .WithName("Feedback")
             .RequireAuthorization();
 
         feedback.MapPost(string.Empty, async (

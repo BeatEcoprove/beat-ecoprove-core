@@ -40,7 +40,7 @@ public static class DependencyInjection
     {
         services.AddApiVersioning(options =>
         {
-            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.DefaultApiVersion = ApiVersions.Current;
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.ApiVersionReader = new UrlSegmentApiVersionReader();
         }).AddApiExplorer(options =>
@@ -63,20 +63,17 @@ public static class DependencyInjection
     {
         services.AddTelemetry();
         services.AddApiVersion();
-
         services.AddMiddlewares();
+        services.AddCarter();
+        services.AddControllers();
+        services.AddMappings();
 
         services.ConfigureHttpJsonOptions(options =>
         {
             options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
         });
 
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-        services.AddMappings();
-
-        services.AddCarter();
+        services.AddSwagger();
         services.AddCors();
 
         return services;

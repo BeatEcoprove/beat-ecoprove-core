@@ -17,6 +17,7 @@ public class StoreController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var stores = CreateVersionedGroup(app, "stores")
+            .WithName("Stores")
             .RequireAuthorization();
 
         stores.MapGet(string.Empty, GetOwningStores)

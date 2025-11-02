@@ -20,6 +20,7 @@ public class ProviderController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var providers = CreateVersionedGroup(app, "providers")
+            .WithName("Providers")
             .RequireAuthorization();
 
         providers.MapGet(string.Empty, GetAllProviders)
@@ -36,7 +37,7 @@ public class ProviderController : ApiCarterModule
         stores.MapGet("{storeId:guid}", GetStoreById)
             .RequireScopes("stores:view");
 
-        providers.MapGet(String.Empty, GetProviderAdverts)
+        providers.MapGet("adverts", GetProviderAdverts)
             .RequireScopes("adverts:view");
     }
 

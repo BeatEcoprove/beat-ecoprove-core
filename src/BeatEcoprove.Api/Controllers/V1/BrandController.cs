@@ -14,6 +14,7 @@ public class BrandController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var brands = CreateVersionedGroup(app, "extensions/brands")
+            .WithName("Brands")
             .RequireAuthorization();
 
         brands.MapGet(String.Empty, async (

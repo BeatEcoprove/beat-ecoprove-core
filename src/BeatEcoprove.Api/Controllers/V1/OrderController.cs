@@ -18,6 +18,7 @@ public class OrderController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var order = CreateVersionedGroup(app, "orders")
+            .WithName("Orders")
             .RequireAuthorization();
 
         order.MapGet("{orderId:guid}/stores/{storeId:guid}", GetOrdersById)

@@ -14,6 +14,7 @@ public class BucketController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var buckets = CreateVersionedGroup(app, "profiles/closet/buckets")
+            .WithName("Buckets")
             .RequireAuthorization();
 
         buckets.MapPatch("{bucketId:guid}", async (

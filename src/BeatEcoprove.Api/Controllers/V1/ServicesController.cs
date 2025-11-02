@@ -14,6 +14,7 @@ public class ServicesController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var services = CreateVersionedGroup(app, "services")
+            .WithName("Services")
             .RequireAuthorization();
 
         services.MapGet(string.Empty, async (
