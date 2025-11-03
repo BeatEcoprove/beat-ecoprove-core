@@ -7,11 +7,11 @@ public static partial class Errors
     public class Email
     {
         public static Error EmptyEmail => Error.Validation(
-            "Email.EmptyEmail",
-            "Por favor, introduza um email.");
+            "Core.Email.EmptyEmail.Title",
+            "Core.Email.EmptyEmail.Description");
 
         public static Error InvalidEmail => Error.Validation(
-            "Email.InvalidEmail",
-            "Por favor, introduza um e-mail válido");
+            "Core.Email.InvalidEmail.Title",
+            "Core.Email.InvalidEmail.Description");
     }
 }

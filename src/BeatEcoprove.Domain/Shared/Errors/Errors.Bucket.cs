@@ -7,43 +7,43 @@ public static partial class Errors
     public class Bucket
     {
         public static Error InvalidClothToAdd => Error.Conflict(
-            "Bucket.InvalidClothToAdd",
-            "Roupa não encontrada.");
+            "Core.Bucket.InvalidClothToAdd.Title",
+            "Core.Bucket.InvalidClothToAdd.Description");
 
         public static Error EmptyClothIds => Error.Conflict(
-            "Bucket.EmptyClothIds",
-            "Por favor, adiciona pelo menos uma peça ao cesto.");
+            "Core.Bucket.EmptyClothIds.Title",
+            "Core.Bucket.EmptyClothIds.Description");
 
         public static Error ClothAreNotUnique => Error.Conflict(
-            "Bucket.ClothAreNotUnique",
-            "Por favor, adicione apenas uma vez a peça de roupa.");
+            "Core.Bucket.ClothAreNotUnique.Title",
+            "Core.Bucket.ClothAreNotUnique.Description");
 
         public static Error CanAddClothToBucket => Error.Conflict(
-            "Bucket.CanAddClothToBucket",
-            "Por favor, essa roupa já está num cesto.");
+            "Core.Bucket.CanAddClothToBucket.Title",
+            "Core.Bucket.CanAddClothToBucket.Description");
 
         public static Error CannotRemoveCloth => Error.Conflict(
-            "Bucket.CannotRemoveCloth",
-            "Não é possível remover esta peça de roupa do cesto.");
+            "Core.Bucket.CannotRemoveCloth.Title",
+            "Core.Bucket.CannotRemoveCloth.Description");
 
         public static Error BucketNameAlreadyUsed => Error.Conflict(
-            "Bucket.BucketNameAlreadyUsed",
-            "Por favor, escolha um nome diferente para o cesto.");
+            "Core.Bucket.BucketNameAlreadyUsed.Title",
+            "Core.Bucket.BucketNameAlreadyUsed.Description");
 
         public static Error InvalidBucketName => Error.Validation(
-            "Bucket.InvalidBucketName",
-            "Por favor, escolha um nome válido para o cesto.");
+            "Core.Bucket.InvalidBucketName.Title",
+            "Core.Bucket.InvalidBucketName.Description");
 
         public static Error BucketDoesNotExists => Error.Conflict(
-            "Bucket.BucketDoesNotExists",
-            "Falha ao encontrar o cesto.");
+            "Core.Bucket.BucketDoesNotExists.Title",
+            "Core.Bucket.BucketDoesNotExists.Description");
 
         public static Error CannotAccessBucket => Error.Conflict(
-            "Bucket.CannotAccessBucket",
-            "Este cesto não lhe pertence.");
+            "Core.Bucket.CannotAccessBucket.Title",
+            "Core.Bucket.CannotAccessBucket.Description");
 
         public static Error NameCannotBeEmpty => Error.Validation(
-            "Bucket.NameCannotBeEmpty",
-            "Por favor preencha um nome para o cesto.");
+            "Core.Bucket.NameCannotBeEmpty.Title",
+            "Core.Bucket.NameCannotBeEmpty.Description");
     }
 }

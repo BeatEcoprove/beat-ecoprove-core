@@ -6,18 +6,16 @@ public static partial class Errors
 {
     public class Auth
     {
-        private const string ErrorRemovingAuthKey = "Error has occurred while deleting account.";
-
         public static Error FailedRemovingSubProfiles => Error.Conflict(
-            "Auth.FailedRemovingSubProfiles",
-            ErrorRemovingAuthKey);
+            "Core.Auth.FailedRemovingSubProfiles.Title",
+            "Core.Auth.FailedRemovingSubProfiles.Description");
 
         public static Error FailedRemovingAuthKey => Error.Conflict(
-            "Auth.FailedRemovingAuthKey",
-            ErrorRemovingAuthKey);
+            "Core.Auth.FailedRemovingAuthKey.Title",
+            "Core.Auth.FailedRemovingAuthKey.Description");
 
         public static Error InvalidAuth => Error.Conflict(
-            "Auth.InvalidAuth",
-            "Senha de accesso inválida.");
+            "Core.Auth.InvalidAuth.Title",
+            "Core.Auth.InvalidAuth.Description");
     }
 }

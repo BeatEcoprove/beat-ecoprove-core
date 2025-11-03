@@ -7,15 +7,15 @@ public static partial class Errors
     public class Phone
     {
         public static Error EmptyPhone => Error.Validation(
-            "Phone.EmptyPhone",
-            "O código e a palavra-chave devem ser introduzidos.");
+            "Core.Phone.EmptyPhone.Title",
+            "Core.Phone.EmptyPhone.Description");
 
         public static Error InvalidPhone => Error.Validation(
-            "Phone.InvalidPhone",
-            "Por favor introduza um código de país válido.");
+            "Core.Phone.InvalidPhone.Title",
+            "Core.Phone.InvalidPhone.Description");
 
         public static Error MustBeNineLegth => Error.Validation(
-            "Phone.MustBeNineLegth",
-            "A telemóvel deve ter nove digítos.");
+            "Core.Phone.MustBeNineLength.Title",
+            "Core.Phone.MustBeNineLength.Description");
     }
 }

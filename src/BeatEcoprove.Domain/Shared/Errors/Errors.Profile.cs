@@ -7,29 +7,25 @@ public static partial class Errors
     public class Profile
     {
         public static Error CannotFindCloth => Error.Conflict(
-            "Profile.CannotFindCloth",
-            "Não foi possível encontrar a peça de roupa.");
+            "Core.Profile.CannotFindCloth.Title",
+            "Core.Profile.CannotFindCloth.Description");
 
         public static Error CannotFindBucket => Error.Conflict(
-            "Profile.CannotFindBucket",
-            "Não foi possível encontrar o cesto.");
+            "Core.Profile.CannotFindBucket.Title",
+            "Core.Profile.CannotFindBucket.Description");
         public static Error CannotExchageWithYourSelf => Error.Conflict(
-            "Profile.CannotExchageWithYourSelf",
-            "Não é possível realizar trocas com o mesmo perfil.");
+            "Core.Profile.CannotExchangeWithYourSelf.Title",
+            "Core.Profile.CannotExchangeWithYourSelf.Description");
 
         public static Error CannotConvertNegativeEcoCoins => Error.Conflict(
-            "Profile.CannotConvertNegativeEcoCoins",
-            "Não é possível converter um número negativo de EcoCoins.");
+            "Core.Profile.CannotConvertNegativeEcoCoins.Title",
+            "Core.Profile.CannotConvertNegativeEcoCoins.Description");
 
         public static Error NotEnoughEcoCoins => Error.Conflict(
-            "Profile.NotEnoughEcoCoins",
-            "Não tens EcoCoins suficientes.");
+            "Core.Profile.NotEnoughEcoCoins.Title",
+            "Core.Profile.NotEnoughEcoCoins.Description");
         public static Error NotFound => Error.Conflict(
-            "Profile.NotFound",
-            "Não foi possível encontrar o perfil.");
-
-        public static Error AlreadyExists => Error.Conflict(
-            "Profile.AlreadyExists",
-            "Core.Profile.AlreadyExists");
+            "Core.Profile.NotFound.Title",
+            "Core.Profile.NotFound.Description");
     }
 }

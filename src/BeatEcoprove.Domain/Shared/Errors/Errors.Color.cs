@@ -7,11 +7,11 @@ public static partial class Errors
     public class Color
     {
         public static Error MustProvideColor => Error.Validation(
-            "Color.MustProvideColor",
-            "Cor mal definida.");
+            "Core.Color.MustProvideColor.Title",
+            "Core.Color.MustProvideColor.Description");
 
         public static Error BadHexValue => Error.Validation(
-            "Color.BadHexValue",
-            "Cor não permitida.");
+            "Core.Color.BadHexValue.Title",
+            "Core.Color.BadHexValue.Description");
     }
 }

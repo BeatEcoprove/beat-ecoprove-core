@@ -7,23 +7,23 @@ public static partial class Errors
     public class Password
     {
         public static Error EmptyPassword => Error.Validation(
-            "Password.EmptyPassword",
-            "Por favor, introduza uma password.");
+            "Core.Password.EmptyPassword.Title",
+            "Core.Password.EmptyPassword.Description");
 
         public static Error MustBeBetween6And16 => Error.Validation(
-            "Password.MustBeBetween6And16",
-            "A palavra-chave deve ter entre 6 a 16 caracteres");
+            "Core.Password.MustBeBetween6And16.Title",
+            "Core.Password.MustBeBetween6And16.Description");
 
         public static Error MustContainAtLeastOnNumber => Error.Validation(
-            "Password.MustContainAtLeastOnNumber",
-            "A palavra-chave deve conter pelo menos 1 número");
+            "Core.Password.MustContainAtLeastOnNumber.Title",
+            "Core.Password.MustContainAtLeastOnNumber.Description");
 
         public static Error MustContainAtLeastOnCaptialLetter => Error.Validation(
-            "Password.MustContainAtLeastOnCaptialLetter",
-            "A palavra-chave deve conter pelo menos uma letra maiúscula");
+            "Core.Password.MustContainAtLeastOnCaptialLetter.Title",
+            "Core.Password.MustContainAtLeastOnCaptialLetter.Description");
 
         public static Error MustContainAtLeastLetter => Error.Validation(
-            "Password.MustContainAtLeastLetter",
-            "A palavra-chave deve conter pelo menos uma letra minúscula");
+            "Core.Password.MustContainAtLeastLetter.Title",
+            "Core.Password.MustContainAtLeastLetter.Description");
     }
 }

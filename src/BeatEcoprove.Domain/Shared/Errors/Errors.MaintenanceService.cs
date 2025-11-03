@@ -7,11 +7,11 @@ public partial class Errors
     public class MaintenanceService
     {
         public static Error NotFound => Error.Conflict(
-            "MaintenanceService.NotFound",
-            "O serviço selecionado não existe.");
+            "Core.MaintenanceService.NotFound.Title",
+            "Core.MaintenanceService.NotFound.Description");
 
         public static Error NotFoundAction => Error.Conflict(
-            "MaintenanceService-Action.NotFound",
-            "A action selecionada não existe.");
+            "Core.MaintenanceService.ActionNotFound.Title",
+            "Core.MaintenanceService.ActionNotFound.Description");
     }
 }

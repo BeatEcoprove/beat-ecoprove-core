@@ -7,15 +7,15 @@ public partial class Errors
     public class Brand
     {
         public static Error MustProvideBrandName => Error.Conflict(
-            "Brand.MustProvideBrandName",
-            "Por favor, forneça um nome para a marca.");
+            "Core.Brand.MustProvideBrandName.Title",
+            "Core.Brand.MustProvideBrandName.Description");
 
         public static Error MustProvideBrandAvatar => Error.Conflict(
-            "Brand.MustProvideBrandAvatar",
-            "Por favor, forneça um avatar para a marca.");
+            "Core.Brand.MustProvideBrandAvatar.Title",
+            "Core.Brand.MustProvideBrandAvatar.Description");
 
         public static Error ThereIsNoBrandName => Error.Conflict(
-            "Brand.ThereIsNoBrandName",
-            "Não existe nenhuma marca com esse nome.");
+            "Core.Brand.ThereIsNoBrandName.Title",
+            "Core.Brand.ThereIsNoBrandName.Description");
     }
 }

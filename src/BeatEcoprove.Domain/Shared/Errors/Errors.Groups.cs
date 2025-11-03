@@ -7,59 +7,59 @@ public partial class Errors
     public class Groups
     {
         public static Error NotFound => Error.Conflict(
-            "Group.NotFound",
-            "O grupo não foi encontrado.");
+            "Core.Group.NotFound.Title",
+            "Core.Group.NotFound.Description");
 
         public static Error WSNotFound => Error.Conflict(
-            "Group.WSNotFound",
-            "O grupo não foi encontrado.");
+            "Core.Group.WSNotFound.Title",
+            "Core.Group.WSNotFound.Description");
 
         public static Error WSIsntConnected => Error.Conflict(
-            "Group.WSIsntConnected",
-            "Não se encontra conectado a nenhum grupo.");
+            "Core.Group.WSIsntConnected.Title",
+            "Core.Group.WSIsntConnected.Description");
 
         public static Error CannotAccess => Error.Conflict(
-            "Group.CannotAccess",
-            "Não tem permissões para aceder ao grupo.");
+            "Core.Group.CannotAccess.Title",
+            "Core.Group.CannotAccess.Description");
 
         public static Error MemberNotFound => Error.Conflict(
-            "Group.MemberNotFound",
-            "Este membro não pertence ao grupo.");
+            "Core.Group.MemberNotFound.Title",
+            "Core.Group.MemberNotFound.Description");
 
         public static Error CannotPromoteToSameRole => Error.Conflict(
-            "Group.CannotPromoteToSameRole",
-            "Não pode promover um membro para o mesmo cargo.");
+            "Core.Group.CannotPromoteToSameRole.Title",
+            "Core.Group.CannotPromoteToSameRole.Description");
 
         public static Error DontBelongToGroup => Error.Conflict(
-            "Group.DontBelongToGroup",
-            "Não pertences a este grupo.");
+            "Core.Group.DontBelongToGroup.Title",
+            "Core.Group.DontBelongToGroup.Description");
 
         public static Error PermissionNotValid => Error.Conflict(
-            "Group.PermissionNotValid",
-            "Permissão invalida.");
+            "Core.Group.PermissionNotValid.Title",
+            "Core.Group.PermissionNotValid.Description");
 
         public static Error CannotPromoteMember => Error.Conflict(
-            "Group.CannotPromoteMember",
-            "Não tem permissões para promover este membro.");
+            "Core.Group.CannotPromoteMember.Title",
+            "Core.Group.CannotPromoteMember.Description");
 
         public static Error CannotPromoteYourself => Error.Conflict(
-            "Group.CannotPromoteYourself",
-            "Não pode promover-se a si mesmo");
+            "Core.Group.CannotPromoteYourself.Title",
+            "Core.Group.CannotPromoteYourself.Description");
 
         public static Error CannotKickMember => Error.Conflict(
-            "Group.CannotKickMember",
-            "Não foi possível remover o membro do grupo.");
+            "Core.Group.CannotKickMember.Title",
+            "Core.Group.CannotKickMember.Description");
 
         public static Error MemberAlreadyExists => Error.Conflict(
-            "Group.MemberAlreadyExists",
-            "Este membro já pertence ao grupo.");
+            "Core.Group.MemberAlreadyExists.Title",
+            "Core.Group.MemberAlreadyExists.Description");
 
         public static Error InviteNotFound => Error.Conflict(
-            "Group.InviteNotFound",
-            "Este convite não existe.");
+            "Core.Group.InviteNotFound.Title",
+            "Core.Group.InviteNotFound.Description");
 
         public static Error InviteAlreadyUsed => Error.Conflict(
-            "Group.InviteAlreadyAccepted",
-            "Este convite já foi utilizado.");
+            "Core.Group.InviteAlreadyAccepted.Title",
+            "Core.Group.InviteAlreadyAccepted.Description");
     }
 }

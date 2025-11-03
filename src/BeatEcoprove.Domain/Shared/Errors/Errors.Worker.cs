@@ -7,19 +7,19 @@ public partial class Errors
     public class Worker
     {
         public static Error NotAllowedName => Error.Conflict(
-            "Worker.NotAllowedName",
-            "Por favor introduz um nome valid");
+            "Core.Worker.NotAllowedName.Title",
+            "Core.Worker.NotAllowedName.Description");
         public static Error CannotChangeToSamePermission => Error.Conflict(
-            "Worker.CannotChangeToSamePermission",
-            "Não possível alterar para a mesma permissão já atribuida");
+            "Core.Worker.CannotChangeToSamePermission.Title",
+            "Core.Worker.CannotChangeToSamePermission.Description");
         public static Error NotFound => Error.NotFound(
-            "Worker.NotFound",
-            "Não existe nenhum trabalhador com esse id");
+            "Core.Worker.NotFound.Title",
+            "Core.Worker.NotFound.Description");
         public static Error InvalidPermission => Error.Conflict(
-            "Worker.InvalidPermission",
-            "Permissão inválida ou não existe");
+            "Core.Worker.InvalidPermission.Title",
+            "Core.Worker.InvalidPermission.Description");
         public static Error DoesNotBelongToStore => Error.Conflict(
-                    "Worker.DoesNotBelongToStore",
-                    "Este trabalhador não pertence à loja");
+                    "Core.Worker.DoesNotBelongToStore.Title",
+                    "Core.Worker.DoesNotBelongToStore.Description");
     }
 }

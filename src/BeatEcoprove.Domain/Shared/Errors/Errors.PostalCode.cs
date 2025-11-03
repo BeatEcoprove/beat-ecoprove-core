@@ -7,11 +7,11 @@ public static partial class Errors
     public class PostalCode
     {
         public static Error EmptyPostalCode => Error.Validation(
-            "PostalCode.EmptyPostalCode",
-            "Por favor, introduza um código postal.");
+            "Core.PostalCode.EmptyPostalCode.Title",
+            "Core.PostalCode.EmptyPostalCode.Description");
 
         public static Error InvalidPostalCode => Error.Validation(
-            "PostalCode.InvalidPostalCode",
-            "Por favor, introduza um código postal válido");
+            "Core.PostalCode.InvalidPostalCode.Title",
+            "Core.PostalCode.InvalidPostalCode.Description");
     }
 }

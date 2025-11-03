@@ -7,20 +7,20 @@ public partial class Errors
     public class FeedBack
     {
         public static Error TitleNotDefine => Error.Validation(
-            "FeedBack.TitleNotDefine",
-            "Por favor, introduza um título.");
+            "Core.FeedBack.TitleNotDefine.Title",
+            "Core.FeedBack.TitleNotDefine.Description");
 
         public static Error DescriptionNotProvided => Error.Validation(
-            "FeedBack.DescriptionNotProvided",
-            "Por favor, introduza uma descrição.");
+            "Core.FeedBack.DescriptionNotProvided.Title",
+            "Core.FeedBack.DescriptionNotProvided.Description");
 
         public static Error TitleMaxExceeded => Error.Validation(
-            "FeedBack.TitleMaxExceeded",
-            "O título não pode exceder os 100 caracteres.");
+            "Core.FeedBack.TitleMaxExceeded.Title",
+            "Core.FeedBack.TitleMaxExceeded.Description");
 
         public static Error TitleMinExceeded => Error.Validation(
-            "FeedBack.TitleMinExceeded",
-            "O título tem de ter pelo menos 5 caracteres.");
+            "Core.FeedBack.TitleMinExceeded.Title",
+            "Core.FeedBack.TitleMinExceeded.Description");
 
     }
 }

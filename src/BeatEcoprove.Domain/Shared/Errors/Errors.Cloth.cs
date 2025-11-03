@@ -7,51 +7,51 @@ public partial class Errors
     public class Cloth
     {
         public static Error InvalidClothName => Error.Validation(
-            "Cloth.InvalidClothName",
-            "Por favor, introduz um nome válido.");
+            "Core.Cloth.InvalidClothName.Title",
+            "Core.Cloth.InvalidClothName.Description");
 
         public static Error ClothNotFound => Error.Conflict(
-            "Cloth.ClothNotFound",
-            "A peça que tentou aceder não existe.");
+            "Core.Cloth.ClothNotFound.Title",
+            "Core.Cloth.ClothNotFound.Description");
 
         public static Error ClothIdBlocked => Error.Conflict(
-            "Cloth.ClothIdBlocked",
-            "A peça que tentou aceder está bloqueada numa transação");
+            "Core.Cloth.ClothIdBlocked.Title",
+            "Core.Cloth.ClothIdBlocked.Description");
 
         public static Error MaintenanceActivityNotFound => Error.Conflict(
-            "Cloth.MaintenanceActivityNotFound",
-            "Esta peça não possui nenhum registo de manutenções anteriores.");
+            "Core.Cloth.MaintenanceActivityNotFound.Title",
+            "Core.Cloth.MaintenanceActivityNotFound.Description");
 
         public static Error InvalidClothType => Error.Validation(
-            "Cloth.InvalidClothType",
-            "Por favor, introduz um tipo de peça válido.");
+            "Core.Cloth.InvalidClothType.Title",
+            "Core.Cloth.InvalidClothType.Description");
 
         public static Error InvalidClothSize => Error.Validation(
-            "Cloth.InvalidClothSize",
-            "Por favor, introduz um tamanho válido (xs, s, m, l, xl, xxl).");
+            "Core.Cloth.InvalidClothSize.Title",
+            "Core.Cloth.InvalidClothSize.Description");
 
         public static Error CannotUseCloth => Error.Conflict(
-            "Cloth.CannotUseCloth",
-            "Esta peça já está em uso.");
+            "Core.Cloth.CannotUseCloth.Title",
+            "Core.Cloth.CannotUseCloth.Description");
 
         public static Error CannotUseClothBecauseIsOnMaintenance => Error.Conflict(
-            "Cloth.CannotUseClothOnMaintenaice",
-            "Esta peça está em manutenção.");
+            "Core.Cloth.CannotUseClothOnMaintenance.Title",
+            "Core.Cloth.CannotUseClothOnMaintenance.Description");
 
         public static Error IsBeingMaintain => Error.Conflict(
-            "Cloth.IsBeingMaintain",
-            "Esta peça já se encontra em manutenção.");
+            "Core.Cloth.IsBeingMaintain.Title",
+            "Core.Cloth.IsBeingMaintain.Description");
 
         public static Error CannotDisposeCloth => Error.Conflict(
-            "Cloth.CannotDisposeCloth",
-            "Não é possível demarcar esta peça, porque não está em uso.");
+            "Core.Cloth.CannotDisposeCloth.Title",
+            "Core.Cloth.CannotDisposeCloth.Description");
 
         public static Error CannotFinishMaintenanceActivity => Error.Conflict(
-            "Cloth.CannotFinishMaintenanceActivity",
-            "Não é possível terminar a terefa de manutenção.");
+            "Core.Cloth.CannotFinishMaintenanceActivity.Title",
+            "Core.Cloth.CannotFinishMaintenanceActivity.Description");
 
         public static Error CannotAccessBucket => Error.Conflict(
-            "Cloth.CannotAccessBucket",
-            "Esta peça de roupa não lhe pertence.");
+            "Core.Cloth.CannotAccessBucket.Title",
+            "Core.Cloth.CannotAccessBucket.Description");
     }
 }

@@ -7,31 +7,31 @@ public static partial class Errors
     public class User
     {
         public static Error ProfileDoesNotBelongToAuth => Error.Conflict(
-            "User.ProfileDoesNotBelongToAuth",
-            "Este utilizador não tem acesso ao perfil escolhido.");
+            "Core.User.ProfileDoesNotBelongToAuth.Title",
+            "Core.User.ProfileDoesNotBelongToAuth.Description");
 
         public static Error ProfileDoesNotExists => Error.Conflict(
-            "User.ProfileDoesNotExists",
-            "Não foi encontrado nenhum perfil associado ao utilizador.");
+            "Core.User.ProfileDoesNotExists.Title",
+            "Core.User.ProfileDoesNotExists.Description");
 
         public static Error EmailAlreadyExists => Error.Conflict(
-            "User.EmailAlreadyExists",
-            "Este email já se encontra em uso.");
+            "Core.User.EmailAlreadyExists.Title",
+            "Core.User.EmailAlreadyExists.Description");
 
         public static Error UserNameAlreadyExists => Error.Conflict(
-            "User.UserNameAlreadyExists",
-            "Este nome de utilizador já se encontra em uso.");
+            "Core.User.UserNameAlreadyExists.Title",
+            "Core.User.UserNameAlreadyExists.Description");
 
         public static Error EmailDoesNotExists => Error.Conflict(
-            "User.EmailDoesNotExists",
-            "Este email não corresponde a nenhum utilizador.");
+            "Core.User.EmailDoesNotExists.Title",
+            "Core.User.EmailDoesNotExists.Description");
 
         public static Error BadCredentials => Error.Conflict(
-            "User.BadCredentials",
-            "O email ou a palavra-chave estão erradas.");
+            "Core.User.BadCredentials.Title",
+            "Core.User.BadCredentials.Description");
 
         public static Error InvalidUserGender => Error.Conflict(
-            "User.InvalidUserGender",
-            "O género do utilizador não é aceite.");
+            "Core.User.InvalidUserGender.Title",
+            "Core.User.InvalidUserGender.Description");
     }
 }

@@ -7,7 +7,7 @@ public partial class Errors
     public class Provider
     {
         public static Error NotFound => Error.NotFound(
-            "Provider.NotFound",
-            "Não foi encontrado nenhum seriço");
+            "Core.Provider.NotFound.Title",
+            "Core.Provider.NotFound.Description");
     }
 }

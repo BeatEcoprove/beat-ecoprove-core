@@ -7,7 +7,7 @@ public partial class Errors
     public class Username
     {
         public static Error InvalidUsername => Error.Validation(
-            "Username.InvalidUsername",
-            "Por favor, insira um nome de utilizador válido.");
+            "Core.Username.InvalidUsername.Title",
+            "Core.Username.InvalidUsername.Description");
     }
 }

@@ -7,25 +7,25 @@ public partial class Errors
     public class Store
     {
         public static Error RateNotAllowed => Error.Conflict(
-            "Store.RateNotAllowed",
-            "Valor não aceite para o rating da loja");
+            "Core.Store.RateNotAllowed.Title",
+            "Core.Store.RateNotAllowed.Description");
 
         public static Error CantCreateStore => Error.Conflict(
-            "Store.CantCreateStore",
-            "Não tens permissão para criar uma loja");
+            "Core.Store.CantCreateStore.Title",
+            "Core.Store.CantCreateStore.Description");
 
         public static Error StoreNotFound => Error.NotFound(
-            "Store.StoreNotFound",
-            "Não existe nenhuma loja com esse id");
+            "Core.Store.StoreNotFound.Title",
+            "Core.Store.StoreNotFound.Description");
         public static Error CouldNotDelete => Error.NotFound(
-            "Store.CouldNotDelete",
-            "Não foi possível remover a loja");
+            "Core.Store.CouldNotDelete.Title",
+            "Core.Store.CouldNotDelete.Description");
         public static Error StoreAlreadyExistsName => Error.Conflict(
-            "Store.StoreAlreadyExistsName",
-            "Este nome já foi utilizado para o registro de uma loja");
+            "Core.Store.StoreAlreadyExistsName.Title",
+            "Core.Store.StoreAlreadyExistsName.Description");
 
         public static Error DontHaveAccessToStore => Error.Conflict(
-            "Store.DontHaveAccessToStore",
-            "Não tens acesso a este recurso");
+            "Core.Store.DontHaveAccessToStore.Title",
+            "Core.Store.DontHaveAccessToStore.Description");
     }
 }

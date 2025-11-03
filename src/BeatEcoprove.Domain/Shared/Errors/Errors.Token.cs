@@ -7,19 +7,19 @@ public static partial class Errors
     public static class Token
     {
         public static Error InvalidToken => Error.Validation(
-            code: "Token.InvalidToken",
-            description: "Token inválido");
+            code: "Core.Token.InvalidToken.Title",
+            description: "Core.Token.InvalidToken.Description");
 
         public static Error InvalidRefreshToken => Error.Validation(
-            code: "Token.InvalidRefreshToken",
-            description: "Token de atualização inválido");
+            code: "Core.Token.InvalidRefreshToken.Title",
+            description: "Core.Token.InvalidRefreshToken.Description");
 
         public static Error ExpiredToken => Error.Validation(
-            code: "Token.ExpiredToken",
-            description: "Token expirado");
+            code: "Core.Token.ExpiredToken.Title",
+            description: "Core.Token.ExpiredToken.Description");
 
         public static Error MissingToken => Error.Validation(
-            code: "Token.MissingToken",
-            description: "Token não encontrado");
+            code: "Core.Token.MissingToken.Title",
+            description: "Core.Token.MissingToken.Description");
     }
 }
