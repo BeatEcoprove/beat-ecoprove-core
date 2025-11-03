@@ -48,10 +48,12 @@
               pkgs.coreutils
             ];
             config = {
-              Cmd = [ "${self.packages.${system}.default}/bin/${pname}" "start" ];
+              Cmd = [ "${self.packages.${system}.default}/bin/${mainProjectName}" ];
               Env = [
                 "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
                 "LANG=C.UTF-8"
+
+                "DOTNET_RUNNING_IN_CONTAINER=true"
               ];
             };
           };
@@ -60,11 +62,14 @@
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             dotnetSdk
+            dotnet-ef
+            just
           ];
 
           shellHook = ''
-
-            '';
+            echo "Development environment loaded"
+            dotnet --version
+          '';
         };
 
       });
