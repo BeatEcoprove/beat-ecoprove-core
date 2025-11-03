@@ -1,5 +1,4 @@
 using BeatEcoprove.Api.Middlewares;
-using BeatEcoprove.Application.Shared.Multilanguage;
 
 using ErrorOr;
 
@@ -14,7 +13,9 @@ public static class ControllerExtensions
         return builder.AddEndpointFilter(new ScopeAuthorizationMiddleware(scopes));
     }
 
-    public static IResult ToProblemDetails(this List<Error> errors, ILanguageCulture localizer)
+    public static IResult ToProblemDetails(
+        this List<Error> errors,
+        HttpContext context)
     {
         if (errors.Count == 0)
         {
@@ -27,12 +28,13 @@ public static class ControllerExtensions
         {
             var validationErrors = errors.ToDictionary(
                 error => error.Code,
-                error => new[] { localizer.GetChunk(error.Code, error.Description) }
+                error => new[] { error.Code, error.Description }
             );
 
             return Results.ValidationProblem(
                 validationErrors,
-                title: "One or more validation errors occurred");
+                title: "One or more validation errors occurred",
+                instance: context.Request.Path);
         }
 
         var firstError = errors[0];
@@ -48,6 +50,8 @@ public static class ControllerExtensions
 
         return Results.Problem(
             statusCode: statusCode,
-            title: localizer.GetChunk(firstError.Code, firstError.Description));
+            title: firstError.Code,
+            detail: firstError.Description,
+            instance: context.Request.Path);
     }
 }

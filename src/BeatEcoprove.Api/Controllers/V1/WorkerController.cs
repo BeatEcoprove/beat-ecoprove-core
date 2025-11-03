@@ -1,5 +1,4 @@
 using BeatEcoprove.Api.Extensions;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddWorker;
 using BeatEcoprove.Application.Stores.Commands.DeleteStoreById;
 using BeatEcoprove.Application.Stores.Commands.ElevatePermissionOnWorker;
@@ -18,7 +17,7 @@ public class WorkerController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var worker = CreateVersionedGroup(app, "stores/{storeId}/workers")
-            .WithName("Workers")
+            .WithTags("Workers")
             .RequireAuthorization();
 
         worker.MapGet(string.Empty, GetWorkers)
@@ -40,7 +39,6 @@ public class WorkerController : ApiCarterModule
     private static async Task<IResult> GetWorkers(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         string? search,
@@ -63,14 +61,13 @@ public class WorkerController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<WorkerResponse>>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetWorkerById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         Guid workerId,
@@ -89,7 +86,7 @@ public class WorkerController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<WorkerResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
@@ -97,7 +94,6 @@ public class WorkerController : ApiCarterModule
     private static async Task<IResult> CreateWorker(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         CreateWorkerRequest request,
@@ -118,14 +114,13 @@ public class WorkerController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<WorkerResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> DeleteWorker(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         CancellationToken cancellationToken)
@@ -142,14 +137,13 @@ public class WorkerController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<WorkerResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> ChangePermission(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         Guid workerId,
@@ -170,7 +164,7 @@ public class WorkerController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<WorkerResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 }

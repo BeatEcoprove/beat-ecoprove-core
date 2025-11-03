@@ -1,6 +1,5 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.FeedBacks.Commands.SubmitFeedBack;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.FeedBacks;
 
 using MapsterMapper;
@@ -14,13 +13,12 @@ public class FeedbackController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var feedback = CreateVersionedGroup(app, "extensions/feedback")
-            .WithName("Feedback")
+            .WithTags("Feedback")
             .RequireAuthorization();
 
         feedback.MapPost(string.Empty, async (
             ISender sender,
             IMapper mapper,
-            ILanguageCulture localizer,
             HttpContext context,
             FeedBackRequest request,
             CancellationToken cancellationToken
@@ -38,7 +36,7 @@ public class FeedbackController : ApiCarterModule
             return result.Match(
                 response => Results.Ok(
                     mapper.Map<FeedBackResponse>(response)),
-                errors => errors.ToProblemDetails(localizer)
+                errors => errors.ToProblemDetails(context)
             );
         }).RequireScopes("feedback:create");
     }

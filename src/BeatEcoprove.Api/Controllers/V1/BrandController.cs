@@ -1,6 +1,5 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Brands.Queries;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Brands;
 
 using MapsterMapper;
@@ -14,13 +13,13 @@ public class BrandController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var brands = CreateVersionedGroup(app, "extensions/brands")
-            .WithName("Brands")
+            .WithTags("Brands")
             .RequireAuthorization();
 
         brands.MapGet(String.Empty, async (
             ISender sender,
             IMapper mapper,
-            ILanguageCulture localizer
+            HttpContext context
         ) =>
         {
             var result =
@@ -29,7 +28,7 @@ public class BrandController : ApiCarterModule
             return result.Match(
                 brand => Results.Ok(
                     mapper.Map<BrandResponse>(brand)),
-                errors => errors.ToProblemDetails(localizer)
+                errors => errors.ToProblemDetails(context)
             );
         }).RequireScopes("brands:view");
     }

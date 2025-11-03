@@ -5,7 +5,6 @@ using BeatEcoprove.Application.Cloths.Queries.Common.HistoryResult;
 using BeatEcoprove.Application.Cloths.Queries.GetAvailableServices;
 using BeatEcoprove.Application.Cloths.Queries.GetClothMaintenanceStatus;
 using BeatEcoprove.Application.Cloths.Queries.GetHistory;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Closet.Cloth;
 using BeatEcoprove.Contracts.Closet.Cloth.HistoryResponse;
 using BeatEcoprove.Contracts.Services;
@@ -23,7 +22,7 @@ public class ClothController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var cloth = CreateVersionedGroup(app, "profiles/closet/cloth/{clothId:guid}/services")
-            .WithName("Cloth")
+            .WithTags("Cloth")
             .RequireAuthorization();
 
         cloth.MapGet(String.Empty, GetAvailableServices)
@@ -45,7 +44,6 @@ public class ClothController : ApiCarterModule
     private static async Task<IResult> GetAvailableServices(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid clothId,
         CancellationToken cancellationToken)
@@ -63,14 +61,13 @@ public class ClothController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<List<MaintenanceServiceResponse>>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> PerformService(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid serviceId,
         Guid clothId,
@@ -90,14 +87,13 @@ public class ClothController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<ClothResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> CloseAction(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid clothId,
         Guid maintenanceActivityId,
@@ -115,14 +111,13 @@ public class ClothController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<ClothResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetClothMaintenanceStatus(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid clothId,
         Guid maintenanceActivityId,
@@ -139,14 +134,13 @@ public class ClothController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<ClothMaintenanceStatusResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetClothHistory(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid clothId,
         Guid maintenanceActivityId,
@@ -155,16 +149,16 @@ public class ClothController : ApiCarterModule
         var profileId = context.User.GetProfileId();
 
         var result = await sender.Send(new
-            GetHistoryQuery(
-                profileId,
-                clothId
-            )
-, cancellationToken);
+                GetHistoryQuery(
+                    profileId,
+                    clothId
+                )
+            , cancellationToken);
 
         return result.Match(
             response => Results.Ok(
                 ProxyResponse(mapper, response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 

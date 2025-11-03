@@ -5,7 +5,6 @@ using BeatEcoprove.Application.Profiles.Commands.UpdateProfile;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetProfile;
 using BeatEcoprove.Application.Shared.Inputs;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Profile;
 
 using MapsterMapper;
@@ -19,7 +18,7 @@ public class ProfileController() : ApiCarterModule()
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var profiles = CreateVersionedGroup(app, "profiles")
-            .WithName("Profiles")
+            .WithTags("Profiles")
             .RequireAuthorization();
 
         profiles.MapPost("/client", CreateClientProfile)
@@ -49,7 +48,6 @@ public class ProfileController() : ApiCarterModule()
     private static async Task<IResult> CreateClientProfile(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         CreateClientProfileRequest request,
         CancellationToken cancellationToken)
@@ -82,14 +80,13 @@ public class ProfileController() : ApiCarterModule()
             profile => Results.Created(
                 $"/v1/profiles/{result.Value.Id}",
                 mapper.Map<ProfileResponse>(profile)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> CreateOrganizationProfile(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         CreateOrganizationRequest request,
         CancellationToken cancellationToken)
@@ -125,14 +122,13 @@ public class ProfileController() : ApiCarterModule()
             profile => Results.Created(
                 $"/v1/profiles/{result.Value.Id}",
                 mapper.Map<ProfileResponse>(profile)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetMe(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         CancellationToken cancellationToken)
     {
@@ -143,14 +139,13 @@ public class ProfileController() : ApiCarterModule()
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<ProfileResponse>(profile)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetProfiles(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         CancellationToken cancellationToken)
     {
@@ -160,14 +155,13 @@ public class ProfileController() : ApiCarterModule()
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<ProfileResponse>(profile)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> DeleteProfile(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid id,
         CancellationToken cancellationToken)
@@ -188,14 +182,13 @@ public class ProfileController() : ApiCarterModule()
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<ProfileResponse>(profile)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> UpdateProfile(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid id,
         UpdateProfileRequest request,
@@ -218,7 +211,7 @@ public class ProfileController() : ApiCarterModule()
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<ProfileResponse>(profile)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 }

@@ -1,6 +1,5 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Currency.Queries.ConvertCurrency;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Currency;
 
 using MapsterMapper;
@@ -14,13 +13,12 @@ public class CurrencyController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var currency = CreateVersionedGroup(app, "extensions/currency")
-            .WithName("Currency")
+            .WithTags("Currency")
             .RequireAuthorization();
 
         currency.MapGet("convert", async (
             ISender sender,
             IMapper mapper,
-            ILanguageCulture localizer,
             HttpContext context,
             int? ecoCoins,
             int? sustainabilityPoints
@@ -39,7 +37,7 @@ public class CurrencyController : ApiCarterModule
             return result.Match(
                 response => Results.Ok(
                     mapper.Map<Conversionresult>(response)),
-                errors => errors.ToProblemDetails(localizer)
+                errors => errors.ToProblemDetails(context)
             );
         }).RequireScopes("currency:convert");
     }

@@ -9,7 +9,6 @@ using BeatEcoprove.Application.Closet.Queries.GetBucket;
 using BeatEcoprove.Application.Closet.Queries.GetBucketsCloth;
 using BeatEcoprove.Application.Closet.Queries.GetCloset;
 using BeatEcoprove.Application.Closet.Queries.GetCloth;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Closet;
 using BeatEcoprove.Contracts.Closet.Bucket;
 using BeatEcoprove.Contracts.Closet.Cloth;
@@ -27,7 +26,7 @@ public class ClosetController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var closet = CreateVersionedGroup(app, "profiles/closet")
-            .WithName("Closet")
+            .WithTags("Closet")
             .RequireAuthorization();
 
         closet.MapGet(string.Empty, GetCloset);
@@ -69,7 +68,6 @@ public class ClosetController : ApiCarterModule
     private static async Task<IResult> GetCloset(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         string? search,
         string? size,
@@ -102,14 +100,13 @@ public class ClosetController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<ClosetResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> CreateClothToCloset(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         CreateClothRequest request,
         CancellationToken cancellationToken)
@@ -131,14 +128,13 @@ public class ClosetController : ApiCarterModule
             response => Results.Created(
                 "profiles/closet",
                 mapper.Map<ClothResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetClothBuckets(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid clothId,
         CancellationToken cancellationToken)
@@ -158,14 +154,13 @@ public class ClosetController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<List<BucketResponse>>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetClothById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid clothId,
         CancellationToken cancellationToken)
@@ -184,14 +179,13 @@ public class ClosetController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<ClothResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> DeleteClothFromCloset(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid clothId,
         CancellationToken cancellationToken)
@@ -211,14 +205,13 @@ public class ClosetController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 response.Adapt<ClothResponse>()),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> CreateBucketToCloset(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         CreateBucketRequest request,
         CancellationToken cancellationToken)
@@ -239,14 +232,13 @@ public class ClosetController : ApiCarterModule
             response => Results.Created(
                 "",
                 mapper.Map<BucketResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetBucketById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid bucketId,
         CancellationToken cancellationToken)
@@ -265,14 +257,13 @@ public class ClosetController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<BucketResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> DeleteBucketFromCloset(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid bucketId,
         CancellationToken cancellationToken)
@@ -291,14 +282,13 @@ public class ClosetController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<BucketResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> CreateClothsToBucket(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid bucketId,
         CreateClothToBucketRequest request,
@@ -318,14 +308,13 @@ public class ClosetController : ApiCarterModule
             response => Results.Created(
                 "",
                 mapper.Map<BucketResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> DeleteClothFromBucket(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid bucketId,
         DeleteClothsFromBucketRequest request,
@@ -346,7 +335,7 @@ public class ClosetController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<BucketResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 }

@@ -34,11 +34,6 @@ public static class JwtAuthentication
 
                     ClockSkew = TimeSpan.FromMinutes(5)
                 };
-
-                options.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = context => Task.CompletedTask
-                };
             });
 
         return services;

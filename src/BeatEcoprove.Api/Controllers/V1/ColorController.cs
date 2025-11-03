@@ -1,6 +1,5 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Colors.Queries;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Colors;
 
 using MapsterMapper;
@@ -14,13 +13,13 @@ public class ColorController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var colors = CreateVersionedGroup(app, "extensions/colors")
-            .WithName("Colors")
+            .WithTags("Colors")
             .RequireAuthorization();
 
         colors.MapGet(String.Empty, async (
             ISender sender,
             IMapper mapper,
-            ILanguageCulture localizer
+            HttpContext context
         ) =>
         {
             var result =
@@ -29,7 +28,7 @@ public class ColorController : ApiCarterModule
             return result.Match(
                 color => Results.Ok(
                     mapper.Map<ColorResponse>(color)),
-                errors => errors.ToProblemDetails(localizer)
+                errors => errors.ToProblemDetails(context)
             );
         }).RequireScopes("color:view");
     }

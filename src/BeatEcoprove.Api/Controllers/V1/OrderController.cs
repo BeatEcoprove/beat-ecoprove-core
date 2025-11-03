@@ -1,6 +1,5 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Api.Mappers;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.CompleteOrder;
 using BeatEcoprove.Application.Stores.Commands.RegisterOrder;
 using BeatEcoprove.Application.Stores.Queries.GetOrderById;
@@ -18,7 +17,7 @@ public class OrderController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var order = CreateVersionedGroup(app, "orders")
-            .WithName("Orders")
+            .WithTags("Orders")
             .RequireAuthorization();
 
         order.MapGet("{orderId:guid}/stores/{storeId:guid}", GetOrdersById)
@@ -37,7 +36,6 @@ public class OrderController : ApiCarterModule
     private static async Task<IResult> GetOrdersById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid orderId,
         Guid storeId,
@@ -56,14 +54,13 @@ public class OrderController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<OrderResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetOrders(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         string storeIds,
         string? search,
@@ -94,14 +91,13 @@ public class OrderController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 response.Select(StoreMappingConfiguration.CreateOrderResponse)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> CreateOrder(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         CreateOrderRequest request,
         CancellationToken cancellationToken)
@@ -120,14 +116,13 @@ public class OrderController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<OrderResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> CompleteOrder(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid orderId,
         CompleteOrderRequest request,
@@ -147,7 +142,7 @@ public class OrderController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<OrderResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 }

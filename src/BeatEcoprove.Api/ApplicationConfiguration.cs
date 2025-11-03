@@ -33,7 +33,7 @@ public static class ApplicationConfiguration
 
     private static IApplicationBuilder AddCustomMiddlewares(this IApplicationBuilder app)
     {
-        app.UseMiddleware<ProfileCheckerMiddleware>();
+        app.UseMiddleware<AuthorizationMiddleware>();
 
         return app;
     }
@@ -65,8 +65,9 @@ public static class ApplicationConfiguration
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
+        app.AddCustomMiddlewares();
         app.MapCarter();
-        
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

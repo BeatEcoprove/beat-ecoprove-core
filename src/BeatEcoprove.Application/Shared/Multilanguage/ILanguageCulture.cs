@@ -1,6 +1,6 @@
 ﻿namespace BeatEcoprove.Application.Shared.Multilanguage;
 
-public interface ILanguageCulture
+public interface ILanguageCultures
 {
     string GetChunk(string key, string fallback = "");
     Language GetCurrentCulture();

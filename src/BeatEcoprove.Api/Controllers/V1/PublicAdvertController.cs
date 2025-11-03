@@ -1,5 +1,4 @@
 using BeatEcoprove.Api.Extensions;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Queries.GetAdevertById;
 using BeatEcoprove.Application.Stores.Queries.GetHomeAdds;
 using BeatEcoprove.Contracts.Advertisements;
@@ -15,7 +14,7 @@ public class PublicAdvertController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var publicAdvert = CreateVersionedGroup(app, "public/adverts")
-            .WithName("PublicAdvert")
+            .WithTags("PublicAdvert")
             .RequireAuthorization();
 
         publicAdvert.MapGet("{advertId:guid}", GetById)
@@ -28,7 +27,6 @@ public class PublicAdvertController : ApiCarterModule
     private static async Task<IResult> GetById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid advertId,
         CancellationToken cancellationToken)
@@ -46,14 +44,13 @@ public class PublicAdvertController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<AdvertisementResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetHomeAds(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         string? search,
         int? page,
@@ -74,7 +71,7 @@ public class PublicAdvertController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<AdvertisementResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 }

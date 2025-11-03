@@ -2,7 +2,6 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Closet.Commands.RegisterClothUsage;
 using BeatEcoprove.Application.Closet.Commands.RemoveClothFromOutfit;
 using BeatEcoprove.Application.Closet.Queries.GetCurrentOutfit;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Activities;
 using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
@@ -22,7 +21,7 @@ public class OutfitController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var outfit = CreateVersionedGroup(app, "profiles/closet")
-            .WithName("Outfit")
+            .WithTags("Outfit")
             .RequireAuthorization();
 
         outfit.MapPatch("cloth/{clothId:guid}/usage", RegisterClothUsage)
@@ -62,7 +61,6 @@ public class OutfitController : ApiCarterModule
     private static async Task<IResult> RegisterClothUsage(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid clothId,
         bool? use,
@@ -81,14 +79,13 @@ public class OutfitController : ApiCarterModule
         return result.Match(
             response => Results.Ok(
                 mapper.Map<DailyActivityResponse>(response)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetCurrentOutfit(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         CancellationToken cancellationToken)
     {
@@ -104,7 +101,7 @@ public class OutfitController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<ProfileResponse>(profile)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 }

@@ -1,5 +1,4 @@
 using BeatEcoprove.Api.Extensions;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.CreateAdd;
 using BeatEcoprove.Application.Stores.Commands.RemoveAdvert;
 using BeatEcoprove.Application.Stores.Queries.GetAdevertById;
@@ -17,7 +16,7 @@ public class AdvertisementController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var advertisement = CreateVersionedGroup(app, "stores/{storeId:guid}/adverts")
-            .WithName("Advertisements")
+            .WithTags("Advertisements")
             .RequireAuthorization();
 
         advertisement.MapGet(string.Empty, GetMyAdverts)
@@ -36,7 +35,6 @@ public class AdvertisementController : ApiCarterModule
     private static async Task<IResult> GetMyAdverts(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         string? search,
@@ -59,14 +57,13 @@ public class AdvertisementController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<AdvertisementResponse>>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetAdvertById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid advertId,
         CancellationToken cancellationToken)
@@ -83,14 +80,13 @@ public class AdvertisementController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<AdvertisementResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> CreateAdvert(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         CreateAdvertisementRequest request,
@@ -114,14 +110,13 @@ public class AdvertisementController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<AdvertisementResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> DeleteAdvert(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         Guid advertId,
@@ -139,7 +134,7 @@ public class AdvertisementController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<AdvertisementResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 }

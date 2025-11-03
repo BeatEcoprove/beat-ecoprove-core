@@ -1,6 +1,5 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.ClosetBuckets.Commands.PatchBucket;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Closet.Bucket;
 
 using MapsterMapper;
@@ -14,13 +13,12 @@ public class BucketController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var buckets = CreateVersionedGroup(app, "profiles/closet/buckets")
-            .WithName("Buckets")
+            .WithTags("Buckets")
             .RequireAuthorization();
 
         buckets.MapPatch("{bucketId:guid}", async (
             ISender sender,
             IMapper mapper,
-            ILanguageCulture localizer,
             HttpContext context,
             Guid bucketId,
             PatchBucketRequest request,
@@ -39,7 +37,7 @@ public class BucketController : ApiCarterModule
             return result.Match(
                 response => Results.Ok(
                     mapper.Map<BucketResponse>(response)),
-                errors => errors.ToProblemDetails(localizer)
+                errors => errors.ToProblemDetails(context)
             );
         }).RequireScopes("bucket:update");
     }

@@ -1,6 +1,5 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Services.Queries.GetAllServices;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Services;
 
 using MapsterMapper;
@@ -14,13 +13,12 @@ public class ServicesController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var services = CreateVersionedGroup(app, "services")
-            .WithName("Services")
+            .WithTags("Services")
             .RequireAuthorization();
 
         services.MapGet(string.Empty, async (
             ISender sender,
             IMapper mapper,
-            ILanguageCulture localizer,
             HttpContext context,
             CancellationToken cancellationToken
         ) =>
@@ -30,7 +28,7 @@ public class ServicesController : ApiCarterModule
             return result.Match(
                 response => Results.Ok(
                     mapper.Map<List<MaintenanceServiceResponse>>(response)),
-                errors => errors.ToProblemDetails(localizer)
+                errors => errors.ToProblemDetails(context)
             );
         }).RequireScopes("service:view");
     }

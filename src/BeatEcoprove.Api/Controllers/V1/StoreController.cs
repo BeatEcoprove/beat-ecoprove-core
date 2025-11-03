@@ -1,5 +1,4 @@
 using BeatEcoprove.Api.Extensions;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddStore;
 using BeatEcoprove.Application.Stores.Commands.DeleteStoreById;
 using BeatEcoprove.Application.Stores.Queries.GetOwningStores;
@@ -17,7 +16,7 @@ public class StoreController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var stores = CreateVersionedGroup(app, "stores")
-            .WithName("Stores")
+            .WithTags("Stores")
             .RequireAuthorization();
 
         stores.MapGet(string.Empty, GetOwningStores)
@@ -36,7 +35,6 @@ public class StoreController : ApiCarterModule
     private static async Task<IResult> GetOwningStores(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         string? search,
         int page,
@@ -57,14 +55,13 @@ public class StoreController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<StoreResponse>>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetStoreById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         CancellationToken cancellationToken)
@@ -81,14 +78,13 @@ public class StoreController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<StoreResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> CreateStore(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         CreateStoreRequest request,
         CancellationToken cancellationToken)
@@ -112,14 +108,13 @@ public class StoreController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<StoreResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> DeleteStoreById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid storeId,
         CancellationToken cancellationToken)
@@ -136,7 +131,7 @@ public class StoreController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<StoreResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 }

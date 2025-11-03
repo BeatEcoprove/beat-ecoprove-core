@@ -3,7 +3,6 @@ using BeatEcoprove.Infrastructure.Authentication;
 using BeatEcoprove.Infrastructure.Broker;
 using BeatEcoprove.Infrastructure.EmailSender;
 using BeatEcoprove.Infrastructure.FileStorage;
-using BeatEcoprove.Infrastructure.MultiLanguage;
 using BeatEcoprove.Infrastructure.Persistence;
 using BeatEcoprove.Infrastructure.Providers;
 using BeatEcoprove.Infrastructure.Services;
@@ -25,7 +24,6 @@ public static class DependencyInjection
         services.AddProviders();
         services.AddServices();
         services.AddPersistenceLayer();
-        services.AddMultiLanguage();
 
         services.AddDomain();
 

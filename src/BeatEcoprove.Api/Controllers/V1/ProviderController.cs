@@ -4,7 +4,6 @@ using BeatEcoprove.Application.Providers.Queries.GetProviderAdverts;
 using BeatEcoprove.Application.Providers.Queries.GetProviderById;
 using BeatEcoprove.Application.Providers.Queries.GetProviderStoreById;
 using BeatEcoprove.Application.Providers.Queries.GetProviderStores;
-using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Advertisements;
 using BeatEcoprove.Contracts.Providers;
 using BeatEcoprove.Contracts.Store;
@@ -20,7 +19,7 @@ public class ProviderController : ApiCarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         var providers = CreateVersionedGroup(app, "providers")
-            .WithName("Providers")
+            .WithTags("Providers")
             .RequireAuthorization();
 
         providers.MapGet(string.Empty, GetAllProviders)
@@ -44,7 +43,6 @@ public class ProviderController : ApiCarterModule
     private static async Task<IResult> GetAllProviders(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         string? search,
         int page,
@@ -65,14 +63,13 @@ public class ProviderController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<StandardProviderResponse>>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetProviderById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid providerId,
         CancellationToken cancellationToken)
@@ -89,14 +86,13 @@ public class ProviderController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<ProviderResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetStores(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid providerId,
         string? search,
@@ -119,13 +115,12 @@ public class ProviderController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<StoreResponse>>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
     private static async Task<IResult> GetStoreById(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid providerId,
         Guid storeId,
@@ -144,14 +139,13 @@ public class ProviderController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<StoreResponse>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 
     private static async Task<IResult> GetProviderAdverts(
         ISender sender,
         IMapper mapper,
-        ILanguageCulture localizer,
         HttpContext context,
         Guid providerId,
         CancellationToken cancellationToken)
@@ -168,7 +162,7 @@ public class ProviderController : ApiCarterModule
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<AdvertisementResponse>>(result)),
-            errors => errors.ToProblemDetails(localizer)
+            errors => errors.ToProblemDetails(context)
         );
     }
 }
