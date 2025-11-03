@@ -24,8 +24,13 @@ public static partial class Errors
         public static Error NotEnoughEcoCoins => Error.Conflict(
             "Core.Profile.NotEnoughEcoCoins.Title",
             "Core.Profile.NotEnoughEcoCoins.Description");
+        
         public static Error NotFound => Error.Conflict(
             "Core.Profile.NotFound.Title",
             "Core.Profile.NotFound.Description");
+        
+        public static Error AlreadyExists => Error.Conflict(
+            "Core.Profile.AlreadyExists.Title",
+            "Core.Profile.AlreadyExists.Description");
     }
 }
