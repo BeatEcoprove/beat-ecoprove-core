@@ -94,7 +94,7 @@ ASPNETCORE_HTTP_PORTS=5182
 ASPNETCORE_URLS=http://*:5182
 
 # Identity Server
-BEAT_IDENTITY_SERVER=http://localhost:5001
+JWKS_URL=http://localhost:5001
 
 # Redis Configuration
 REDIS_HOST=localhost
@@ -329,7 +329,7 @@ just format
 |----------|-------------|---------|----------|
 | `BEAT_API_REST_PORT` | API HTTP port | 5182 | Yes |
 | `ASPNETCORE_HTTP_PORTS` | ASP.NET Core HTTP ports | 5182 | Yes |
-| `BEAT_IDENTITY_SERVER` | Identity server URL | - | Yes |
+| `JWKS_URL` | Identity server URL | - | Yes |
 | `POSTGRES_HOST` | PostgreSQL host | localhost | Yes |
 | `POSTGRES_PORT` | PostgreSQL port | 5432 | Yes |
 | `POSTGRES_DB` | Database name | ecoprove | Yes |
