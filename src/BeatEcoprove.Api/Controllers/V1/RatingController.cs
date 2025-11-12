@@ -18,10 +18,10 @@ public class RatingController : ApiCarterModule
             .RequireAuthorization();
 
         ratting.MapGet(string.Empty, GetStoreRatings)
-            .RequireScopes("ratings:view");
+            .RequireScopes("rating:view");
 
         ratting.MapPost(string.Empty, CreateRating)
-            .RequireScopes("ratings:create");
+            .RequireScopes("rating:create");
     }
 
     private static async Task<IResult> GetStoreRatings(

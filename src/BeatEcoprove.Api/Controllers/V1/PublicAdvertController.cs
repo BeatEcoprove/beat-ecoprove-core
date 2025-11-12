@@ -18,10 +18,10 @@ public class PublicAdvertController : ApiCarterModule
             .RequireAuthorization();
 
         publicAdvert.MapGet("{advertId:guid}", GetById)
-            .RequireScopes("adverts:view");
+            .RequireScopes("advert:view");
 
         publicAdvert.MapGet(string.Empty, GetHomeAds)
-            .RequireScopes("adverts:view");
+            .RequireScopes("advert:view");
     }
 
     private static async Task<IResult> GetById(

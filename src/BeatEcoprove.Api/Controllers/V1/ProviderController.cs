@@ -23,21 +23,21 @@ public class ProviderController : ApiCarterModule
             .RequireAuthorization();
 
         providers.MapGet(string.Empty, GetAllProviders)
-            .RequireScopes("providers:view");
+            .RequireScopes("provider:view");
 
         providers.MapGet("{providerId:guid}", GetProviderById)
-            .RequireScopes("providers:view");
+            .RequireScopes("provider:view");
 
         var stores = providers.MapGroup("{providerId:guid}/stores");
 
         stores.MapGet(String.Empty, GetStores)
-            .RequireScopes("stores:view");
+            .RequireScopes("store:view");
 
         stores.MapGet("{storeId:guid}", GetStoreById)
-            .RequireScopes("stores:view");
+            .RequireScopes("store:view");
 
         providers.MapGet("adverts", GetProviderAdverts)
-            .RequireScopes("adverts:view");
+            .RequireScopes("advert:view");
     }
 
     private static async Task<IResult> GetAllProviders(

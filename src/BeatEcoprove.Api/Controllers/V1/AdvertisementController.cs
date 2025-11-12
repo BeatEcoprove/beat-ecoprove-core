@@ -20,16 +20,16 @@ public class AdvertisementController : ApiCarterModule
             .RequireAuthorization();
 
         advertisement.MapGet(string.Empty, GetMyAdverts)
-            .RequireScopes("adverts:view");
+            .RequireScopes("advert:view");
 
         advertisement.MapGet("{advertId:guid}", GetAdvertById)
-            .RequireScopes("adverts:view");
+            .RequireScopes("advert:view");
 
         advertisement.MapPost(string.Empty, CreateAdvert)
-            .RequireScopes("adverts:create");
+            .RequireScopes("advert:create");
 
         advertisement.MapDelete("{advertId:guid}", DeleteAdvert)
-            .RequireScopes("adverts:delete");
+            .RequireScopes("advert:delete");
     }
 
     private static async Task<IResult> GetMyAdverts(
