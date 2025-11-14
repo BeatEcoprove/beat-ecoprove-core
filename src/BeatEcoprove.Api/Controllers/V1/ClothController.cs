@@ -37,7 +37,7 @@ public class ClothController : ApiCarterModule
         cloth.MapPatch("current", GetClothMaintenanceStatus)
             .RequireScopes("maintenance:view");
 
-        cloth.MapPatch("history", GetClothHistory)
+        cloth.MapGet("history", GetClothHistory)
             .RequireScopes("cloth:history");
     }
 
