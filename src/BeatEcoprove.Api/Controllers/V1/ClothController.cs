@@ -143,7 +143,6 @@ public class ClothController : ApiCarterModule
         IMapper mapper,
         HttpContext context,
         Guid clothId,
-        Guid maintenanceActivityId,
         CancellationToken cancellationToken)
     {
         var profileId = context.User.GetProfileId();
