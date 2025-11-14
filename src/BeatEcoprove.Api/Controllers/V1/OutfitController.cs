@@ -3,7 +3,7 @@ using BeatEcoprove.Application.Closet.Commands.RegisterClothUsage;
 using BeatEcoprove.Application.Closet.Commands.RemoveClothFromOutfit;
 using BeatEcoprove.Application.Closet.Queries.GetCurrentOutfit;
 using BeatEcoprove.Contracts.Activities;
-using BeatEcoprove.Contracts.Profile;
+using BeatEcoprove.Contracts.Closet.Bucket;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 
 using ErrorOr;
@@ -100,7 +100,7 @@ public class OutfitController : ApiCarterModule
 
         return result.Match(
             profile => Results.Ok(
-                mapper.Map<ProfileResponse>(profile)),
+                mapper.Map<BucketResponse>(profile)),
             errors => errors.ToProblemDetails(context)
         );
     }
