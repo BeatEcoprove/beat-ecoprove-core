@@ -23,7 +23,7 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
     {
         var getAllAdverts = from advert in DbContext.Set<Advertisement>()
                             where
-                                (search == null || ((string)advert.Title).Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                                (search == null || ((string)advert.Title).Contains(search, StringComparison.OrdinalIgnoreCase))
                             select advert;
 
         getAllAdverts = getAllAdverts
@@ -52,7 +52,7 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
                                     ||
                                     advert.Creator == profile
                                 ) &&
-                                (search == null || ((string)advert.Title).Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                                (search == null || ((string)advert.Title).Contains(search, StringComparison.OrdinalIgnoreCase))
                             select advert;
 
         getAllAdverts = getAllAdverts
@@ -69,7 +69,7 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
         var getAdds = from advert in DbContext.Set<Advertisement>()
                       where
                           advert.Creator == providerId &&
-                          (search == null || ((string)advert.Title).Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                          (search == null || ((string)advert.Title).Contains(search, StringComparison.OrdinalIgnoreCase))
                       select advert;
 
         getAdds = getAdds

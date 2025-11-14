@@ -88,7 +88,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                                   let organization = profile as Organization
                                   where
                                       profile.Type.Equals(UserType.Organization) && organization != null &&
-                                      (search == null || ((string)profile.DisplayName).Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                                      (search == null || ((string)profile.DisplayName).Contains(search, StringComparison.OrdinalIgnoreCase))
                                   select organization;
 
         getAllOrganizations = getAllOrganizations
@@ -104,7 +104,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         var getAllProfiles =
             from profile in DbContext.Profiles
             where
-                (search == null || ((string)profile.DisplayName).Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                (search == null || ((string)profile.DisplayName).Contains(search, StringComparison.OrdinalIgnoreCase))
             select profile;
 
         getAllProfiles = getAllProfiles
@@ -158,7 +158,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 (colorValue == null || colorValue.Contains(color.Id)) &&
                 (size == null || size.Contains(cloth.Size)) &&
                 (category == null || category.Contains(cloth.Type)) &&
-                (search == null || cloth.Name.Contains(search, StringComparison.CurrentCultureIgnoreCase) || brand.Name.Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                (search == null || cloth.Name.Contains(search, StringComparison.OrdinalIgnoreCase) || brand.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
             select mainProfileId != clothEntry.ProfileId ?
                 new ClothDaoWithProfile(
                 cloth.Id,
