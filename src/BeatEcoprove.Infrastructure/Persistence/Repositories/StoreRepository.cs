@@ -130,7 +130,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
                                   isEmployee && store.Workers.Select(worker => worker.Profile).Contains(owner) ||
                                   store.Owner == owner
                               ) &&
-                              (search == null || store.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
+                              (search == null || store.Name.ToLower().Contains(search.ToLower()))
                           select store;
 
         allMyStores = allMyStores
@@ -272,7 +272,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
                               ).ToList()
                           where
                               orderServices.Count > 0 &&
-                              (search == null || cloth.Name.Contains(search, StringComparison.OrdinalIgnoreCase) || brand.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) &&
+                              (search == null || cloth.Name.ToLower().Contains(search.ToLower()) || brand.Name.ToLower().Contains(search.ToLower())) &&
                               (isDone == null || (bool)isDone ? order.Status == OrderStatus.Completed : order.Status != OrderStatus.Completed) &&
                               profile.Id == order.Owner
                           select isOrderCloth
@@ -319,7 +319,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
                          where
                                  store.Id == storeId &&
                                  worker.Profile == profile.Id &&
-                                 (search == null || ((string)profile.DisplayName).Contains(search, StringComparison.OrdinalIgnoreCase))
+                                 (search == null || ((string)profile.DisplayName).ToLower().Contains(search.ToLower()))
                          select new WorkerDao(
                              worker.Id,
                              (string)profile.DisplayName,
