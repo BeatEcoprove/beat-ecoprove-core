@@ -1,40 +1,29 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
-using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.ProfileAggregator.DAOS;
-
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 
-internal sealed class GetMyProfilesQueryHandler : IQueryHandler<GetMyProfilesQuery, ErrorOr<List<ProfileDao>>>
+internal sealed class GetMyProfilesQueryHandler(
+    IProfileRepository profileRepository
+) : IQueryHandler<GetMyProfilesQuery, ErrorOr<List<Profile>>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IProfileRepository _profileRepository;
-
-    public GetMyProfilesQueryHandler(
-        IProfileManager profileManager,
-        IProfileRepository profileRepository)
+    public async Task<ErrorOr<List<Profile>>> Handle(GetMyProfilesQuery request, CancellationToken cancellationToken)
     {
-        _profileManager = profileManager;
-        _profileRepository = profileRepository;
-    }
+        var profiles = new List<Profile>();
 
-    public async Task<ErrorOr<List<ProfileDao>>> Handle(GetMyProfilesQuery request, CancellationToken cancellationToken)
-    {
-        var profile = await _profileManager.GetProfileAsync(Guid.Empty, cancellationToken);
-
-        if (profile.IsError)
+        foreach (var id in request.ProfileIds)
         {
-            return profile.Errors;
+            var profileId = ProfileId.Create(id);
+            var profile = await profileRepository.GetByIdAsync(profileId, cancellationToken);
+
+            if (profile is not null)
+                profiles.Add(profile);
         }
 
-        var profileList = await _profileRepository.GetAllProfilesAsync(
-            null, // No search filter
-            1,    // First page
-            100,  // Maximum profiles to return
-            cancellationToken);
 
-        return profileList.ConvertAll(p => p.ToDao());
+        return profiles;
     }
 }

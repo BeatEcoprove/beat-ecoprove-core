@@ -149,8 +149,12 @@ public class ProfileController() : ApiCarterModule()
         HttpContext context,
         CancellationToken cancellationToken)
     {
+        var profileIds = context.User.GetProfileIds();
+
         var result = await sender
-            .Send(new GetMyProfilesQuery(), cancellationToken);
+            .Send(new GetMyProfilesQuery(
+                profileIds
+            ), cancellationToken);
 
         return result.Match(
             profile => Results.Ok(

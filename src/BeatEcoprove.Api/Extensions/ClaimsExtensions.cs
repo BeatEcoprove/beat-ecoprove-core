@@ -26,6 +26,30 @@ public static class ClaimsExtensions
         return Guid.Parse(userId!.Value);
     }
 
+    public static List<Guid> GetProfileIds(this ClaimsPrincipal claims)
+    {
+        if (claims?.Claims == null)
+        {
+            return Enumerable.Empty<Guid>().ToList();
+        }
+
+        var profileIdClaims = claims.Claims
+            .Where(claim => claim.Type == UserClaims.ProfileId)
+            .Select(claim => claim.Value)
+            .Where(value => !string.IsNullOrWhiteSpace(value));
+
+        var profileIds = new List<Guid>();
+        foreach (var value in profileIdClaims)
+        {
+            if (Guid.TryParse(value, out var guid))
+            {
+                profileIds.Add(guid);
+            }
+        }
+
+        return profileIds;
+    }
+
     public static string GetUserType(this ClaimsPrincipal claims)
     {
         var claimList = claims.Claims;
