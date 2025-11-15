@@ -1,4 +1,5 @@
 using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.Brands.Commands;
 using BeatEcoprove.Application.Brands.Queries;
 using BeatEcoprove.Contracts.Brands;
 
@@ -16,20 +17,42 @@ public class BrandController : ApiCarterModule
             .WithTags("Brands")
             .RequireAuthorization();
 
-        brands.MapGet(String.Empty, async (
-            ISender sender,
-            IMapper mapper,
-            HttpContext context
-        ) =>
-        {
-            var result =
-                await sender.Send(new GetAllBrandsQuery());
+        brands.MapGet(string.Empty, GetAllBrands).RequireScopes("brand:view");
+        brands.MapPost(string.Empty, CreateBrand).RequireScopes("brand:create");
+    }
 
-            return result.Match(
-                brand => Results.Ok(
-                    mapper.Map<BrandResponse>(brand)),
-                errors => errors.ToProblemDetails(context)
-            );
-        }).RequireScopes("brand:view");
+    private static async Task<IResult> GetAllBrands(
+        ISender sender,
+        IMapper mapper,
+        HttpContext context
+    )
+    {
+        var result =
+            await sender.Send(new GetAllBrandsQuery());
+
+        return result.Match(
+            brand => Results.Ok(
+                mapper.Map<BrandResponse>(brand)),
+            errors => errors.ToProblemDetails(context)
+        );
+    }
+
+    private static async Task<IResult> CreateBrand(
+        ISender sender,
+        IMapper mapper,
+        CreateBrandRequest request,
+        HttpContext context
+    )
+    {
+        var result =
+            await sender.Send(new CreateBrandCommand(
+                request.Name
+            ));
+
+        return result.Match(
+            brand => Results.Ok(
+                mapper.Map<BrandResult>(brand)),
+            errors => errors.ToProblemDetails(context)
+        );
     }
 }
