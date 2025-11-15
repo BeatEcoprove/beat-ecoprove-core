@@ -70,7 +70,7 @@ public class PublicAdvertController : ApiCarterModule
 
         return result.Match(
             profile => Results.Ok(
-                mapper.Map<AdvertisementResponse>(result)),
+                mapper.Map<List<AdvertisementResponse>>(result)),
             errors => errors.ToProblemDetails(context)
         );
     }

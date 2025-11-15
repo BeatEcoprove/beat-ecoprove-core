@@ -57,8 +57,6 @@ public class ProfileMappingConfiguration : IRegister
 
         // config.NewConfig<List<ProfileDao>, MyProfilesResponse>()
         //     .MapWith(src => ToMyProfilesResponse(src));
-
-
     }
 
     /*private MyProfilesResponse ToMyProfilesResponse(List<ProfileDao> profiles)
