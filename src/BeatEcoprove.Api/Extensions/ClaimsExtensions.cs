@@ -34,7 +34,7 @@ public static class ClaimsExtensions
         }
 
         var profileIdClaims = claims.Claims
-            .Where(claim => claim.Type == UserClaims.ProfileId)
+            .Where(claim => claim.Type == UserClaims.ProfileIds)
             .Select(claim => claim.Value)
             .Where(value => !string.IsNullOrWhiteSpace(value));
 
