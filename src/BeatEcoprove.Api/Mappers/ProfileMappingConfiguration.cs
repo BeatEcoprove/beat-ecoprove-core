@@ -19,6 +19,8 @@ public class ProfileMappingConfiguration : IRegister
                     src.profile.EcoScore,
                     src.profile.EcoCoins,
                     src.profile.AvatarUrl,
+                    src.profile.Phone.Value,
+                    src.profile.Phone.Code,
                     src.profile.Level,
                     src.profile.XP,
                     0,

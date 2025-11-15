@@ -7,6 +7,8 @@ public record GamificationProfileResponse(
     int EcoScore,
     int EcoCoins,
     string AvatarUrl,
+    string PhoneNumber,
+    string PhoneCountry,
     int Level,
     double XP,
     float LevelPercentage,
