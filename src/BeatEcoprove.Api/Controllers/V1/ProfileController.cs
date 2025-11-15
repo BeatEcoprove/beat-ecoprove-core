@@ -158,7 +158,7 @@ public class ProfileController() : ApiCarterModule()
 
         return result.Match(
             profile => Results.Ok(
-                mapper.Map<ProfileResponse>(profile)),
+                mapper.Map<List<ProfileResponse>>(profile)),
             errors => errors.ToProblemDetails(context)
         );
     }
