@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Contracts.Profile;
+﻿using BeatEcoprove.Application.Shared.Gaming;
+using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
 using Mapster;
@@ -9,17 +10,37 @@ public class ProfileMappingConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
+        config.NewConfig<GamificationDTO, GamificationProfileResponse>()
+            .MapWith((src) =>
+                new GamificationProfileResponse(
+                    src.profile.Id.Value,
+                    src.profile.DisplayName.Value,
+                    src.profile.SustainabilityPoints,
+                    src.profile.EcoScore,
+                    src.profile.EcoCoins,
+                    src.profile.AvatarUrl,
+                    src.profile.Level,
+                    src.profile.XP,
+                    0,
+                    src.NextLevelUp
+                )
+            );
+
+
         config.NewConfig<Profile, ProfileResponse>()
             .MapWith((src) =>
                 new ProfileResponse(
                     src.Id.Value,
                     src.DisplayName.Value,
                     src.Level,
+                    src.XP,
                     0,
                     src.SustainabilityPoints,
                     src.EcoScore,
                     src.EcoCoins,
-                    src.AvatarUrl
+                    src.AvatarUrl,
+                    src.Phone.Value,
+                    src.Phone.Code
                 )
             );
 

@@ -1,8 +1,8 @@
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Gaming;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Events;
 using BeatEcoprove.Domain.ProfileAggregator.Factories;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -20,10 +20,11 @@ internal sealed class CreateOrganizationCommandHandler(
     IProfileRepository profileRepository,
     IProfileCreateService profileCreateService,
     ITopicProducer<IAuthEvent> publishAuthEvents,
+    IGamingService gamingService,
     IUnitOfWork unitOfWork
-) : ICommandHandler<CreateOrganizationCommand, ErrorOr<Profile>>
+) : ICommandHandler<CreateOrganizationCommand, ErrorOr<GamificationDTO>>
 {
-    public async Task<ErrorOr<Profile>> Handle(
+    public async Task<ErrorOr<GamificationDTO>> Handle(
         CreateOrganizationCommand request,
         CancellationToken cancellationToken)
     {
@@ -75,6 +76,11 @@ internal sealed class CreateOrganizationCommandHandler(
             cancellationToken
         );
 
-        return profile;
+        var nextLevelUp = gamingService.GetNextLevelXp(profile.Value);
+
+        return new GamificationDTO(
+            profile.Value,
+            nextLevelUp
+        );
     }
 }

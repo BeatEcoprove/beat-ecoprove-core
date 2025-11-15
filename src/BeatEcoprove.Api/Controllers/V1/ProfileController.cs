@@ -78,8 +78,8 @@ public class ProfileController() : ApiCarterModule()
 
         return result.Match(
             profile => Results.Created(
-                $"/v1/profiles/{result.Value.Id}",
-                mapper.Map<ProfileResponse>(profile)),
+                $"/v1/profiles/{result.Value.profile.Id}",
+                mapper.Map<GamificationProfileResponse>(profile)),
             errors => errors.ToProblemDetails(context)
         );
     }
@@ -120,8 +120,8 @@ public class ProfileController() : ApiCarterModule()
 
         return result.Match(
             profile => Results.Created(
-                $"/v1/profiles/{result.Value.Id}",
-                mapper.Map<ProfileResponse>(profile)),
+                $"/v1/profiles/{result.Value.profile.Id}",
+                mapper.Map<GamificationProfileResponse>(profile)),
             errors => errors.ToProblemDetails(context)
         );
     }
@@ -138,7 +138,7 @@ public class ProfileController() : ApiCarterModule()
 
         return result.Match(
             profile => Results.Ok(
-                mapper.Map<ProfileResponse>(profile)),
+                mapper.Map<GamificationProfileResponse>(profile)),
             errors => errors.ToProblemDetails(context)
         );
     }

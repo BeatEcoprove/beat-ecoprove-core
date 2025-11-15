@@ -1,6 +1,6 @@
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Gaming;
 using BeatEcoprove.Application.Shared.Inputs;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
 using ErrorOr;
 
@@ -10,4 +10,4 @@ public record CreateConsumerCommand
 (
     Guid ProfileId,
     PersonalInfoInput Personal
-) : ICommand<ErrorOr<Profile>>;
+) : ICommand<ErrorOr<GamificationDTO>>;

@@ -1,4 +1,5 @@
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Gaming;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
@@ -21,10 +22,11 @@ internal sealed class CreateConsumerCommandHandler(
     IProfileRepository profileRepository,
     IProfileCreateService profileCreateService,
     ITopicProducer<IAuthEvent> publishAuthEvents,
+    IGamingService gamingService,
     IUnitOfWork unitOfWork
-) : ICommandHandler<CreateConsumerCommand, ErrorOr<Profile>>
+) : ICommandHandler<CreateConsumerCommand, ErrorOr<GamificationDTO>>
 {
-    public async Task<ErrorOr<Profile>> Handle(
+    public async Task<ErrorOr<GamificationDTO>> Handle(
         CreateConsumerCommand request,
         CancellationToken cancellationToken)
     {
@@ -77,6 +79,11 @@ internal sealed class CreateConsumerCommandHandler(
             cancellationToken
         );
 
-        return profile;
+        var next_level = gamingService.GetLevelProgress(profile.Value);
+
+        return new GamificationDTO(
+            profile.Value,
+            next_level
+        );
     }
 }
