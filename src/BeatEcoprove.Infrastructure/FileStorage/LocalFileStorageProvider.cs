@@ -4,17 +4,27 @@ using Microsoft.Extensions.Options;
 
 namespace BeatEcoprove.Infrastructure.FileStorage;
 
-public class LocalFileStorageProvider : IFileStorageProvider
+public class LocalFileStorageProvider(
+    IOptions<LocalFileStorageSettings> settings
+) : IFileStorageProvider
 {
     private const string DefaultImagePath = "default\\default.png";
-    private readonly LocalFileStorageSettings _settings;
+    private readonly LocalFileStorageSettings _settings = settings.Value;
 
-    public LocalFileStorageProvider(IOptions<LocalFileStorageSettings> settings)
+    public Task<string> GetImageAsync(
+        string fileName,
+        CancellationToken cancellationToken = default
+    )
     {
-        _settings = settings.Value;
+        throw new NotImplementedException();
     }
 
-    public async Task<string> UploadFileAsync(string bucketName, string fileName, Stream stream, CancellationToken cancellationToken = default)
+    public async Task<string> UploadFileAsync(
+        string bucketName,
+        string fileName,
+        Stream stream,
+        CancellationToken cancellationToken = default
+    )
     {
         var pointerName = Path.Combine(bucketName, fileName + ".png");
         var bucketPath = Path.Combine(_settings.FolderPath, bucketName);
