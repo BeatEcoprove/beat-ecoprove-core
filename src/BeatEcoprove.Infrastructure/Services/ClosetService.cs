@@ -17,6 +17,7 @@ namespace BeatEcoprove.Infrastructure.Services;
 
 public class ClosetService(
     IClothRepository clothRepository,
+    IPictureService pictureService,
     IBucketRepository bucketRepository,
     IProfileRepository profileRepository)
     : IClosetService
@@ -29,12 +30,18 @@ public class ClosetService(
         Uri picture,
         CancellationToken cancellationToken = default)
     {
-        cloth.SetClothPicture($"https://robohash.org/{cloth.Id.Value.ToString()}");
+        var imageUrl = await pictureService.GetImageUrlLiteral(
+            picture,
+            cancellationToken);
+
+        if (!imageUrl.IsError)
+            cloth.SetClothPicture(imageUrl.Value);
+        
         profile.AddCloth(cloth);
 
         await clothRepository.AddAsync(cloth, cancellationToken);
 
-        return new(
+        return new ClothResult(
             cloth.Id,
             cloth.Name,
             cloth.Type.ToString(),

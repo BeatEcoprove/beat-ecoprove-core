@@ -1,17 +1,16 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
-using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.Shared.Entities;
-using BeatEcoprove.Domain.Shared.Errors;
 
 using ErrorOr;
-using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
+
 namespace BeatEcoprove.Application.Brands.Commands;
 
 internal sealed class CreateBrandCommandHandler(
     IBrandRepository brandRepository,
-    IFileStorageProvider fileStorageProvider,
+    IPictureService pictureService,
     IUnitOfWork unitOfWork
 ) : ICommandHandler<CreateBrandCommand, ErrorOr<Brand>>
 {
@@ -20,20 +19,16 @@ internal sealed class CreateBrandCommandHandler(
         CancellationToken cancellationToken
     )
     {
-        var image = ImageUrl.Create(request.Picture);
+        var imageUrl = await pictureService.GetImageUrlLiteral(
+            request.Picture,
+            cancellationToken);
 
-        if (image.IsError)
-            return image.Errors;
-
-        if (!await fileStorageProvider.IsAlreadyCreated(
-                image.Value.Bucket,
-                image.Value.Id, 
-                cancellationToken))
-            return Errors.Brand.MustProvideBrandAvatar;
+        if (imageUrl.IsError)
+            return imageUrl.Errors;
 
         var brand = Brand.Create(
             request.Name,
-            image.Value.Url
+            imageUrl.Value
         );
 
         if (brand.IsError)

@@ -121,8 +121,7 @@ public class ClosetController : ApiCarterModule
                     request.ClothSize,
                     request.Brand,
                     request.Color,
-                    request.Picture
-                    ),
+                    request.Picture),
                 cancellationToken
             );
 
