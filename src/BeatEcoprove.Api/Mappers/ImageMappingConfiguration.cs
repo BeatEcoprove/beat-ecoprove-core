@@ -1,4 +1,5 @@
 using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.ImageUpload.Commands;
 using BeatEcoprove.Contracts.ImageUpload;
 using BeatEcoprove.Contracts.Services;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
@@ -11,7 +12,7 @@ public class ImageMappingConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<ImageUrl, ImageUploadResponse>()
+        config.NewConfig<UploadedUrl, ImageUploadResponse>()
             .MapWith(src => new ImageUploadResponse(
                 src.Url
             ));

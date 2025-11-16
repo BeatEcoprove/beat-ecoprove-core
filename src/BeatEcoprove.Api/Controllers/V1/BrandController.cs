@@ -52,7 +52,9 @@ public class BrandController : ApiCarterModule
             ));
 
         return result.Match(
-            brand => Results.Ok(mapper.Map<BrandResult>(brand)),
+            brand => Results.Created(
+                "/api/v1/brands",
+                mapper.Map<BrandResult>(brand)),
             errors => errors.ToProblemDetails(context)
         );
     }

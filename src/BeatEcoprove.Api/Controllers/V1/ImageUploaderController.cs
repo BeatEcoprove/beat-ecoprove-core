@@ -26,7 +26,7 @@ public sealed class ImageUploaderController : ApiCarterModule
     private static async Task<IResult> UploadImage(
         ISender sender,
         IMapper mapper,
-        IFormFile image,
+        IFormFile? image,
         [FromForm] string itemId,
         [FromForm] string bucket,
         HttpContext context,
@@ -45,15 +45,9 @@ public sealed class ImageUploaderController : ApiCarterModule
             ), cancellationToken);
 
         return result.Match(
-            url =>
-            {
-                var formattedUrl = url.Format(context);
-
-                return Results.Created(
-                    formattedUrl,
-                    mapper.Map<ImageUploadResponse>(formattedUrl)
-                );
-            },
+            url => Results.Created(
+                    url.Url,
+                    mapper.Map<ImageUploadResponse>(url)),
             errors => errors.ToProblemDetails(context)
         );
     }
