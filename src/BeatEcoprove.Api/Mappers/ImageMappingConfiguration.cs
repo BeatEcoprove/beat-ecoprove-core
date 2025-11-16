@@ -1,4 +1,4 @@
-using BeatEcoprove.Application.ImageUpload.Commands;
+using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Contracts.ImageUpload;
 using BeatEcoprove.Contracts.Services;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;

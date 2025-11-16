@@ -1,8 +1,11 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.ImageUpload.Commands;
 using BeatEcoprove.Contracts.ImageUpload;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers.V1;
@@ -19,9 +22,6 @@ public sealed class ImageUploaderController : ApiCarterModule
             .RequireScopes("upload:action")
             .DisableAntiforgery();
     }
-
-    public static ImageUrl FormatResponse(HttpContext context, ImageUrl url)
-        => new($"{context.Request.Scheme}://{context.Request.Host}/{url.Url}");
 
     private static async Task<IResult> UploadImage(
         ISender sender,
@@ -45,13 +45,14 @@ public sealed class ImageUploaderController : ApiCarterModule
             ), cancellationToken);
 
         return result.Match(
-            image =>
+            url =>
             {
-                var response = FormatResponse(context, image);
+                var formattedUrl = url.Format(context);
 
                 return Results.Created(
-                    response.Url,
-                    mapper.Map<ImageUploadResponse>(response));
+                    formattedUrl,
+                    mapper.Map<ImageUploadResponse>(formattedUrl)
+                );
             },
             errors => errors.ToProblemDetails(context)
         );

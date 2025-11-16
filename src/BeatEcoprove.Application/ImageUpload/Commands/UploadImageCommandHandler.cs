@@ -9,9 +9,9 @@ namespace BeatEcoprove.Application.ImageUpload.Commands;
 
 internal sealed class UploadImageCommandHandler(
     IFileStorageProvider fileStorageProvider
-) : ICommandHandler<UploadImageCommand, ErrorOr<ImageUrl>>
+) : ICommandHandler<UploadImageCommand, ErrorOr<UploadedUrl>>
 {
-    public async Task<ErrorOr<ImageUrl>> Handle(
+    public async Task<ErrorOr<UploadedUrl>> Handle(
         UploadImageCommand request,
         CancellationToken cancellationToken
     )
@@ -31,7 +31,7 @@ internal sealed class UploadImageCommandHandler(
                 cancellationToken
             );
 
-        return new ImageUrl(
+        return new UploadedUrl(
             imageUrl
         );
     }

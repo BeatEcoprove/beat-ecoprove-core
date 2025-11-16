@@ -2,6 +2,7 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
