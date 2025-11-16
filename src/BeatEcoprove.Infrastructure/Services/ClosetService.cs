@@ -1,6 +1,5 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
-using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
@@ -17,7 +16,6 @@ using Mapster;
 namespace BeatEcoprove.Infrastructure.Services;
 
 public class ClosetService(
-    IFileStorageProvider fileStorageProvider,
     IClothRepository clothRepository,
     IBucketRepository bucketRepository,
     IProfileRepository profileRepository)
@@ -28,6 +26,7 @@ public class ClosetService(
         Cloth cloth,
         string brandName,
         string colorHex,
+        Uri picture,
         CancellationToken cancellationToken = default)
     {
         cloth.SetClothPicture($"https://robohash.org/{cloth.Id.Value.ToString()}");

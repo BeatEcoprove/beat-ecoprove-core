@@ -9,6 +9,12 @@ using DotNetEnv;
 Env.Load($"../../.env");
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders()
+    .AddDebug()
+    .AddConsole();
+
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
+
 builder.Services.AddControllers();
 builder.Services
     .AddPresentation()

@@ -55,6 +55,7 @@ public static class DependencyInjection
     private static IServiceCollection AddMiddlewares(this IServiceCollection services)
     {
         services.AddTransient<AuthorizationMiddleware>();
+        services.AddTransient<PictureFormatterMiddleware>();
 
         return services;
     }

@@ -12,5 +12,6 @@ public record CreateClothCommand
     string ClothType,
     string ClothSize,
     string Brand,
-    string Color
+    string Color,
+    Uri Picture
 ) : ICommand<ErrorOr<ClothResult>>;

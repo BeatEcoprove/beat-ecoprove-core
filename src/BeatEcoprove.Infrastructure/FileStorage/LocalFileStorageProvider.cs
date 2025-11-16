@@ -11,12 +11,18 @@ public class LocalFileStorageProvider(
     private const string DefaultImagePath = "default\\default.png";
     private readonly LocalFileStorageSettings _settings = settings.Value;
 
-    public Task<string> GetImageAsync(
+    public async Task<bool> IsAlreadyCreated(
+        string bucket,
         string fileName,
         CancellationToken cancellationToken = default
     )
     {
-        throw new NotImplementedException();
+        await Task.CompletedTask;
+
+        var pointerName = Path.Combine(bucket, fileName + ".png");
+        var path = Path.Combine(_settings.FolderPath, pointerName);
+
+        return File.Exists(path);
     }
 
     public async Task<string> UploadFileAsync(

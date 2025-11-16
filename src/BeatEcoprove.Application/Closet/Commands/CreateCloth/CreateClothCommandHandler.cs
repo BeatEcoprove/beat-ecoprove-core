@@ -74,6 +74,7 @@ public class CreateClothCommandHandler(
             cloth.Value,
             request.Brand,
             request.Color,
+            request.Picture,
             cancellationToken);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

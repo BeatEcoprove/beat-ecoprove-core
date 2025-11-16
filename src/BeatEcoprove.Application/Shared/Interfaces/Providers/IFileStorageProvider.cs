@@ -9,7 +9,8 @@ public interface IFileStorageProvider
         CancellationToken cancellationToken = default
     );
 
-    Task<string> GetImageAsync(
+    Task<bool> IsAlreadyCreated(
+        string bucket,
         string fileName,
         CancellationToken cancellationToken = default
     );

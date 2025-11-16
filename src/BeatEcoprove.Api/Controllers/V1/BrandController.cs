@@ -1,6 +1,7 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Brands.Commands;
 using BeatEcoprove.Application.Brands.Queries;
+using BeatEcoprove.Application.ImageUpload.Commands;
 using BeatEcoprove.Contracts.Brands;
 
 using MapsterMapper;
@@ -46,12 +47,12 @@ public class BrandController : ApiCarterModule
     {
         var result =
             await sender.Send(new CreateBrandCommand(
-                request.Name
+                request.Name,
+                request.Picture
             ));
 
         return result.Match(
-            brand => Results.Ok(
-                mapper.Map<BrandResult>(brand)),
+            brand => Results.Ok(mapper.Map<BrandResult>(brand)),
             errors => errors.ToProblemDetails(context)
         );
     }

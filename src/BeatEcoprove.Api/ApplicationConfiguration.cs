@@ -34,6 +34,7 @@ public static class ApplicationConfiguration
     private static IApplicationBuilder AddCustomMiddlewares(this IApplicationBuilder app)
     {
         app.UseMiddleware<AuthorizationMiddleware>();
+        app.UseMiddleware<PictureFormatterMiddleware>();
 
         return app;
     }

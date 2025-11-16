@@ -8,7 +8,11 @@ public partial class Errors
     public class Image
     {
         public static Error InvalidBucketName => Error.Conflict(
-            "Core.Bucket.ImavalidBucketName.Title",
-            "Core.Bucket.ImavalidBucketName.Description");
+            "Core.Image.ImavalidBucketName.Title",
+            "Core.Image.ImavalidBucketName.Description");
+
+        public static Error InvalidImage => Error.Conflict(
+            "Core.Image.InvalidImage.Title",
+            "Core.Image.InvalidImage.Description");
     }
 }
