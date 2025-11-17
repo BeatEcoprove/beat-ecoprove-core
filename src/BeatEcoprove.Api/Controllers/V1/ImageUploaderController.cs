@@ -34,7 +34,7 @@ public sealed class ImageUploaderController : ApiCarterModule
         if (image == null || image.Length == 0)
         {
             return Results.Problem(
-                statusCode: StatusCodes.Status401Unauthorized,
+                statusCode: StatusCodes.Status400BadRequest,
                 title: "Image Failed to Upload",
                 detail: "No file provided"
             );
