@@ -73,16 +73,17 @@ internal sealed class CreateConsumerCommandHandler(
             new ProfileCreatedEvent(
                 profile.Value.AuthId,
                 profile.Value.Id,
+                profile.Value.DisplayName,
                 AuthRole.Client
             ),
             cancellationToken
         );
 
-        var next_level = gamingService.GetLevelProgress(profile.Value);
+        var nextLevel = gamingService.GetLevelProgress(profile.Value);
 
         return new GamificationDTO(
             profile.Value,
-            next_level
+            nextLevel
         );
     }
 }

@@ -71,6 +71,7 @@ internal sealed class CreateOrganizationCommandHandler(
             new ProfileCreatedEvent(
                 profile.Value.AuthId,
                 profile.Value.Id,
+                profile.Value.DisplayName,
                 AuthRole.Organization
             ),
             cancellationToken
