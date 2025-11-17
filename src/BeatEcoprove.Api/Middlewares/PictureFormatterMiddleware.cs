@@ -21,6 +21,9 @@ public partial class PictureFormatterMiddleware : IMiddleware
         => PublicUrlRgx().Replace(json, match
             => new UploadedUrl(match.Value)
                 .Format(context));
+    
+    private static Task ReturnResponse(HttpContext context, string responseText)
+        => context.Response.WriteAsync(responseText);
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -36,14 +39,14 @@ public partial class PictureFormatterMiddleware : IMiddleware
         context.Response.Body.Seek(0, SeekOrigin.Begin);
 
         if (!IsValidToHandle(context, responseText))
-            await next(context);
+            await ReturnResponse(context, responseText);
 
         if (!IsPictureUrl(responseText))
-            await next(context);
+            await ReturnResponse(context, responseText);
 
         var modifiedResponse = TransformPublicUrls(context, responseText);
 
         context.Response.Body = originalBodyStream;
-        await context.Response.WriteAsync(modifiedResponse);
+        await ReturnResponse(context, modifiedResponse);
     }
 }
