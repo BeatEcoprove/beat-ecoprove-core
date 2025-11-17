@@ -1,6 +1,7 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 
 using ErrorOr;
@@ -26,7 +27,7 @@ internal sealed class UploadImageCommandHandler(
         var imageUrl = await fileStorageProvider
             .UploadFileAsync(
                 bucketName,
-                request.ItemId.ToString(),
+                ProfileId.CreateUnique().Value.ToString(),
                 request.Image,
                 cancellationToken
             );

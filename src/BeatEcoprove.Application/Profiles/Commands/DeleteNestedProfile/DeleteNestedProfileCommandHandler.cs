@@ -9,27 +9,17 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Commands.DeleteNestedProfile;
 
-internal sealed class DeleteNestedProfileCommandHandler : ICommandHandler<DeleteNestedProfileCommand, ErrorOr<Profile>>
+internal sealed class DeleteNestedProfileCommandHandler(
+    IProfileManager profileManager,
+    IProfileRepository profileRepository,
+    IUnitOfWork unitOfWork)
+    : ICommandHandler<DeleteNestedProfileCommand, ErrorOr<Profile>>
 {
-    private readonly IProfileManager _profileManager;
-    private readonly IProfileRepository _profileRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public DeleteNestedProfileCommandHandler(
-        IProfileManager profileManager,
-        IProfileRepository profileRepository,
-        IUnitOfWork unitOfWork)
-    {
-        _profileManager = profileManager;
-        _profileRepository = profileRepository;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<ErrorOr<Profile>> Handle(DeleteNestedProfileCommand request, CancellationToken cancellationToken)
     {
         var profileId = ProfileId.Create(request.ProfileId);
 
-        var profile = await _profileManager.GetProfileAsync(profileId, cancellationToken);
+        var profile = await profileManager.GetProfileAsync(profileId, cancellationToken);
 
         if (profile.IsError)
         {
@@ -37,8 +27,8 @@ internal sealed class DeleteNestedProfileCommandHandler : ICommandHandler<Delete
         }
 
         // delete the profile and save changes
-        await _profileRepository.DeleteAsync(profile.Value.Id, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await profileRepository.DeleteAsync(profile.Value.Id, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return profile;
     }

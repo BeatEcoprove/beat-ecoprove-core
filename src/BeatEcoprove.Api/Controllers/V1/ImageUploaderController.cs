@@ -27,7 +27,6 @@ public sealed class ImageUploaderController : ApiCarterModule
         ISender sender,
         IMapper mapper,
         IFormFile? image,
-        [FromForm] string itemId,
         [FromForm] string bucket,
         HttpContext context,
         CancellationToken cancellationToken)
@@ -39,7 +38,6 @@ public sealed class ImageUploaderController : ApiCarterModule
 
         var result = await sender
             .Send(new UploadImageCommand(
-                Guid.Parse(itemId),
                 bucket,
                 image!.OpenReadStream()
             ), cancellationToken);
