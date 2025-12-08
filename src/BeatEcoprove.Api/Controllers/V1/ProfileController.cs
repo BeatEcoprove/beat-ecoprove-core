@@ -36,7 +36,8 @@ public class ProfileController() : ApiCarterModule()
         profiles.MapGet(String.Empty, GetProfiles)
             .RequireScopes("profile:view");
 
-        profiles.MapGet("/public", GetPublicProfileData);
+        profiles.MapGet("/public", GetPublicProfileData)
+            .RequireScopes("profile:view");
 
         // TODO: did not test this one
         profiles.MapDelete("{id:guid}", DeleteProfile)
