@@ -3,7 +3,7 @@ namespace BeatEcoprove.Contracts.Profile;
 public record ProfileResponse
 (
     Guid Id,
-    string Username,
+    string DisplayName,
     int Level,
     double XP,
     float LevelPercentage,

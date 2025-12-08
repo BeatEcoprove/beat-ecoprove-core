@@ -3,7 +3,7 @@ namespace BeatEcoprove.Contracts.Profile;
 public record PublicProfileResponse
 (
     Guid Id,
-    string Username,
+    string DisplayName,
     int Level,
     int SustainabilityPoints,
     int EcoScore,
