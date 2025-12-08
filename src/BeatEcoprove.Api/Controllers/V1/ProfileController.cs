@@ -4,8 +4,11 @@ using BeatEcoprove.Application.Profiles.Commands.DeleteNestedProfile;
 using BeatEcoprove.Application.Profiles.Commands.UpdateProfile;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetProfile;
+using BeatEcoprove.Application.Profiles.Queries.GetPublicProfile;
 using BeatEcoprove.Application.Shared.Inputs;
 using BeatEcoprove.Contracts.Profile;
+
+using ErrorOr;
 
 using MapsterMapper;
 
@@ -33,6 +36,8 @@ public class ProfileController() : ApiCarterModule()
         profiles.MapGet(String.Empty, GetProfiles)
             .RequireScopes("profile:view");
 
+        profiles.MapGet("/public", GetPublicProfileData);
+
         // TODO: did not test this one
         profiles.MapDelete("{id:guid}", DeleteProfile)
             .RequireScopes("profile:delete");
@@ -41,9 +46,28 @@ public class ProfileController() : ApiCarterModule()
         profiles.MapPut("{id:guid}", UpdateProfile)
             .RequireScopes("profile:update");
     }
-
+    
     private static bool VerifyProfileId(HttpContext context, Guid profileId)
         => context.User.GetProfileId() == profileId;
+
+    private static ErrorOr<List<Guid>> ParseIds(string ids)
+        => ids
+            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+            .Select(id => id.Trim())
+            .Aggregate(
+                (parsedIds: new List<Guid>(), errors: new List<string>()),
+                (acc, id) =>
+                {
+                    if (Guid.TryParse(id, out var parsedId))
+                        acc.parsedIds.Add(parsedId);
+                    else
+                        acc.errors.Add($"Failed to parse id: {id}");
+                    
+                    return acc;
+            },
+            acc => acc.errors.Count != 0
+                ? Error.Validation("ids", $"Invalid GUIDs: {string.Join(", ", acc.errors)}")
+                : ErrorOrFactory.From(acc.parsedIds));
 
     private static async Task<IResult> CreateClientProfile(
         ISender sender,
@@ -159,6 +183,30 @@ public class ProfileController() : ApiCarterModule()
         return result.Match(
             profile => Results.Ok(
                 mapper.Map<List<ProfileResponse>>(profile)),
+            errors => errors.ToProblemDetails(context)
+        );
+    }
+    
+    private static async Task<IResult> GetPublicProfileData(
+        ISender sender,
+        IMapper mapper,
+        HttpContext context,
+        string ids,
+        CancellationToken cancellationToken)
+    {
+        var parseIds = ParseIds(ids);
+
+        if (parseIds.IsError)
+            return parseIds.Errors.ToProblemDetails(context);
+
+        var result = await sender
+            .Send(new GetPublicProfileQuery(
+                    parseIds.Value),
+                cancellationToken);
+
+        return result.Match(
+            profile => Results.Ok(
+                mapper.Map<List<PublicProfileResponse>>(profile)),
             errors => errors.ToProblemDetails(context)
         );
     }

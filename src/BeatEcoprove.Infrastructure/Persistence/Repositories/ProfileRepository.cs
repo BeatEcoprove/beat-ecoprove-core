@@ -15,15 +15,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
-public class ProfileRepository : Repository<Profile, ProfileId>, IProfileRepository
+public class ProfileRepository(IApplicationDbContext dbContext)
+    : Repository<Profile, ProfileId>(dbContext), IProfileRepository
 {
-    public ProfileRepository(IApplicationDbContext dbContext) : base(dbContext)
-    {
-    }
-
     public async Task<bool> DisableSubProfiles(ProfileId profileId, CancellationToken cancellationToken = default)
     {
-        var profile = await DbContext.Profiles.FindAsync(new object[] { profileId }, cancellationToken: cancellationToken);
+        var profile = await DbContext.Profiles.FindAsync([profileId], cancellationToken: cancellationToken);
 
         if (profile is null)
         {
@@ -110,6 +107,19 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         getAllProfiles = getAllProfiles
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
+
+        return await getAllProfiles
+            .ToListAsync(cancellationToken);
+    }
+    
+    public async Task<List<Profile>> GetAllProfilesAsync(
+        List<Guid> ids, 
+        CancellationToken cancellationToken = default)
+    {
+        var getAllProfiles =
+            from profile in DbContext.Profiles
+            where ids.Contains(profile.Id)
+            select profile;
 
         return await getAllProfiles
             .ToListAsync(cancellationToken);
