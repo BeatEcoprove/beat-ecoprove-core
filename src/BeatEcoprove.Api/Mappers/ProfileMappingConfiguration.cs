@@ -45,6 +45,18 @@ public class ProfileMappingConfiguration : IRegister
                     src.Phone.Code
                 )
             );
+        
+        config.NewConfig<Profile, PublicProfileResponse>()
+            .MapWith((src) =>
+                new PublicProfileResponse(
+                    src.Id.Value,
+                    src.DisplayName.Value,
+                    src.Level,
+                    src.SustainabilityPoints,
+                    src.EcoScore,
+                    src.AvatarUrl
+                )
+            );
 
         config.NewConfig<Profile, ProfileClosetResponse>()
             .MapWith((src) =>
