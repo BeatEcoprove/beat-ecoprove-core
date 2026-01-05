@@ -24,25 +24,34 @@ public partial class PictureFormatterMiddleware : IMiddleware
     
     private static Task ReturnResponse(HttpContext context, string responseText)
         => context.Response.WriteAsync(responseText);
+    
+    private static bool IsJson(HttpResponse response)
+    => response.ContentType?.Contains("application/json") == true;
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        string responseText = string.Empty;
         var originalBodyStream = context.Response.Body;
 
         using var responseBody = new MemoryStream();
         context.Response.Body = responseBody;
 
         await next(context);
-
-        context.Response.Body.Seek(0, SeekOrigin.Begin);
-        var responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
+        
         context.Response.Body.Seek(0, SeekOrigin.Begin);
 
-        if (!IsValidToHandle(context, responseText))
-            await ReturnResponse(context, responseText);
+        if (IsJson(context.Response))
+        {
+            responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
+            context.Response.Body.Seek(0, SeekOrigin.Begin);
+        }
 
-        if (!IsPictureUrl(responseText))
+        if (!IsValidToHandle(context, responseText) 
+            || !IsPictureUrl(responseText))
+        {
             await ReturnResponse(context, responseText);
+            return;
+        }
 
         var modifiedResponse = TransformPublicUrls(context, responseText);
 
