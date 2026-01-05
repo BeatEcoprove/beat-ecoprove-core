@@ -39,12 +39,12 @@ public partial class PictureFormatterMiddleware : IMiddleware
 
         context.Response.Body.Seek(0, SeekOrigin.Begin);
 
-        // no json responses
-        if (!IsJson(context.Response))
-        {
-            await responseBody.CopyToAsync(originalBodyStream);
-            return;
-        }
+        //// no json responses
+        //if (!IsJson(context.Response))
+        //{
+            //await responseBody.CopyToAsync(originalBodyStream);
+            //return;
+        //}
 
         // read json responses
         var responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
