@@ -26,28 +26,31 @@ public partial class PictureFormatterMiddleware : IMiddleware
         => context.Response.WriteAsync(responseText);
     
     private static bool IsJson(HttpResponse response)
-    => response.ContentType?.Contains("application/json") == true;
+        => response.ContentType?.Contains("application/json") == true;
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        string responseText = string.Empty;
         var originalBodyStream = context.Response.Body;
 
         using var responseBody = new MemoryStream();
         context.Response.Body = responseBody;
 
         await next(context);
-        
+
         context.Response.Body.Seek(0, SeekOrigin.Begin);
 
-        if (IsJson(context.Response))
+        // no json responses
+        if (!IsJson(context.Response))
         {
-            responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
-            context.Response.Body.Seek(0, SeekOrigin.Begin);
+            await responseBody.CopyToAsync(originalBodyStream);
+            return;
         }
 
-        if (!IsValidToHandle(context, responseText) 
-            || !IsPictureUrl(responseText))
+        // read json responses
+        var responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
+        context.Response.Body.Seek(0, SeekOrigin.Begin);
+        
+        if (!IsValidToHandle(context, responseText) || !IsPictureUrl(responseText))
         {
             await ReturnResponse(context, responseText);
             return;
