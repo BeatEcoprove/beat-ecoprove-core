@@ -24,8 +24,9 @@ public static class ApplicationConfiguration
                 }
             },
             FileProvider = new PhysicalFileProvider(
-                path),
-            RequestPath = "/public"
+                path
+            ),
+            RequestPath = "/images"
         });
 
         return app;
